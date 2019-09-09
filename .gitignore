@@ -1,0 +1,9 @@
+/.vscode/
+/venv/
+/build/
+/dist/
+/libra-client.egg-info/
+/libra_client.egg-info/
+__pycache__/
+*.pyc
+*.swp
