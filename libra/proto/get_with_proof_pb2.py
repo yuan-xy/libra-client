@@ -593,88 +593,88 @@ DESCRIPTOR.message_types_by_name['GetTransactionsRequest'] = _GETTRANSACTIONSREQ
 DESCRIPTOR.message_types_by_name['GetTransactionsResponse'] = _GETTRANSACTIONSRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-UpdateToLatestLedgerRequest = _reflection.GeneratedProtocolMessageType('UpdateToLatestLedgerRequest', (_message.Message,), dict(
-  DESCRIPTOR = _UPDATETOLATESTLEDGERREQUEST,
-  __module__ = 'get_with_proof_pb2'
+UpdateToLatestLedgerRequest = _reflection.GeneratedProtocolMessageType('UpdateToLatestLedgerRequest', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATETOLATESTLEDGERREQUEST,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.UpdateToLatestLedgerRequest)
-  ))
+  })
 _sym_db.RegisterMessage(UpdateToLatestLedgerRequest)
 
-RequestItem = _reflection.GeneratedProtocolMessageType('RequestItem', (_message.Message,), dict(
-  DESCRIPTOR = _REQUESTITEM,
-  __module__ = 'get_with_proof_pb2'
+RequestItem = _reflection.GeneratedProtocolMessageType('RequestItem', (_message.Message,), {
+  'DESCRIPTOR' : _REQUESTITEM,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.RequestItem)
-  ))
+  })
 _sym_db.RegisterMessage(RequestItem)
 
-UpdateToLatestLedgerResponse = _reflection.GeneratedProtocolMessageType('UpdateToLatestLedgerResponse', (_message.Message,), dict(
-  DESCRIPTOR = _UPDATETOLATESTLEDGERRESPONSE,
-  __module__ = 'get_with_proof_pb2'
+UpdateToLatestLedgerResponse = _reflection.GeneratedProtocolMessageType('UpdateToLatestLedgerResponse', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATETOLATESTLEDGERRESPONSE,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.UpdateToLatestLedgerResponse)
-  ))
+  })
 _sym_db.RegisterMessage(UpdateToLatestLedgerResponse)
 
-ResponseItem = _reflection.GeneratedProtocolMessageType('ResponseItem', (_message.Message,), dict(
-  DESCRIPTOR = _RESPONSEITEM,
-  __module__ = 'get_with_proof_pb2'
+ResponseItem = _reflection.GeneratedProtocolMessageType('ResponseItem', (_message.Message,), {
+  'DESCRIPTOR' : _RESPONSEITEM,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.ResponseItem)
-  ))
+  })
 _sym_db.RegisterMessage(ResponseItem)
 
-GetAccountStateRequest = _reflection.GeneratedProtocolMessageType('GetAccountStateRequest', (_message.Message,), dict(
-  DESCRIPTOR = _GETACCOUNTSTATEREQUEST,
-  __module__ = 'get_with_proof_pb2'
+GetAccountStateRequest = _reflection.GeneratedProtocolMessageType('GetAccountStateRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTSTATEREQUEST,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetAccountStateRequest)
-  ))
+  })
 _sym_db.RegisterMessage(GetAccountStateRequest)
 
-GetAccountStateResponse = _reflection.GeneratedProtocolMessageType('GetAccountStateResponse', (_message.Message,), dict(
-  DESCRIPTOR = _GETACCOUNTSTATERESPONSE,
-  __module__ = 'get_with_proof_pb2'
+GetAccountStateResponse = _reflection.GeneratedProtocolMessageType('GetAccountStateResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTSTATERESPONSE,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetAccountStateResponse)
-  ))
+  })
 _sym_db.RegisterMessage(GetAccountStateResponse)
 
-GetAccountTransactionBySequenceNumberRequest = _reflection.GeneratedProtocolMessageType('GetAccountTransactionBySequenceNumberRequest', (_message.Message,), dict(
-  DESCRIPTOR = _GETACCOUNTTRANSACTIONBYSEQUENCENUMBERREQUEST,
-  __module__ = 'get_with_proof_pb2'
+GetAccountTransactionBySequenceNumberRequest = _reflection.GeneratedProtocolMessageType('GetAccountTransactionBySequenceNumberRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTTRANSACTIONBYSEQUENCENUMBERREQUEST,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetAccountTransactionBySequenceNumberRequest)
-  ))
+  })
 _sym_db.RegisterMessage(GetAccountTransactionBySequenceNumberRequest)
 
-GetAccountTransactionBySequenceNumberResponse = _reflection.GeneratedProtocolMessageType('GetAccountTransactionBySequenceNumberResponse', (_message.Message,), dict(
-  DESCRIPTOR = _GETACCOUNTTRANSACTIONBYSEQUENCENUMBERRESPONSE,
-  __module__ = 'get_with_proof_pb2'
+GetAccountTransactionBySequenceNumberResponse = _reflection.GeneratedProtocolMessageType('GetAccountTransactionBySequenceNumberResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTTRANSACTIONBYSEQUENCENUMBERRESPONSE,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetAccountTransactionBySequenceNumberResponse)
-  ))
+  })
 _sym_db.RegisterMessage(GetAccountTransactionBySequenceNumberResponse)
 
-GetEventsByEventAccessPathRequest = _reflection.GeneratedProtocolMessageType('GetEventsByEventAccessPathRequest', (_message.Message,), dict(
-  DESCRIPTOR = _GETEVENTSBYEVENTACCESSPATHREQUEST,
-  __module__ = 'get_with_proof_pb2'
+GetEventsByEventAccessPathRequest = _reflection.GeneratedProtocolMessageType('GetEventsByEventAccessPathRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETEVENTSBYEVENTACCESSPATHREQUEST,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetEventsByEventAccessPathRequest)
-  ))
+  })
 _sym_db.RegisterMessage(GetEventsByEventAccessPathRequest)
 
-GetEventsByEventAccessPathResponse = _reflection.GeneratedProtocolMessageType('GetEventsByEventAccessPathResponse', (_message.Message,), dict(
-  DESCRIPTOR = _GETEVENTSBYEVENTACCESSPATHRESPONSE,
-  __module__ = 'get_with_proof_pb2'
+GetEventsByEventAccessPathResponse = _reflection.GeneratedProtocolMessageType('GetEventsByEventAccessPathResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETEVENTSBYEVENTACCESSPATHRESPONSE,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetEventsByEventAccessPathResponse)
-  ))
+  })
 _sym_db.RegisterMessage(GetEventsByEventAccessPathResponse)
 
-GetTransactionsRequest = _reflection.GeneratedProtocolMessageType('GetTransactionsRequest', (_message.Message,), dict(
-  DESCRIPTOR = _GETTRANSACTIONSREQUEST,
-  __module__ = 'get_with_proof_pb2'
+GetTransactionsRequest = _reflection.GeneratedProtocolMessageType('GetTransactionsRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETTRANSACTIONSREQUEST,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetTransactionsRequest)
-  ))
+  })
 _sym_db.RegisterMessage(GetTransactionsRequest)
 
-GetTransactionsResponse = _reflection.GeneratedProtocolMessageType('GetTransactionsResponse', (_message.Message,), dict(
-  DESCRIPTOR = _GETTRANSACTIONSRESPONSE,
-  __module__ = 'get_with_proof_pb2'
+GetTransactionsResponse = _reflection.GeneratedProtocolMessageType('GetTransactionsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETTRANSACTIONSRESPONSE,
+  '__module__' : 'get_with_proof_pb2'
   # @@protoc_insertion_point(class_scope:types.GetTransactionsResponse)
-  ))
+  })
 _sym_db.RegisterMessage(GetTransactionsResponse)
 
 

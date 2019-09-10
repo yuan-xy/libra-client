@@ -662,81 +662,81 @@ DESCRIPTOR.message_types_by_name['TransactionListWithProof'] = _TRANSACTIONLISTW
 DESCRIPTOR.enum_types_by_name['WriteOpType'] = _WRITEOPTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-RawTransaction = _reflection.GeneratedProtocolMessageType('RawTransaction', (_message.Message,), dict(
-  DESCRIPTOR = _RAWTRANSACTION,
-  __module__ = 'transaction_pb2'
+RawTransaction = _reflection.GeneratedProtocolMessageType('RawTransaction', (_message.Message,), {
+  'DESCRIPTOR' : _RAWTRANSACTION,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.RawTransaction)
-  ))
+  })
 _sym_db.RegisterMessage(RawTransaction)
 
-Program = _reflection.GeneratedProtocolMessageType('Program', (_message.Message,), dict(
-  DESCRIPTOR = _PROGRAM,
-  __module__ = 'transaction_pb2'
+Program = _reflection.GeneratedProtocolMessageType('Program', (_message.Message,), {
+  'DESCRIPTOR' : _PROGRAM,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.Program)
-  ))
+  })
 _sym_db.RegisterMessage(Program)
 
-TransactionArgument = _reflection.GeneratedProtocolMessageType('TransactionArgument', (_message.Message,), dict(
-  DESCRIPTOR = _TRANSACTIONARGUMENT,
-  __module__ = 'transaction_pb2'
+TransactionArgument = _reflection.GeneratedProtocolMessageType('TransactionArgument', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSACTIONARGUMENT,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.TransactionArgument)
-  ))
+  })
 _sym_db.RegisterMessage(TransactionArgument)
 
-SignedTransaction = _reflection.GeneratedProtocolMessageType('SignedTransaction', (_message.Message,), dict(
-  DESCRIPTOR = _SIGNEDTRANSACTION,
-  __module__ = 'transaction_pb2'
+SignedTransaction = _reflection.GeneratedProtocolMessageType('SignedTransaction', (_message.Message,), {
+  'DESCRIPTOR' : _SIGNEDTRANSACTION,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.SignedTransaction)
-  ))
+  })
 _sym_db.RegisterMessage(SignedTransaction)
 
-SignedTransactionWithProof = _reflection.GeneratedProtocolMessageType('SignedTransactionWithProof', (_message.Message,), dict(
-  DESCRIPTOR = _SIGNEDTRANSACTIONWITHPROOF,
-  __module__ = 'transaction_pb2'
+SignedTransactionWithProof = _reflection.GeneratedProtocolMessageType('SignedTransactionWithProof', (_message.Message,), {
+  'DESCRIPTOR' : _SIGNEDTRANSACTIONWITHPROOF,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.SignedTransactionWithProof)
-  ))
+  })
 _sym_db.RegisterMessage(SignedTransactionWithProof)
 
-SignedTransactionsBlock = _reflection.GeneratedProtocolMessageType('SignedTransactionsBlock', (_message.Message,), dict(
-  DESCRIPTOR = _SIGNEDTRANSACTIONSBLOCK,
-  __module__ = 'transaction_pb2'
+SignedTransactionsBlock = _reflection.GeneratedProtocolMessageType('SignedTransactionsBlock', (_message.Message,), {
+  'DESCRIPTOR' : _SIGNEDTRANSACTIONSBLOCK,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.SignedTransactionsBlock)
-  ))
+  })
 _sym_db.RegisterMessage(SignedTransactionsBlock)
 
-WriteSet = _reflection.GeneratedProtocolMessageType('WriteSet', (_message.Message,), dict(
-  DESCRIPTOR = _WRITESET,
-  __module__ = 'transaction_pb2'
+WriteSet = _reflection.GeneratedProtocolMessageType('WriteSet', (_message.Message,), {
+  'DESCRIPTOR' : _WRITESET,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.WriteSet)
-  ))
+  })
 _sym_db.RegisterMessage(WriteSet)
 
-WriteOp = _reflection.GeneratedProtocolMessageType('WriteOp', (_message.Message,), dict(
-  DESCRIPTOR = _WRITEOP,
-  __module__ = 'transaction_pb2'
+WriteOp = _reflection.GeneratedProtocolMessageType('WriteOp', (_message.Message,), {
+  'DESCRIPTOR' : _WRITEOP,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.WriteOp)
-  ))
+  })
 _sym_db.RegisterMessage(WriteOp)
 
-AccountState = _reflection.GeneratedProtocolMessageType('AccountState', (_message.Message,), dict(
-  DESCRIPTOR = _ACCOUNTSTATE,
-  __module__ = 'transaction_pb2'
+AccountState = _reflection.GeneratedProtocolMessageType('AccountState', (_message.Message,), {
+  'DESCRIPTOR' : _ACCOUNTSTATE,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.AccountState)
-  ))
+  })
 _sym_db.RegisterMessage(AccountState)
 
-TransactionToCommit = _reflection.GeneratedProtocolMessageType('TransactionToCommit', (_message.Message,), dict(
-  DESCRIPTOR = _TRANSACTIONTOCOMMIT,
-  __module__ = 'transaction_pb2'
+TransactionToCommit = _reflection.GeneratedProtocolMessageType('TransactionToCommit', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSACTIONTOCOMMIT,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.TransactionToCommit)
-  ))
+  })
 _sym_db.RegisterMessage(TransactionToCommit)
 
-TransactionListWithProof = _reflection.GeneratedProtocolMessageType('TransactionListWithProof', (_message.Message,), dict(
-  DESCRIPTOR = _TRANSACTIONLISTWITHPROOF,
-  __module__ = 'transaction_pb2'
+TransactionListWithProof = _reflection.GeneratedProtocolMessageType('TransactionListWithProof', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSACTIONLISTWITHPROOF,
+  '__module__' : 'transaction_pb2'
   # @@protoc_insertion_point(class_scope:types.TransactionListWithProof)
-  ))
+  })
 _sym_db.RegisterMessage(TransactionListWithProof)
 
 

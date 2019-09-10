@@ -198,32 +198,32 @@ DESCRIPTOR.message_types_by_name['EventsList'] = _EVENTSLIST
 DESCRIPTOR.message_types_by_name['EventsForVersions'] = _EVENTSFORVERSIONS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), dict(
-  DESCRIPTOR = _EVENT,
-  __module__ = 'events_pb2'
+Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), {
+  'DESCRIPTOR' : _EVENT,
+  '__module__' : 'events_pb2'
   # @@protoc_insertion_point(class_scope:types.Event)
-  ))
+  })
 _sym_db.RegisterMessage(Event)
 
-EventWithProof = _reflection.GeneratedProtocolMessageType('EventWithProof', (_message.Message,), dict(
-  DESCRIPTOR = _EVENTWITHPROOF,
-  __module__ = 'events_pb2'
+EventWithProof = _reflection.GeneratedProtocolMessageType('EventWithProof', (_message.Message,), {
+  'DESCRIPTOR' : _EVENTWITHPROOF,
+  '__module__' : 'events_pb2'
   # @@protoc_insertion_point(class_scope:types.EventWithProof)
-  ))
+  })
 _sym_db.RegisterMessage(EventWithProof)
 
-EventsList = _reflection.GeneratedProtocolMessageType('EventsList', (_message.Message,), dict(
-  DESCRIPTOR = _EVENTSLIST,
-  __module__ = 'events_pb2'
+EventsList = _reflection.GeneratedProtocolMessageType('EventsList', (_message.Message,), {
+  'DESCRIPTOR' : _EVENTSLIST,
+  '__module__' : 'events_pb2'
   # @@protoc_insertion_point(class_scope:types.EventsList)
-  ))
+  })
 _sym_db.RegisterMessage(EventsList)
 
-EventsForVersions = _reflection.GeneratedProtocolMessageType('EventsForVersions', (_message.Message,), dict(
-  DESCRIPTOR = _EVENTSFORVERSIONS,
-  __module__ = 'events_pb2'
+EventsForVersions = _reflection.GeneratedProtocolMessageType('EventsForVersions', (_message.Message,), {
+  'DESCRIPTOR' : _EVENTSFORVERSIONS,
+  '__module__' : 'events_pb2'
   # @@protoc_insertion_point(class_scope:types.EventsForVersions)
-  ))
+  })
 _sym_db.RegisterMessage(EventsForVersions)
 
 

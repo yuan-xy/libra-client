@@ -253,39 +253,39 @@ DESCRIPTOR.message_types_by_name['AccountStateProof'] = _ACCOUNTSTATEPROOF
 DESCRIPTOR.message_types_by_name['EventProof'] = _EVENTPROOF
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-AccumulatorProof = _reflection.GeneratedProtocolMessageType('AccumulatorProof', (_message.Message,), dict(
-  DESCRIPTOR = _ACCUMULATORPROOF,
-  __module__ = 'proof_pb2'
+AccumulatorProof = _reflection.GeneratedProtocolMessageType('AccumulatorProof', (_message.Message,), {
+  'DESCRIPTOR' : _ACCUMULATORPROOF,
+  '__module__' : 'proof_pb2'
   # @@protoc_insertion_point(class_scope:types.AccumulatorProof)
-  ))
+  })
 _sym_db.RegisterMessage(AccumulatorProof)
 
-SparseMerkleProof = _reflection.GeneratedProtocolMessageType('SparseMerkleProof', (_message.Message,), dict(
-  DESCRIPTOR = _SPARSEMERKLEPROOF,
-  __module__ = 'proof_pb2'
+SparseMerkleProof = _reflection.GeneratedProtocolMessageType('SparseMerkleProof', (_message.Message,), {
+  'DESCRIPTOR' : _SPARSEMERKLEPROOF,
+  '__module__' : 'proof_pb2'
   # @@protoc_insertion_point(class_scope:types.SparseMerkleProof)
-  ))
+  })
 _sym_db.RegisterMessage(SparseMerkleProof)
 
-SignedTransactionProof = _reflection.GeneratedProtocolMessageType('SignedTransactionProof', (_message.Message,), dict(
-  DESCRIPTOR = _SIGNEDTRANSACTIONPROOF,
-  __module__ = 'proof_pb2'
+SignedTransactionProof = _reflection.GeneratedProtocolMessageType('SignedTransactionProof', (_message.Message,), {
+  'DESCRIPTOR' : _SIGNEDTRANSACTIONPROOF,
+  '__module__' : 'proof_pb2'
   # @@protoc_insertion_point(class_scope:types.SignedTransactionProof)
-  ))
+  })
 _sym_db.RegisterMessage(SignedTransactionProof)
 
-AccountStateProof = _reflection.GeneratedProtocolMessageType('AccountStateProof', (_message.Message,), dict(
-  DESCRIPTOR = _ACCOUNTSTATEPROOF,
-  __module__ = 'proof_pb2'
+AccountStateProof = _reflection.GeneratedProtocolMessageType('AccountStateProof', (_message.Message,), {
+  'DESCRIPTOR' : _ACCOUNTSTATEPROOF,
+  '__module__' : 'proof_pb2'
   # @@protoc_insertion_point(class_scope:types.AccountStateProof)
-  ))
+  })
 _sym_db.RegisterMessage(AccountStateProof)
 
-EventProof = _reflection.GeneratedProtocolMessageType('EventProof', (_message.Message,), dict(
-  DESCRIPTOR = _EVENTPROOF,
-  __module__ = 'proof_pb2'
+EventProof = _reflection.GeneratedProtocolMessageType('EventProof', (_message.Message,), {
+  'DESCRIPTOR' : _EVENTPROOF,
+  '__module__' : 'proof_pb2'
   # @@protoc_insertion_point(class_scope:types.EventProof)
-  ))
+  })
 _sym_db.RegisterMessage(EventProof)
 
 

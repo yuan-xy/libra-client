@@ -109,18 +109,18 @@ DESCRIPTOR.message_types_by_name['AccountStateBlob'] = _ACCOUNTSTATEBLOB
 DESCRIPTOR.message_types_by_name['AccountStateWithProof'] = _ACCOUNTSTATEWITHPROOF
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-AccountStateBlob = _reflection.GeneratedProtocolMessageType('AccountStateBlob', (_message.Message,), dict(
-  DESCRIPTOR = _ACCOUNTSTATEBLOB,
-  __module__ = 'account_state_blob_pb2'
+AccountStateBlob = _reflection.GeneratedProtocolMessageType('AccountStateBlob', (_message.Message,), {
+  'DESCRIPTOR' : _ACCOUNTSTATEBLOB,
+  '__module__' : 'account_state_blob_pb2'
   # @@protoc_insertion_point(class_scope:types.AccountStateBlob)
-  ))
+  })
 _sym_db.RegisterMessage(AccountStateBlob)
 
-AccountStateWithProof = _reflection.GeneratedProtocolMessageType('AccountStateWithProof', (_message.Message,), dict(
-  DESCRIPTOR = _ACCOUNTSTATEWITHPROOF,
-  __module__ = 'account_state_blob_pb2'
+AccountStateWithProof = _reflection.GeneratedProtocolMessageType('AccountStateWithProof', (_message.Message,), {
+  'DESCRIPTOR' : _ACCOUNTSTATEWITHPROOF,
+  '__module__' : 'account_state_blob_pb2'
   # @@protoc_insertion_point(class_scope:types.AccountStateWithProof)
-  ))
+  })
 _sym_db.RegisterMessage(AccountStateWithProof)
 
 

@@ -1186,60 +1186,60 @@ DESCRIPTOR.enum_types_by_name['BinaryError'] = _BINARYERROR
 DESCRIPTOR.enum_types_by_name['RuntimeStatus'] = _RUNTIMESTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-VMValidationStatus = _reflection.GeneratedProtocolMessageType('VMValidationStatus', (_message.Message,), dict(
-  DESCRIPTOR = _VMVALIDATIONSTATUS,
-  __module__ = 'vm_errors_pb2'
+VMValidationStatus = _reflection.GeneratedProtocolMessageType('VMValidationStatus', (_message.Message,), {
+  'DESCRIPTOR' : _VMVALIDATIONSTATUS,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.VMValidationStatus)
-  ))
+  })
 _sym_db.RegisterMessage(VMValidationStatus)
 
-VMVerificationStatusList = _reflection.GeneratedProtocolMessageType('VMVerificationStatusList', (_message.Message,), dict(
-  DESCRIPTOR = _VMVERIFICATIONSTATUSLIST,
-  __module__ = 'vm_errors_pb2'
+VMVerificationStatusList = _reflection.GeneratedProtocolMessageType('VMVerificationStatusList', (_message.Message,), {
+  'DESCRIPTOR' : _VMVERIFICATIONSTATUSLIST,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.VMVerificationStatusList)
-  ))
+  })
 _sym_db.RegisterMessage(VMVerificationStatusList)
 
-VMVerificationStatus = _reflection.GeneratedProtocolMessageType('VMVerificationStatus', (_message.Message,), dict(
-  DESCRIPTOR = _VMVERIFICATIONSTATUS,
-  __module__ = 'vm_errors_pb2'
+VMVerificationStatus = _reflection.GeneratedProtocolMessageType('VMVerificationStatus', (_message.Message,), {
+  'DESCRIPTOR' : _VMVERIFICATIONSTATUS,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.VMVerificationStatus)
-  ))
+  })
 _sym_db.RegisterMessage(VMVerificationStatus)
 
-AssertionFailure = _reflection.GeneratedProtocolMessageType('AssertionFailure', (_message.Message,), dict(
-  DESCRIPTOR = _ASSERTIONFAILURE,
-  __module__ = 'vm_errors_pb2'
+AssertionFailure = _reflection.GeneratedProtocolMessageType('AssertionFailure', (_message.Message,), {
+  'DESCRIPTOR' : _ASSERTIONFAILURE,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.AssertionFailure)
-  ))
+  })
 _sym_db.RegisterMessage(AssertionFailure)
 
-ArithmeticError = _reflection.GeneratedProtocolMessageType('ArithmeticError', (_message.Message,), dict(
-  DESCRIPTOR = _ARITHMETICERROR,
-  __module__ = 'vm_errors_pb2'
+ArithmeticError = _reflection.GeneratedProtocolMessageType('ArithmeticError', (_message.Message,), {
+  'DESCRIPTOR' : _ARITHMETICERROR,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.ArithmeticError)
-  ))
+  })
 _sym_db.RegisterMessage(ArithmeticError)
 
-DynamicReferenceError = _reflection.GeneratedProtocolMessageType('DynamicReferenceError', (_message.Message,), dict(
-  DESCRIPTOR = _DYNAMICREFERENCEERROR,
-  __module__ = 'vm_errors_pb2'
+DynamicReferenceError = _reflection.GeneratedProtocolMessageType('DynamicReferenceError', (_message.Message,), {
+  'DESCRIPTOR' : _DYNAMICREFERENCEERROR,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.DynamicReferenceError)
-  ))
+  })
 _sym_db.RegisterMessage(DynamicReferenceError)
 
-ExecutionStatus = _reflection.GeneratedProtocolMessageType('ExecutionStatus', (_message.Message,), dict(
-  DESCRIPTOR = _EXECUTIONSTATUS,
-  __module__ = 'vm_errors_pb2'
+ExecutionStatus = _reflection.GeneratedProtocolMessageType('ExecutionStatus', (_message.Message,), {
+  'DESCRIPTOR' : _EXECUTIONSTATUS,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.ExecutionStatus)
-  ))
+  })
 _sym_db.RegisterMessage(ExecutionStatus)
 
-VMStatus = _reflection.GeneratedProtocolMessageType('VMStatus', (_message.Message,), dict(
-  DESCRIPTOR = _VMSTATUS,
-  __module__ = 'vm_errors_pb2'
+VMStatus = _reflection.GeneratedProtocolMessageType('VMStatus', (_message.Message,), {
+  'DESCRIPTOR' : _VMSTATUS,
+  '__module__' : 'vm_errors_pb2'
   # @@protoc_insertion_point(class_scope:types.VMStatus)
-  ))
+  })
 _sym_db.RegisterMessage(VMStatus)
 
 

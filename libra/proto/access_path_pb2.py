@@ -66,11 +66,11 @@ _ACCESSPATH = _descriptor.Descriptor(
 DESCRIPTOR.message_types_by_name['AccessPath'] = _ACCESSPATH
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-AccessPath = _reflection.GeneratedProtocolMessageType('AccessPath', (_message.Message,), dict(
-  DESCRIPTOR = _ACCESSPATH,
-  __module__ = 'access_path_pb2'
+AccessPath = _reflection.GeneratedProtocolMessageType('AccessPath', (_message.Message,), {
+  'DESCRIPTOR' : _ACCESSPATH,
+  '__module__' : 'access_path_pb2'
   # @@protoc_insertion_point(class_scope:types.AccessPath)
-  ))
+  })
 _sym_db.RegisterMessage(AccessPath)
 
 

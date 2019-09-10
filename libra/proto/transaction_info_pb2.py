@@ -80,11 +80,11 @@ _TRANSACTIONINFO = _descriptor.Descriptor(
 DESCRIPTOR.message_types_by_name['TransactionInfo'] = _TRANSACTIONINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-TransactionInfo = _reflection.GeneratedProtocolMessageType('TransactionInfo', (_message.Message,), dict(
-  DESCRIPTOR = _TRANSACTIONINFO,
-  __module__ = 'transaction_info_pb2'
+TransactionInfo = _reflection.GeneratedProtocolMessageType('TransactionInfo', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSACTIONINFO,
+  '__module__' : 'transaction_info_pb2'
   # @@protoc_insertion_point(class_scope:types.TransactionInfo)
-  ))
+  })
 _sym_db.RegisterMessage(TransactionInfo)
 
 

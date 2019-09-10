@@ -71,11 +71,11 @@ _VALIDATORCHANGEEVENTWITHPROOF.fields_by_name['event_with_proof'].message_type =
 DESCRIPTOR.message_types_by_name['ValidatorChangeEventWithProof'] = _VALIDATORCHANGEEVENTWITHPROOF
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-ValidatorChangeEventWithProof = _reflection.GeneratedProtocolMessageType('ValidatorChangeEventWithProof', (_message.Message,), dict(
-  DESCRIPTOR = _VALIDATORCHANGEEVENTWITHPROOF,
-  __module__ = 'validator_change_pb2'
+ValidatorChangeEventWithProof = _reflection.GeneratedProtocolMessageType('ValidatorChangeEventWithProof', (_message.Message,), {
+  'DESCRIPTOR' : _VALIDATORCHANGEEVENTWITHPROOF,
+  '__module__' : 'validator_change_pb2'
   # @@protoc_insertion_point(class_scope:types.ValidatorChangeEventWithProof)
-  ))
+  })
 _sym_db.RegisterMessage(ValidatorChangeEventWithProof)
 
 

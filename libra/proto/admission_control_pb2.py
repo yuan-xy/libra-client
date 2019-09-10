@@ -167,18 +167,18 @@ DESCRIPTOR.message_types_by_name['SubmitTransactionResponse'] = _SUBMITTRANSACTI
 DESCRIPTOR.enum_types_by_name['AdmissionControlStatus'] = _ADMISSIONCONTROLSTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-SubmitTransactionRequest = _reflection.GeneratedProtocolMessageType('SubmitTransactionRequest', (_message.Message,), dict(
-  DESCRIPTOR = _SUBMITTRANSACTIONREQUEST,
-  __module__ = 'admission_control_pb2'
+SubmitTransactionRequest = _reflection.GeneratedProtocolMessageType('SubmitTransactionRequest', (_message.Message,), {
+  'DESCRIPTOR' : _SUBMITTRANSACTIONREQUEST,
+  '__module__' : 'admission_control_pb2'
   # @@protoc_insertion_point(class_scope:admission_control.SubmitTransactionRequest)
-  ))
+  })
 _sym_db.RegisterMessage(SubmitTransactionRequest)
 
-SubmitTransactionResponse = _reflection.GeneratedProtocolMessageType('SubmitTransactionResponse', (_message.Message,), dict(
-  DESCRIPTOR = _SUBMITTRANSACTIONRESPONSE,
-  __module__ = 'admission_control_pb2'
+SubmitTransactionResponse = _reflection.GeneratedProtocolMessageType('SubmitTransactionResponse', (_message.Message,), {
+  'DESCRIPTOR' : _SUBMITTRANSACTIONRESPONSE,
+  '__module__' : 'admission_control_pb2'
   # @@protoc_insertion_point(class_scope:admission_control.SubmitTransactionResponse)
-  ))
+  })
 _sym_db.RegisterMessage(SubmitTransactionResponse)
 
 

@@ -174,25 +174,25 @@ DESCRIPTOR.message_types_by_name['LedgerInfoWithSignatures'] = _LEDGERINFOWITHSI
 DESCRIPTOR.message_types_by_name['ValidatorSignature'] = _VALIDATORSIGNATURE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-LedgerInfo = _reflection.GeneratedProtocolMessageType('LedgerInfo', (_message.Message,), dict(
-  DESCRIPTOR = _LEDGERINFO,
-  __module__ = 'ledger_info_pb2'
+LedgerInfo = _reflection.GeneratedProtocolMessageType('LedgerInfo', (_message.Message,), {
+  'DESCRIPTOR' : _LEDGERINFO,
+  '__module__' : 'ledger_info_pb2'
   # @@protoc_insertion_point(class_scope:types.LedgerInfo)
-  ))
+  })
 _sym_db.RegisterMessage(LedgerInfo)
 
-LedgerInfoWithSignatures = _reflection.GeneratedProtocolMessageType('LedgerInfoWithSignatures', (_message.Message,), dict(
-  DESCRIPTOR = _LEDGERINFOWITHSIGNATURES,
-  __module__ = 'ledger_info_pb2'
+LedgerInfoWithSignatures = _reflection.GeneratedProtocolMessageType('LedgerInfoWithSignatures', (_message.Message,), {
+  'DESCRIPTOR' : _LEDGERINFOWITHSIGNATURES,
+  '__module__' : 'ledger_info_pb2'
   # @@protoc_insertion_point(class_scope:types.LedgerInfoWithSignatures)
-  ))
+  })
 _sym_db.RegisterMessage(LedgerInfoWithSignatures)
 
-ValidatorSignature = _reflection.GeneratedProtocolMessageType('ValidatorSignature', (_message.Message,), dict(
-  DESCRIPTOR = _VALIDATORSIGNATURE,
-  __module__ = 'ledger_info_pb2'
+ValidatorSignature = _reflection.GeneratedProtocolMessageType('ValidatorSignature', (_message.Message,), {
+  'DESCRIPTOR' : _VALIDATORSIGNATURE,
+  '__module__' : 'ledger_info_pb2'
   # @@protoc_insertion_point(class_scope:types.ValidatorSignature)
-  ))
+  })
 _sym_db.RegisterMessage(ValidatorSignature)
 
 
