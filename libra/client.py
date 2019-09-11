@@ -60,3 +60,15 @@ class Client:
 
     def get_transaction(self, start_version):
         return self.get_transactions(start_version)[0]
+
+    def get_account_transaction(self, address, sequence_number, fetch_events=False):
+        request = UpdateToLatestLedgerRequest()
+        item = request.requested_items.add()
+        item.get_account_transaction_by_sequence_number_request.account = bytes.fromhex(address)
+        item.get_account_transaction_by_sequence_number_request.sequence_number = sequence_number
+        item.get_account_transaction_by_sequence_number_request.fetch_events = fetch_events
+        resp = self.stub.UpdateToLatestLedger(request)
+        transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
+        return transaction.signed_transaction_with_proof.signed_transaction
+        #Types::SignedTransactionWithProof [:version, :signed_transaction, :proof, :events]
+
