@@ -43,7 +43,7 @@ class Client:
         state = self.get_account_state(address)
         return state.balance
 
-    def get_latest_transaction_version(self, address):
+    def get_latest_transaction_version(self):
         request = UpdateToLatestLedgerRequest()
         resp = self.stub.UpdateToLatestLedger(request)
         return resp.ledger_info_with_sigs.ledger_info.version
