@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='types',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0bproof.proto\x12\x05types\x1a\x16transaction_info.proto\"@\n\x10\x41\x63\x63umulatorProof\x12\x0e\n\x06\x62itmap\x18\x01 \x01(\x04\x12\x1c\n\x14non_default_siblings\x18\x02 \x03(\x0c\"O\n\x11SparseMerkleProof\x12\x0c\n\x04leaf\x18\x01 \x01(\x0c\x12\x0e\n\x06\x62itmap\x18\x02 \x01(\x0c\x12\x1c\n\x14non_default_siblings\x18\x03 \x03(\x0c\"\x92\x01\n\x16SignedTransactionProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\"\xd2\x01\n\x11\x41\x63\x63ountStateProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\x12\x43\n!transaction_info_to_account_proof\x18\x03 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\xc8\x01\n\nEventProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\x12@\n\x1ftransaction_info_to_event_proof\x18\x03 \x01(\x0b\x32\x17.types.AccumulatorProofb\x06proto3')
+  serialized_pb=_b('\n\x0bproof.proto\x12\x05types\x1a\x16transaction_info.proto\"@\n\x10\x41\x63\x63umulatorProof\x12\x0e\n\x06\x62itmap\x18\x01 \x01(\x04\x12\x1c\n\x14non_default_siblings\x18\x02 \x03(\x0c\"O\n\x11SparseMerkleProof\x12\x0c\n\x04leaf\x18\x01 \x01(\x0c\x12\x0e\n\x06\x62itmap\x18\x02 \x01(\x0c\x12\x1c\n\x14non_default_siblings\x18\x03 \x03(\x0c\"o\n\x1b\x41\x63\x63umulatorConsistencyProof\x12\x1c\n\x14\x66rozen_subtree_roots\x18\x01 \x03(\x0c\x12\x14\n\x0cnum_siblings\x18\x02 \x01(\r\x12\x1c\n\x14non_default_siblings\x18\x03 \x03(\x0c\"\x92\x01\n\x16SignedTransactionProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\"\xd2\x01\n\x11\x41\x63\x63ountStateProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\x12\x43\n!transaction_info_to_account_proof\x18\x03 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\xc8\x01\n\nEventProof\x12\x46\n%ledger_info_to_transaction_info_proof\x18\x01 \x01(\x0b\x32\x17.types.AccumulatorProof\x12\x30\n\x10transaction_info\x18\x02 \x01(\x0b\x32\x16.types.TransactionInfo\x12@\n\x1ftransaction_info_to_event_proof\x18\x03 \x01(\x0b\x32\x17.types.AccumulatorProofb\x06proto3')
   ,
   dependencies=[transaction__info__pb2.DESCRIPTOR,])
 
@@ -111,6 +111,51 @@ _SPARSEMERKLEPROOF = _descriptor.Descriptor(
 )
 
 
+_ACCUMULATORCONSISTENCYPROOF = _descriptor.Descriptor(
+  name='AccumulatorConsistencyProof',
+  full_name='types.AccumulatorConsistencyProof',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='frozen_subtree_roots', full_name='types.AccumulatorConsistencyProof.frozen_subtree_roots', index=0,
+      number=1, type=12, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='num_siblings', full_name='types.AccumulatorConsistencyProof.num_siblings', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='non_default_siblings', full_name='types.AccumulatorConsistencyProof.non_default_siblings', index=2,
+      number=3, type=12, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=193,
+  serialized_end=304,
+)
+
+
 _SIGNEDTRANSACTIONPROOF = _descriptor.Descriptor(
   name='SignedTransactionProof',
   full_name='types.SignedTransactionProof',
@@ -144,8 +189,8 @@ _SIGNEDTRANSACTIONPROOF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=194,
-  serialized_end=340,
+  serialized_start=307,
+  serialized_end=453,
 )
 
 
@@ -189,8 +234,8 @@ _ACCOUNTSTATEPROOF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=343,
-  serialized_end=553,
+  serialized_start=456,
+  serialized_end=666,
 )
 
 
@@ -234,8 +279,8 @@ _EVENTPROOF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=556,
-  serialized_end=756,
+  serialized_start=669,
+  serialized_end=869,
 )
 
 _SIGNEDTRANSACTIONPROOF.fields_by_name['ledger_info_to_transaction_info_proof'].message_type = _ACCUMULATORPROOF
@@ -248,6 +293,7 @@ _EVENTPROOF.fields_by_name['transaction_info'].message_type = transaction__info_
 _EVENTPROOF.fields_by_name['transaction_info_to_event_proof'].message_type = _ACCUMULATORPROOF
 DESCRIPTOR.message_types_by_name['AccumulatorProof'] = _ACCUMULATORPROOF
 DESCRIPTOR.message_types_by_name['SparseMerkleProof'] = _SPARSEMERKLEPROOF
+DESCRIPTOR.message_types_by_name['AccumulatorConsistencyProof'] = _ACCUMULATORCONSISTENCYPROOF
 DESCRIPTOR.message_types_by_name['SignedTransactionProof'] = _SIGNEDTRANSACTIONPROOF
 DESCRIPTOR.message_types_by_name['AccountStateProof'] = _ACCOUNTSTATEPROOF
 DESCRIPTOR.message_types_by_name['EventProof'] = _EVENTPROOF
@@ -266,6 +312,13 @@ SparseMerkleProof = _reflection.GeneratedProtocolMessageType('SparseMerkleProof'
   # @@protoc_insertion_point(class_scope:types.SparseMerkleProof)
   })
 _sym_db.RegisterMessage(SparseMerkleProof)
+
+AccumulatorConsistencyProof = _reflection.GeneratedProtocolMessageType('AccumulatorConsistencyProof', (_message.Message,), {
+  'DESCRIPTOR' : _ACCUMULATORCONSISTENCYPROOF,
+  '__module__' : 'proof_pb2'
+  # @@protoc_insertion_point(class_scope:types.AccumulatorConsistencyProof)
+  })
+_sym_db.RegisterMessage(AccumulatorConsistencyProof)
 
 SignedTransactionProof = _reflection.GeneratedProtocolMessageType('SignedTransactionProof', (_message.Message,), {
   'DESCRIPTOR' : _SIGNEDTRANSACTIONPROOF,
