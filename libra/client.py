@@ -48,4 +48,15 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request)
         return resp.ledger_info_with_sigs.ledger_info.version
 
-    # def get_transaction(self, address)
+    def get_transactions(self, start_version, limit=1, fetch_events=False):
+        request = UpdateToLatestLedgerRequest()
+        item = request.requested_items.add()
+        item.get_transactions_request.start_version = start_version
+        item.get_transactions_request.limit = limit
+        item.get_transactions_request.fetch_events = fetch_events
+        resp = self.stub.UpdateToLatestLedger(request)
+        txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        return txnp.transactions
+
+    def get_transaction(self, start_version):
+        return self.get_transactions(start_version)[0]
