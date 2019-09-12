@@ -15,11 +15,9 @@ _sym_db = _symbol_database.Default()
 
 
 import get_with_proof_pb2 as get__with__proof__pb2
-import transaction_pb2 as transaction__pb2
-import proof_pb2 as proof__pb2
-import ledger_info_pb2 as ledger__info__pb2
-import vm_errors_pb2 as vm__errors__pb2
 import mempool_status_pb2 as mempool__status__pb2
+import transaction_pb2 as transaction__pb2
+import vm_errors_pb2 as vm__errors__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -27,13 +25,13 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='admission_control',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x17\x61\x64mission_control.proto\x12\x11\x61\x64mission_control\x1a\x14get_with_proof.proto\x1a\x11transaction.proto\x1a\x0bproof.proto\x1a\x11ledger_info.proto\x1a\x0fvm_errors.proto\x1a\x14mempool_status.proto\"H\n\x18SubmitTransactionRequest\x12,\n\nsigned_txn\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\"\xe1\x01\n\x19SubmitTransactionResponse\x12$\n\tvm_status\x18\x01 \x01(\x0b\x32\x0f.types.VMStatusH\x00\x12>\n\tac_status\x18\x02 \x01(\x0e\x32).admission_control.AdmissionControlStatusH\x00\x12>\n\x0emempool_status\x18\x03 \x01(\x0e\x32$.mempool.MempoolAddTransactionStatusH\x00\x12\x14\n\x0cvalidator_id\x18\x04 \x01(\x0c\x42\x08\n\x06status*E\n\x16\x41\x64missionControlStatus\x12\x0c\n\x08\x41\x63\x63\x65pted\x10\x00\x12\x0f\n\x0b\x42lacklisted\x10\x01\x12\x0c\n\x08Rejected\x10\x02\x32\xe7\x01\n\x10\x41\x64missionControl\x12p\n\x11SubmitTransaction\x12+.admission_control.SubmitTransactionRequest\x1a,.admission_control.SubmitTransactionResponse\"\x00\x12\x61\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x17\x61\x64mission_control.proto\x12\x11\x61\x64mission_control\x1a\x14get_with_proof.proto\x1a\x14mempool_status.proto\x1a\x11transaction.proto\x1a\x0fvm_errors.proto\"H\n\x18SubmitTransactionRequest\x12,\n\nsigned_txn\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\"f\n\x16\x41\x64missionControlStatus\x12;\n\x04\x63ode\x18\x01 \x01(\x0e\x32-.admission_control.AdmissionControlStatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xe1\x01\n\x19SubmitTransactionResponse\x12$\n\tvm_status\x18\x01 \x01(\x0b\x32\x0f.types.VMStatusH\x00\x12>\n\tac_status\x18\x02 \x01(\x0b\x32).admission_control.AdmissionControlStatusH\x00\x12>\n\x0emempool_status\x18\x03 \x01(\x0b\x32$.mempool.MempoolAddTransactionStatusH\x00\x12\x14\n\x0cvalidator_id\x18\x04 \x01(\x0c\x42\x08\n\x06status*I\n\x1a\x41\x64missionControlStatusCode\x12\x0c\n\x08\x41\x63\x63\x65pted\x10\x00\x12\x0f\n\x0b\x42lacklisted\x10\x01\x12\x0c\n\x08Rejected\x10\x02\x32\xe7\x01\n\x10\x41\x64missionControl\x12p\n\x11SubmitTransaction\x12+.admission_control.SubmitTransactionRequest\x1a,.admission_control.SubmitTransactionResponse\"\x00\x12\x61\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\"\x00\x62\x06proto3')
   ,
-  dependencies=[get__with__proof__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,proof__pb2.DESCRIPTOR,ledger__info__pb2.DESCRIPTOR,vm__errors__pb2.DESCRIPTOR,mempool__status__pb2.DESCRIPTOR,])
+  dependencies=[get__with__proof__pb2.DESCRIPTOR,mempool__status__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,vm__errors__pb2.DESCRIPTOR,])
 
-_ADMISSIONCONTROLSTATUS = _descriptor.EnumDescriptor(
-  name='AdmissionControlStatus',
-  full_name='admission_control.AdmissionControlStatus',
+_ADMISSIONCONTROLSTATUSCODE = _descriptor.EnumDescriptor(
+  name='AdmissionControlStatusCode',
+  full_name='admission_control.AdmissionControlStatusCode',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -52,12 +50,12 @@ _ADMISSIONCONTROLSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=460,
-  serialized_end=529,
+  serialized_start=532,
+  serialized_end=605,
 )
-_sym_db.RegisterEnumDescriptor(_ADMISSIONCONTROLSTATUS)
+_sym_db.RegisterEnumDescriptor(_ADMISSIONCONTROLSTATUSCODE)
 
-AdmissionControlStatus = enum_type_wrapper.EnumTypeWrapper(_ADMISSIONCONTROLSTATUS)
+AdmissionControlStatusCode = enum_type_wrapper.EnumTypeWrapper(_ADMISSIONCONTROLSTATUSCODE)
 Accepted = 0
 Blacklisted = 1
 Rejected = 2
@@ -90,8 +88,46 @@ _SUBMITTRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=158,
-  serialized_end=230,
+  serialized_start=126,
+  serialized_end=198,
+)
+
+
+_ADMISSIONCONTROLSTATUS = _descriptor.Descriptor(
+  name='AdmissionControlStatus',
+  full_name='admission_control.AdmissionControlStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='code', full_name='admission_control.AdmissionControlStatus.code', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='message', full_name='admission_control.AdmissionControlStatus.message', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=200,
+  serialized_end=302,
 )
 
 
@@ -111,15 +147,15 @@ _SUBMITTRANSACTIONRESPONSE = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='ac_status', full_name='admission_control.SubmitTransactionResponse.ac_status', index=1,
-      number=2, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='mempool_status', full_name='admission_control.SubmitTransactionResponse.mempool_status', index=2,
-      number=3, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -145,14 +181,15 @@ _SUBMITTRANSACTIONRESPONSE = _descriptor.Descriptor(
       name='status', full_name='admission_control.SubmitTransactionResponse.status',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=233,
-  serialized_end=458,
+  serialized_start=305,
+  serialized_end=530,
 )
 
 _SUBMITTRANSACTIONREQUEST.fields_by_name['signed_txn'].message_type = transaction__pb2._SIGNEDTRANSACTION
+_ADMISSIONCONTROLSTATUS.fields_by_name['code'].enum_type = _ADMISSIONCONTROLSTATUSCODE
 _SUBMITTRANSACTIONRESPONSE.fields_by_name['vm_status'].message_type = vm__errors__pb2._VMSTATUS
-_SUBMITTRANSACTIONRESPONSE.fields_by_name['ac_status'].enum_type = _ADMISSIONCONTROLSTATUS
-_SUBMITTRANSACTIONRESPONSE.fields_by_name['mempool_status'].enum_type = mempool__status__pb2._MEMPOOLADDTRANSACTIONSTATUS
+_SUBMITTRANSACTIONRESPONSE.fields_by_name['ac_status'].message_type = _ADMISSIONCONTROLSTATUS
+_SUBMITTRANSACTIONRESPONSE.fields_by_name['mempool_status'].message_type = mempool__status__pb2._MEMPOOLADDTRANSACTIONSTATUS
 _SUBMITTRANSACTIONRESPONSE.oneofs_by_name['status'].fields.append(
   _SUBMITTRANSACTIONRESPONSE.fields_by_name['vm_status'])
 _SUBMITTRANSACTIONRESPONSE.fields_by_name['vm_status'].containing_oneof = _SUBMITTRANSACTIONRESPONSE.oneofs_by_name['status']
@@ -163,8 +200,9 @@ _SUBMITTRANSACTIONRESPONSE.oneofs_by_name['status'].fields.append(
   _SUBMITTRANSACTIONRESPONSE.fields_by_name['mempool_status'])
 _SUBMITTRANSACTIONRESPONSE.fields_by_name['mempool_status'].containing_oneof = _SUBMITTRANSACTIONRESPONSE.oneofs_by_name['status']
 DESCRIPTOR.message_types_by_name['SubmitTransactionRequest'] = _SUBMITTRANSACTIONREQUEST
+DESCRIPTOR.message_types_by_name['AdmissionControlStatus'] = _ADMISSIONCONTROLSTATUS
 DESCRIPTOR.message_types_by_name['SubmitTransactionResponse'] = _SUBMITTRANSACTIONRESPONSE
-DESCRIPTOR.enum_types_by_name['AdmissionControlStatus'] = _ADMISSIONCONTROLSTATUS
+DESCRIPTOR.enum_types_by_name['AdmissionControlStatusCode'] = _ADMISSIONCONTROLSTATUSCODE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 SubmitTransactionRequest = _reflection.GeneratedProtocolMessageType('SubmitTransactionRequest', (_message.Message,), {
@@ -173,6 +211,13 @@ SubmitTransactionRequest = _reflection.GeneratedProtocolMessageType('SubmitTrans
   # @@protoc_insertion_point(class_scope:admission_control.SubmitTransactionRequest)
   })
 _sym_db.RegisterMessage(SubmitTransactionRequest)
+
+AdmissionControlStatus = _reflection.GeneratedProtocolMessageType('AdmissionControlStatus', (_message.Message,), {
+  'DESCRIPTOR' : _ADMISSIONCONTROLSTATUS,
+  '__module__' : 'admission_control_pb2'
+  # @@protoc_insertion_point(class_scope:admission_control.AdmissionControlStatus)
+  })
+_sym_db.RegisterMessage(AdmissionControlStatus)
 
 SubmitTransactionResponse = _reflection.GeneratedProtocolMessageType('SubmitTransactionResponse', (_message.Message,), {
   'DESCRIPTOR' : _SUBMITTRANSACTIONRESPONSE,
@@ -189,8 +234,8 @@ _ADMISSIONCONTROL = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=532,
-  serialized_end=763,
+  serialized_start=608,
+  serialized_end=839,
   methods=[
   _descriptor.MethodDescriptor(
     name='SubmitTransaction',

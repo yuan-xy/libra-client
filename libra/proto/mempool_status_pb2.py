@@ -21,12 +21,12 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mempool',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x14mempool_status.proto\x12\x07mempool*\x96\x01\n\x1bMempoolAddTransactionStatus\x12\t\n\x05Valid\x10\x00\x12\x17\n\x13InsufficientBalance\x10\x01\x12\x14\n\x10InvalidSeqNumber\x10\x02\x12\x11\n\rMempoolIsFull\x10\x03\x12\x17\n\x13TooManyTransactions\x10\x04\x12\x11\n\rInvalidUpdate\x10\x05\x62\x06proto3')
+  serialized_pb=_b('\n\x14mempool_status.proto\x12\x07mempool\"f\n\x1bMempoolAddTransactionStatus\x12\x36\n\x04\x63ode\x18\x01 \x01(\x0e\x32(.mempool.MempoolAddTransactionStatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t*\x9a\x01\n\x1fMempoolAddTransactionStatusCode\x12\t\n\x05Valid\x10\x00\x12\x17\n\x13InsufficientBalance\x10\x01\x12\x14\n\x10InvalidSeqNumber\x10\x02\x12\x11\n\rMempoolIsFull\x10\x03\x12\x17\n\x13TooManyTransactions\x10\x04\x12\x11\n\rInvalidUpdate\x10\x05\x62\x06proto3')
 )
 
-_MEMPOOLADDTRANSACTIONSTATUS = _descriptor.EnumDescriptor(
-  name='MempoolAddTransactionStatus',
-  full_name='mempool.MempoolAddTransactionStatus',
+_MEMPOOLADDTRANSACTIONSTATUSCODE = _descriptor.EnumDescriptor(
+  name='MempoolAddTransactionStatusCode',
+  full_name='mempool.MempoolAddTransactionStatusCode',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -57,12 +57,12 @@ _MEMPOOLADDTRANSACTIONSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=34,
-  serialized_end=184,
+  serialized_start=138,
+  serialized_end=292,
 )
-_sym_db.RegisterEnumDescriptor(_MEMPOOLADDTRANSACTIONSTATUS)
+_sym_db.RegisterEnumDescriptor(_MEMPOOLADDTRANSACTIONSTATUSCODE)
 
-MempoolAddTransactionStatus = enum_type_wrapper.EnumTypeWrapper(_MEMPOOLADDTRANSACTIONSTATUS)
+MempoolAddTransactionStatusCode = enum_type_wrapper.EnumTypeWrapper(_MEMPOOLADDTRANSACTIONSTATUSCODE)
 Valid = 0
 InsufficientBalance = 1
 InvalidSeqNumber = 2
@@ -71,8 +71,55 @@ TooManyTransactions = 4
 InvalidUpdate = 5
 
 
-DESCRIPTOR.enum_types_by_name['MempoolAddTransactionStatus'] = _MEMPOOLADDTRANSACTIONSTATUS
+
+_MEMPOOLADDTRANSACTIONSTATUS = _descriptor.Descriptor(
+  name='MempoolAddTransactionStatus',
+  full_name='mempool.MempoolAddTransactionStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='code', full_name='mempool.MempoolAddTransactionStatus.code', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='message', full_name='mempool.MempoolAddTransactionStatus.message', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=33,
+  serialized_end=135,
+)
+
+_MEMPOOLADDTRANSACTIONSTATUS.fields_by_name['code'].enum_type = _MEMPOOLADDTRANSACTIONSTATUSCODE
+DESCRIPTOR.message_types_by_name['MempoolAddTransactionStatus'] = _MEMPOOLADDTRANSACTIONSTATUS
+DESCRIPTOR.enum_types_by_name['MempoolAddTransactionStatusCode'] = _MEMPOOLADDTRANSACTIONSTATUSCODE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+MempoolAddTransactionStatus = _reflection.GeneratedProtocolMessageType('MempoolAddTransactionStatus', (_message.Message,), {
+  'DESCRIPTOR' : _MEMPOOLADDTRANSACTIONSTATUS,
+  '__module__' : 'mempool_status_pb2'
+  # @@protoc_insertion_point(class_scope:mempool.MempoolAddTransactionStatus)
+  })
+_sym_db.RegisterMessage(MempoolAddTransactionStatus)
 
 
 # @@protoc_insertion_point(module_scope)
