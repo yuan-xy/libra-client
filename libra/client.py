@@ -1,5 +1,7 @@
 from grpc import insecure_channel
 import struct
+import requests
+import time
 import pdb
 
 from libra.account_resource import AccountState, AccountResource
@@ -20,9 +22,10 @@ NETWORKS = {
 
 
 class Client:
-    def __init__(self, network):
-        self.channel = insecure_channel(NETWORKS['testnet']['host'])
+    def __init__(self, network="testnet"):
+        self.channel = insecure_channel(NETWORKS[network]['host'])
         self.stub = AdmissionControlStub(self.channel)
+        self.faucet_host = NETWORKS[network]['faucet_host']
 
     def get_account_state(self, address):
         request = UpdateToLatestLedgerRequest()
@@ -69,7 +72,7 @@ class Client:
         item.get_account_transaction_by_sequence_number_request.fetch_events = fetch_events
         resp = self.stub.UpdateToLatestLedger(request)
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
-        return transaction.signed_transaction_with_proof.signed_transaction
+        return transaction.signed_transaction_with_proof
         #Types::SignedTransactionWithProof [:version, :signed_transaction, :proof, :events]
 
 
@@ -103,3 +106,33 @@ class Client:
 
     def get_latest_events_received(self, address, limit=1):
         return self.get_events_received(address, 2**64-1, False, limit)
+
+
+    def mint_coins_with_faucet_service(self, receiver, num_coins, is_blocking=False):
+        url = "http://{}?amount={}&address={}".format(self.faucet_host, num_coins, receiver)
+        resp = requests.post(url)
+        if resp.status_code != 200:
+            raise IOError(
+                "Failed to send request to faucent service: {}".format(self.faucet_host)
+            )
+        sequence_number = int(resp.text)
+        if is_blocking:
+            self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
+        return sequence_number
+
+    def wait_for_transaction(self, address, sequence_number):
+        max_iterations = 500
+        print("waiting \n")
+        while max_iterations > 0:
+            #$stdout.flush
+            max_iterations -= 1
+            transaction = self.get_account_transaction(address, sequence_number - 1, True)
+            if transaction != None and transaction.events != None:
+                print("transaction is stored!")
+                if len(transaction.events.events) == 0:
+                    print("no events emitted")
+                return
+            else:
+                print(".")
+                time.sleep(0.01)
+        print("wait_for_transaction timeout.\n")
