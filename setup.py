@@ -16,6 +16,7 @@ setuptools.setup(
     install_requires=[
         'canoser==0.1.1',
         'grpcio',
+        'PyNaCl',
         'mnemonic'
     ],
     classifiers=[
