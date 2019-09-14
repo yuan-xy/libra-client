@@ -2,10 +2,12 @@ from grpc import insecure_channel
 import struct
 import requests
 import time
+import hashlib
 import pdb
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
+from libra.transaction import Transaction
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -28,9 +30,11 @@ class Client:
         self.faucet_host = NETWORKS[network]['faucet_host']
 
     def get_account_state(self, address):
+        if isinstance(address, str):
+            address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
-        item.get_account_state_request.address = bytes.fromhex(address)
+        item.get_account_state_request.address = address
         resp = self.stub.UpdateToLatestLedger(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
         amap = AccountState.deserialize(blob.blob).blob
@@ -65,9 +69,11 @@ class Client:
         return self.get_transactions(start_version)[0]
 
     def get_account_transaction(self, address, sequence_number, fetch_events=False):
+        if isinstance(address, str):
+            address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
-        item.get_account_transaction_by_sequence_number_request.account = bytes.fromhex(address)
+        item.get_account_transaction_by_sequence_number_request.account = address
         item.get_account_transaction_by_sequence_number_request.sequence_number = sequence_number
         item.get_account_transaction_by_sequence_number_request.fetch_events = fetch_events
         resp = self.stub.UpdateToLatestLedger(request)
@@ -81,9 +87,11 @@ class Client:
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
+        if isinstance(address, str):
+            address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
-        item.get_events_by_event_access_path_request.access_path.address = bytes.fromhex(address)
+        item.get_events_by_event_access_path_request.access_path.address = address
         item.get_events_by_event_access_path_request.access_path.path = path
         item.get_events_by_event_access_path_request.start_event_seq_num = start_sequence_number
         item.get_events_by_event_access_path_request.ascending = ascending
@@ -122,17 +130,45 @@ class Client:
 
     def wait_for_transaction(self, address, sequence_number):
         max_iterations = 500
-        print("waiting \n")
+        print("waiting", flush=True)
         while max_iterations > 0:
-            #$stdout.flush
+            time.sleep(0.1)
             max_iterations -= 1
-            transaction = self.get_account_transaction(address, sequence_number - 1, True)
-            if transaction != None and transaction.events != None:
+            transaction = self.get_account_transaction(address, sequence_number, True)
+            if len(transaction.events.events) > 0:
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:
                     print("no events emitted")
                 return
             else:
-                print(".")
-                time.sleep(0.01)
+                print(".", end='', flush=True)
         print("wait_for_transaction timeout.\n")
+
+    def transfer_coin(self, sender, recevier, amount, is_blocking=False):
+        t = Transaction.gen_transfer_transaction(recevier, amount)
+        sequence_number = self.get_sequence_number(sender.address)
+        raw_tx = t.to_raw_tx_proto(sender, sequence_number)
+        #pdb.set_trace()
+        raw_txn_bytes = raw_tx.SerializeToString()
+        def raw_tx_hash_seed():
+            sha3 = hashlib.sha3_256()
+            RAW_TRANSACTION_HASHER = b"RawTransaction"
+            LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
+            sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
+            return sha3.digest()
+        salt = raw_tx_hash_seed()
+        shazer = hashlib.sha3_256()
+        shazer.update(salt)
+        shazer.update(raw_txn_bytes)
+        raw_hash = shazer.digest()
+        signature = sender.sign(raw_hash)[:64];
+        request = SubmitTransactionRequest()
+        signed_txn = request.signed_txn
+        signed_txn.sender_public_key = sender.public_key
+        signed_txn.raw_txn_bytes = raw_txn_bytes
+        signed_txn.sender_signature = signature
+        resp = self.stub.SubmitTransaction(request)
+        if is_blocking:
+            self.wait_for_transaction(sender.address, sequence_number)
+        return resp
+
