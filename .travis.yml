@@ -1,0 +1,22 @@
+language: python
+
+# Runs jobs on container based infrastructure
+sudo: false
+
+# Saves pip downloads/wheels between builds
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+python:
+    - "3.6"
+    - "3.7"
+
+install:
+    # Optimisation: build requirements as wheels, which get cached by Travis
+    - pip install "pip>=7.0" wheel
+    - pip install pytest
+
+script:
+    - python setup.py install
+    - python -m pytest
