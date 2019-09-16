@@ -32,7 +32,7 @@ def test_get_account_transaction():
     assert len(txn.signed_transaction.raw_txn_bytes) > 0
 
 def test_mint():
-    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
+    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e20"
     c = libra.Client("testnet")
     balance = c.get_balance(address)
     c.mint_coins_with_faucet_service(address, 12345, True)
