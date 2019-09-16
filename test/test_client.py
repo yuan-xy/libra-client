@@ -1,4 +1,5 @@
 import libra
+import pytest
 import pdb
 
 def test_events():
@@ -24,6 +25,12 @@ def test_get_balance():
     balance = c.get_balance(address)
     assert balance > 0
 
+def test_account_not_exsits():
+    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
+    c = libra.Client("testnet")
+    with pytest.raises(libra.client.AccountError):
+        balance = c.get_balance(address)
+
 def test_get_account_transaction():
     address = libra.AccountConfig.association_address()
     c = libra.Client("testnet")
@@ -34,7 +41,10 @@ def test_get_account_transaction():
 def test_mint():
     address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e20"
     c = libra.Client("testnet")
-    balance = c.get_balance(address)
+    try:
+        balance = c.get_balance(address)
+    except libra.client.AccountError:
+        balance = 0
     c.mint_coins_with_faucet_service(address, 12345, True)
     balance2 = c.get_balance(address)
     assert balance + 12345 == balance2

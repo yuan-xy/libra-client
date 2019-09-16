@@ -22,6 +22,9 @@ NETWORKS = {
     }
 }
 
+class AccountError(Exception):
+    pass
+
 
 class Client:
     def __init__(self, network="testnet"):
@@ -37,6 +40,8 @@ class Client:
         item.get_account_state_request.address = address
         resp = self.stub.UpdateToLatestLedger(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
+        if len(blob.__str__()) == 0:
+            raise AccountError("Account state blob is empty.")
         amap = AccountState.deserialize(blob.blob).blob
         resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
         bstr = struct.pack("<{}B".format(len(resource)),*resource)
