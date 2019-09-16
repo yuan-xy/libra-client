@@ -59,7 +59,7 @@ def test_transfer_coin():
     balance0 = c.get_balance(a0.address)
     balance1 = c.get_balance(a1.address)
     ret = c.transfer_coin(a0, a1, 1234, True)
+    assert ret.ac_status.code == libra.proto.admission_control_pb2.AdmissionControlStatusCode.Accepted
     assert c.get_balance(a0.address) == balance0 - 1234
     assert c.get_balance(a1.address) == balance1 + 1234
-    assert ret != None
 

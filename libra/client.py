@@ -9,7 +9,7 @@ from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import Transaction
 
-from libra.proto.admission_control_pb2 import SubmitTransactionRequest
+from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 from libra.proto.transaction_pb2 import SignedTransaction, TransactionArgument
@@ -23,6 +23,9 @@ NETWORKS = {
 }
 
 class AccountError(Exception):
+    pass
+
+class TransactionError(Exception):
     pass
 
 
@@ -134,10 +137,10 @@ class Client:
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number):
-        max_iterations = 500
+        max_iterations = 50
         print("waiting", flush=True)
         while max_iterations > 0:
-            time.sleep(0.1)
+            time.sleep(1)
             max_iterations -= 1
             transaction = self.get_account_transaction(address, sequence_number, True)
             if len(transaction.events.events) > 0:
@@ -172,8 +175,27 @@ class Client:
         signed_txn.sender_public_key = sender.public_key
         signed_txn.raw_txn_bytes = raw_txn_bytes
         signed_txn.sender_signature = signature
-        resp = self.stub.SubmitTransaction(request)
+        return self.submit_transaction(request, sender.address, sequence_number, is_blocking)
+
+    def submit_transaction(self, request, address, sequence_number, is_blocking):
+        resp = self.submit_transaction_non_block(request)
         if is_blocking:
-            self.wait_for_transaction(sender.address, sequence_number)
+            self.wait_for_transaction(address, sequence_number)
         return resp
 
+
+    def submit_transaction_non_block(self, request):
+        resp = self.stub.SubmitTransaction(request)
+        status = resp.WhichOneof('status')
+        if status == 'ac_status':
+            if resp.ac_status.code == AdmissionControlStatusCode.Accepted:
+                return resp
+            else:
+                raise TransactionError(f"Status code: {resp.ac_status.code}")
+        elif status == 'vm_status':
+            raise TransactionError(resp.vm_status.__str__())
+        elif status == 'mempool_status':
+            raise TransactionError(resp.mempool_status.__str__())
+        else:
+            raise TransactionError(f"Unknown Error: {resp}")
+        raise AssertionError("unreacheable")
