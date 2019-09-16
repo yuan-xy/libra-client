@@ -143,7 +143,7 @@ class Client:
             time.sleep(1)
             max_iterations -= 1
             transaction = self.get_account_transaction(address, sequence_number, True)
-            if len(transaction.events.events) > 0:
+            if transaction.HasField("events"):
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:
                     print("no events emitted")
