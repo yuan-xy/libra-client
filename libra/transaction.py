@@ -40,13 +40,13 @@ class Transaction:
 
     @classmethod
     def gen_transfer_transaction(cls, receiver, value):
-        code = get_script_bytecode("transaction_scripts/peer_to_peer_transfer.bytecode")
+        code = cls.get_script_bytecode("transaction_scripts/peer_to_peer_transfer.bytecode")
         tran = cls(code, ["address", "u64"], [receiver, value])
         return tran
 
     @classmethod
     def gen_mint_transaction(cls, receiver, value):
-        code = get_script_bytecode("transaction_scripts/mint.bytecode")
+        code = cls.get_script_bytecode("transaction_scripts/mint.bytecode")
         tran = cls(code, ["address", "u64"], [receiver, value])
         return tran
 
