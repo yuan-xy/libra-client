@@ -44,6 +44,12 @@ class Transaction:
         tran = cls(code, ["address", "u64"], [receiver, value])
         return tran
 
+    @classmethod
+    def gen_mint_transaction(cls, receiver, value):
+        code = get_script_bytecode("transaction_scripts/mint.bytecode")
+        tran = cls(code, ["address", "u64"], [receiver, value])
+        return tran
+
     @staticmethod
     def get_script_bytecode(script_file):
         with open(script_file) as f:
