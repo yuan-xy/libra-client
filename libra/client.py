@@ -158,10 +158,10 @@ class Client:
                 print(".", end='', flush=True)
         print("wait_for_transaction timeout.\n")
 
-    def transfer_coin(self, sender, recevier, amount, is_blocking=False):
-        t = Transaction.gen_transfer_transaction(recevier, amount)
-        sequence_number = self.get_sequence_number(sender.address)
-        raw_tx = t.to_raw_tx_proto(sender, sequence_number)
+    def transfer_coin(self, sender_account, recevier_address, micro_libra, is_blocking=False):
+        t = Transaction.gen_transfer_transaction(recevier_address, micro_libra)
+        sequence_number = self.get_sequence_number(sender_account.address)
+        raw_tx = t.to_raw_tx_proto(sender_account, sequence_number)
         #pdb.set_trace()
         raw_txn_bytes = raw_tx.SerializeToString()
         def raw_tx_hash_seed():
@@ -175,13 +175,13 @@ class Client:
         shazer.update(salt)
         shazer.update(raw_txn_bytes)
         raw_hash = shazer.digest()
-        signature = sender.sign(raw_hash)[:64];
+        signature = sender_account.sign(raw_hash)[:64];
         request = SubmitTransactionRequest()
         signed_txn = request.signed_txn
-        signed_txn.sender_public_key = sender.public_key
+        signed_txn.sender_public_key = sender_account.public_key
         signed_txn.raw_txn_bytes = raw_txn_bytes
         signed_txn.sender_signature = signature
-        return self.submit_transaction(request, sender.address, sequence_number, is_blocking)
+        return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
 
     def submit_transaction(self, request, address, sequence_number, is_blocking):
         resp = self.submit_transaction_non_block(request)

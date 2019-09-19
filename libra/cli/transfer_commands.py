@@ -1,4 +1,4 @@
-from command import Command, blocking_cmd
+from command import *
 
 
 class TransferCommand(Command):
@@ -24,18 +24,22 @@ class TransferCommand(Command):
                 )
             )
             return
-        print(">> Transferring")
-        is_blocking = blocking_cmd(params[0])
-        index_and_seq = client.transfer_coins(params, is_blocking)
-        if is_blocking:
-            print("Finished transaction!")
-        else:
-            print("Transaction submitted to validator")
-        print(
-            "To query for transaction status, run: query txn_acc_seq {} {} \
-            <fetch_events=true|false>".format(
-            index_and_seq.account_index, index_and_seq.sequence_number
+        try:
+            #TODO: gas support
+            print(">> Transferring")
+            is_blocking = blocking_cmd(params[0])
+            index, sequence_number = client.transfer_coins(
+                params[1], params[2], params[3], is_blocking)
+            if is_blocking:
+                print("Finished transaction!")
+            else:
+                print("Transaction submitted to validator")
+            print(
+                "To query for transaction status, run: query txn_acc_seq {} {} \
+                <fetch_events=true|false>".format(
+                index, sequence_number
+                )
             )
-        )
-        #report_error("Failed to perform transaction", e)
+        except Exception as err:
+            report_error("Failed to perform transaction", err)
 

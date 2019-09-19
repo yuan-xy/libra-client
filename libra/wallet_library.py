@@ -17,6 +17,12 @@ class WalletLibrary:
         if child_count > 0:
             self._recover_accounts()
 
+    def find_account_by_address_hex(self, address):
+        for index, account in enumerate(self.accounts):
+            if account.address.hex() == address:
+                return (index, account)
+        return (None, None)
+
     def _recover_accounts(self):
         for idx in range(self.child_count):
             self._add_account(idx)

@@ -49,7 +49,10 @@ class ClientProxy:
             return address
         else:
             idx = int(address_or_refid)
-            return self.accounts[idx].address.hex()
+            if idx >=0 and idx < self.wallet.child_count:
+                return self.accounts[idx].address.hex()
+            else:
+                raise IOError(f"account index {idx} out of range:{self.wallet.child_count}")
 
     def get_balance(self, address_or_refid):
         address = self.parse_address_or_refid(address_or_refid)
@@ -91,3 +94,13 @@ class ClientProxy:
             return self.grpc_client.get_events_received(address, start_seq, ascending, limit)
         else:
             raise IOError(f"Unknown event type: {sent_received}, only sent and received are supported")
+
+    def transfer_coins(self, sender, recevier, coin, is_blocking):
+        sender_addr = self.parse_address_or_refid(sender)
+        index, account = self.wallet.find_account_by_address_hex(sender_addr)
+        if account is None:
+            raise IOError(f"address {sender} not in wallet.")
+        recevier = self.parse_address_or_refid(recevier)
+        micro_libra = int(coin) * 1_000_000
+        self.grpc_client.transfer_coin(account, recevier, micro_libra, is_blocking)
+        return (index, account.sequence_number)
