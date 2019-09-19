@@ -27,17 +27,23 @@ class AccountCommandCreate(Command):
 
     def execute(self, client, params):
         print(">> Creating/retrieving next account from wallet")
-        account_data = client.create_next_account(True)
-        if account_data is not None:
-            print(
-                "Created/retrieved account #{} address {}".format(
-                    account_data.index,
-                    account_data.address.hex()
-                )
+        index, account = client.create_next_account()
+        print(
+            "Created/retrieved account #{} address {}".format(
+                index,
+                account.address.hex()
             )
-        else:
-            report_error("Error creating account", e)
+        )
 
+class AccountCommandListAccounts(Command):
+    def get_aliases(self):
+        return ["list", "la"]
+
+    def get_description(self):
+        return "Print all accounts that were created or loaded"
+
+    def execute(self, client, params):
+        client.print_all_accounts()
 
 class AccountCommandRecoverWallet(Command):
     def get_aliases(self):
@@ -50,14 +56,17 @@ class AccountCommandRecoverWallet(Command):
         return "Recover Libra wallet from the file path"
 
     def execute(self, client, params):
+        if len(params) != 2:
+            print("Invalid number of arguments for recovering wallets")
+            return
         print(">> Recovering Wallet")
-        account_data = client.recover_wallet_accounts(params)
-        if account_data is not None:
-            print(f"Wallet recovered and the first {len(account_data)} child accounts were derived")
-            for data in account_data:
-                    print("#{} address {}".format(data.index, data.address.hex()))
-        else:
-            report_error("Error recovering Libra wallet", e)
+        try:
+            accounts = client.recover_wallet_accounts(params[1])
+            print(f"Wallet recovered and the first {len(accounts)} child accounts were derived")
+            for index, data in enumerate(accounts):
+                print("#{} address {}".format(index, data.address.hex()))
+        except Exception as err:
+            report_error("Error recovering Libra wallet", err)
 
 
 class AccountCommandWriteRecovery(Command):
@@ -71,22 +80,15 @@ class AccountCommandWriteRecovery(Command):
         return "Save Libra wallet mnemonic recovery seed to disk"
 
     def execute(self, client, params):
+        if len(params) != 2:
+            print("Invalid number of arguments for writing recovery wallets")
+            return
         print(">> Saving Libra wallet mnemonic recovery seed to disk")
-        if client.write_recovery(params):
+        try:
+            client.write_recovery(params[1])
             print("Saved mnemonic seed to disk")
-        else:
-            report_error("Error writing mnemonic recovery seed to file", e)
-
-
-class AccountCommandListAccounts(Command):
-    def get_aliases(self):
-        return ["list", "la"]
-
-    def get_description(self):
-        return "Print all accounts that were created or loaded"
-
-    def execute(self, client, params):
-        client.print_all_accounts()
+        except Exception as err:
+            report_error("Error writing mnemonic recovery seed to file", err)
 
 
 class AccountCommandMint(Command):
@@ -105,7 +107,7 @@ class AccountCommandMint(Command):
             return
         print(">> Minting coins")
         is_blocking = blocking_cmd(params[0])
-        client.mint_coins(params, is_blocking)
+        client.mint_coins(params[1], params[2], is_blocking)
         if is_blocking:
             print("Finished minting!")
         else:

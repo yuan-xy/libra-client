@@ -8,19 +8,30 @@ class WalletLibrary:
 
     DELIMITER = ";"
 
-    def __init__(self, mnemonic, seed, key_factory, child_number):
+    def __init__(self, mnemonic, seed, key_factory, child_count):
         self.mnemonic = mnemonic
         self.seed = seed
         self.key_factory = key_factory
-        self.child_number = child_number
-        self._recover_accounts()
+        self.child_count = child_count
+        self.accounts = []
+        if child_count > 0:
+            self._recover_accounts()
 
     def _recover_accounts(self):
-        self.accounts = []
-        for idx in range(self.child_number):
-            privkey = self.key_factory.private_child(idx)
+        for idx in range(self.child_count):
+            self._add_account(idx)
+
+    def _add_account(self, account_idx):
+            privkey = self.key_factory.private_child(account_idx)
             account = libra.Account(privkey)
             self.accounts.append(account)
+            return account
+
+    def new_account(self):
+        child_index = self.child_count
+        self.child_count += 1
+        return self._add_account(child_index)
+
 
     @classmethod
     def new(cls):
@@ -29,10 +40,10 @@ class WalletLibrary:
         return cls.new_from_mnemonic(mnemonic)
 
     @classmethod
-    def new_from_mnemonic(cls, mnemonic, child_number=0):
+    def new_from_mnemonic(cls, mnemonic, child_count=0):
         seed = KeyFactory.to_seed(mnemonic)
         key_factory = KeyFactory(seed)
-        return cls(mnemonic, seed, key_factory, child_number)
+        return cls(mnemonic, seed, key_factory, child_count)
 
     @classmethod
     def recover(cls, filename):
@@ -45,4 +56,4 @@ class WalletLibrary:
         with open(filename, 'wt') as f:
             f.write(self.mnemonic)
             f.write(WalletLibrary.DELIMITER)
-            f.write(str(self.child_number))
+            f.write(str(self.child_count))

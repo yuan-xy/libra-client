@@ -5,7 +5,7 @@ import pdb
 
 def test_wallet():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
-    assert wallet.child_number == 2
+    assert wallet.child_count == 2
     a0 = wallet.accounts[0]
     assert a0.address_hex == "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
     assert a0.public_key_hex == "d1f4e85a3582015deb92d8aba35061a8032865d754a364d2429d475d10829c2a"
@@ -28,7 +28,7 @@ def test_wallet():
 
 def test_new_wallet():
     wallet = libra.WalletLibrary.new()
-    assert wallet.child_number == 0
+    assert wallet.child_count == 0
     assert len(wallet.mnemonic.split()) == 18
 
 

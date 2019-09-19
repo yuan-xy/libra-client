@@ -7,12 +7,13 @@ import pdb
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from libra import Client
+from libra import Client, WalletLibrary
 from command import *
 from account_commands import AccountCommand
 from query_commands import QueryCommand
 from transfer_commands import TransferCommand
 from dev_commands import DevCommand
+from client_proxy import ClientProxy
 
 
 def get_commands(include_dev: bool):
@@ -27,7 +28,7 @@ def get_commands(include_dev: bool):
 
 
 def run_shell(libra_args):
-    client = Client("testnet")
+    client = ClientProxy(Client("testnet"), libra_args)
     client_info = "Connected to validator at: {}:{}".format(libra_args.host, libra_args.port)
     (commands, alias_to_cmd) = get_commands(False)
     while True:
@@ -67,7 +68,7 @@ def main():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
-    #parser.print_help()
+    parser.add_argument('-r', "--sync", default=True, help='If set, client will sync with validator during wallet recovery.')
     AccountCommand()
     libra_args = parser.parse_args(sys.argv[1:])
     run_shell(libra_args)

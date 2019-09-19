@@ -33,9 +33,9 @@ class KeyFactory:
             okm += output_block
         return okm[:length]
 
-    def private_child(self, child_number):
+    def private_child(self, child_index):
         INFO_PREFIX = b"LIBRA WALLET: derived key$"
-        info = INFO_PREFIX + child_number.to_bytes(8, "little")
+        info = INFO_PREFIX + child_index.to_bytes(8, "little")
         hkdf_expand = self.hkdf_expand(self.master, info, 32)
         return hkdf_expand
 

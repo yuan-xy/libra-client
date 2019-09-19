@@ -1,13 +1,19 @@
 from nacl.signing import SigningKey
 import hashlib
+from enum import Enum
+
+
+AccountStatus = Enum('AccountStatus', ('Local','Persisted','Unknown'))
 
 class Account:
-    def __init__(self, private_key):
+    def __init__(self, private_key, sequence_number=0):
         self._signing_key = SigningKey(private_key)
         self._verify_key = self._signing_key.verify_key
         shazer = hashlib.sha3_256()
         shazer.update(self._verify_key.encode())
         self.address = shazer.digest()
+        self.sequence_number = sequence_number
+        self.status = AccountStatus.Local
 
     def sign(self, message):
         return self._signing_key.sign(message)

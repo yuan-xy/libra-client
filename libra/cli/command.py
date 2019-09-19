@@ -16,6 +16,10 @@ class Command(metaclass = abc.ABCMeta):
     def execute(self, client, params):
         pass
 
+
+def report_error(msg, err):
+    print(f"[ERROR] {msg}: {err}")
+
 def parse_cmd(cmd_str: str):
     return cmd_str.split()
 
