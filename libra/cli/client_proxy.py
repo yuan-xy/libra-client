@@ -1,5 +1,7 @@
 from libra import Client, WalletLibrary
+from command import parse_bool
 import pdb
+
 
 class ClientProxy:
     def __init__(self, client, libra_args):
@@ -66,6 +68,26 @@ class ClientProxy:
         #update local account if address in local wallet.
         return (blob, address, version)
 
+    def get_committed_txn_by_acc_seq(self, address_or_refid, seq, fetch_events):
+        address = self.parse_address_or_refid(address_or_refid)
+        seq = int(seq)
+        transaction = self.grpc_client.get_account_transaction(address, seq, fetch_events)
+        return transaction
 
+    def get_committed_txn_by_range(self, start, limit, fetch_events):
+        start = int(start)
+        limit = int(limit)
+        transactions = self.grpc_client.get_transactions(start, limit, fetch_events)
+        return transactions
 
-
+    def get_events_by_account_and_type(self, address_or_refid, sent_received, start_seq, ascending, limit):
+        address = self.parse_address_or_refid(address_or_refid)
+        start_seq = int(start_seq)
+        limit = int(limit)
+        ascending = parse_bool(ascending)
+        if sent_received == "sent":
+            return self.grpc_client.get_events_sent(address, start_seq, ascending, limit)
+        elif sent_received == "received":
+            return self.grpc_client.get_events_received(address, start_seq, ascending, limit)
+        else:
+            raise IOError(f"Unknown event type: {sent_received}, only sent and received are supported")

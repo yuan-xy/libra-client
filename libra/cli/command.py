@@ -23,6 +23,14 @@ def report_error(msg, err):
 def parse_cmd(cmd_str: str):
     return cmd_str.split()
 
+def parse_bool(para_str):
+    para = para_str.lower()
+    if para == "true" or para == "t":
+        return True
+    elif para == "false" or para == "f":
+        return False
+    else:
+        raise IOError(f"Unknown support bool str: {para_str}")
 
 def subcommand_execute(parent_command_name, commands, client, params):
     if len(params) == 0:

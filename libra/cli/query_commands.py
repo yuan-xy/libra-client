@@ -102,15 +102,22 @@ class QueryCommandGetTxnByAccountSeq(Command):
 
     def execute(self, client, params):
         print(">> Getting committed transaction by account and sequence number")
-        (comm_txn, events) = client.get_committed_txn_by_acc_seq(params)
-        print(f"Committed transaction: {comm_txn.format_for_client(get_transaction_name)}")
-        if events_inner:
-            print("Events: ")
-            for event in events_inner:
-                print(f"{event}")
-        if events is None:
-            print("Transaction not available")
-        #report_error("Error getting committed transaction by account and sequence number",e)
+        try:
+            #TODO: params len check && parse fetch_events
+            fetch_events = False
+            transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
+            print(f"Committed transaction: {transaction}") #transaction pretty print
+            if transaction.HasField("signed_transaction"):
+                print("Events: ")
+                for event in transaction.events.events:
+                    #TODO: event pretty print
+                    print(event)
+                if len(transaction.events.events) == 0:
+                    print("no events emitted")
+            else:
+                print("Transaction not available")
+        except Exception as err:
+            report_error("Error getting committed transaction by account and sequence number", err)
 
 
 
@@ -126,24 +133,17 @@ class QueryCommandGetTxnByRange(Command):
          Optionally also fetch events emitted by these transactions."
 
     def execute(self, client, params):
-        print(">> Getting committed transaction by range")
-        comm_txns_and_events = client.get_committed_txn_by_range(params)
-        cur_version = int(params[1])
-        for (txn, opt_events) in comm_txns_and_events:
-            print(
-                "Transaction at version {}: {}",
-                cur_version,
-                txn.format_for_client(get_transaction_name)
-            )
-            if opt_events.is_some():
-                events = opt_events.unwrap()
-                if events.is_empty():
-                    print("No events returned")
-                else:
-                    for event in events:
-                        print("{}", event)
-                cur_version += 1
-        #report_error("Error getting committed transactions by range", e)
+        try:
+            #TODO: params len check && parse fetch_events
+            print(">> Getting committed transaction by range")
+            fetch_events = True
+            transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
+            cur_version = int(params[1])
+            for index, signed_tx in enumerate(transactions):
+                #TODO: events print
+                print(f"Transaction at version {cur_version+index}: {signed_tx}")
+        except Exception as err:
+            report_error("Error getting committed transactions by range", err)
 
 
 
@@ -159,12 +159,18 @@ class QueryCommandGetEvent(Command):
         return "Get events by account and event type (sent|received)."
 
     def execute(self, client, params):
-        print(">> Getting events by account and event type.")
-        (events, last_event_state) = client.get_events_by_account_and_type(params)
-        if events.is_empty():
-            print("No events returned")
-        else:
-            for event in events:
-                print("{}", event)
-        print("Last event state: {:#?}", last_event_state)
-        #report_error("Error getting events by access path", e)
+        if len(params) != 6:
+            print("Invalid number of arguments for events query")
+            return
+        try:
+            print(">> Getting events by account and event type.")
+            events = client.get_events_by_account_and_type(
+                params[1], params[2], params[3], params[4], params[5])
+            if not events:
+                print("No events returned")
+            else:
+                for event in enumerate(events):
+                    print(event)
+            #TODO: print("Last event state: {:#?}", last_event_state)
+        except Exception as err:
+            report_error("Error getting events by access path", err)
