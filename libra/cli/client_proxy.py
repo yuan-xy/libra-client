@@ -1,5 +1,5 @@
 from libra import Client, WalletLibrary
-
+import pdb
 
 class ClientProxy:
     def __init__(self, client, libra_args):
@@ -39,8 +39,8 @@ class ClientProxy:
 
     def mint_coins(self, address_or_refid, libra, is_blocking):
         libra = int(libra)
-        receiver = self.parse_address_or_refid(address_or_refid)
-        self.grpc_client.mint_coins_with_faucet_service(receiver, libra, is_blocking)
+        address = self.parse_address_or_refid(address_or_refid)
+        self.grpc_client.mint_coins_with_faucet_service(address, libra, is_blocking)
 
     def parse_address_or_refid(self, address_or_refid):
         if len(address_or_refid) == 64:
@@ -48,3 +48,17 @@ class ClientProxy:
         else:
             idx = int(address_or_refid)
             return self.accounts[idx].address.hex()
+
+    def get_balance(self, address_or_refid):
+        address = self.parse_address_or_refid(address_or_refid)
+        micro_libra = self.grpc_client.get_balance(address)
+        return micro_libra / 1_000_000
+
+    def get_sequence_number(self, address_or_refid):
+        address = self.parse_address_or_refid(address_or_refid)
+        seq = self.grpc_client.get_sequence_number(address)
+        return seq
+
+
+
+

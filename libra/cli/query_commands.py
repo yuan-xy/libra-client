@@ -1,4 +1,4 @@
-from command import Command, subcommand_execute
+from command import *
 
 class QueryCommand(Command):
     def get_aliases(self):
@@ -33,9 +33,11 @@ class QueryCommandGetBalance(Command):
         if len(params) != 2:
             print("Invalid number of arguments for balance query")
             return
-        balance = client.get_balance(params)
-        print(f"Balance is: {balance}")
-        #report_error("Failed to get balance", e)
+        try:
+            balance = client.get_balance(params[1])
+            print(f"Balance is: {balance}")
+        except Exception as err:
+            report_error("Failed to get balance", err)
 
 
 class QueryCommandGetSeqNum(Command):
@@ -51,9 +53,11 @@ class QueryCommandGetSeqNum(Command):
 
     def execute(self, client, params):
         print(">> Getting current sequence number")
-        sn = client.get_sequence_number(params)
-        print(f"Sequence number is: {sn}")
-        #report_error("Error getting sequence number", e),
+        try:
+            sn = client.get_sequence_number(params[1])
+            print(f"Sequence number is: {sn}")
+        except Exception as err:
+            report_error("Error getting sequence number", err)
 
 
 
