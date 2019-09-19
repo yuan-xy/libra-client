@@ -158,10 +158,11 @@ class Client:
                 print(".", end='', flush=True)
         print("wait_for_transaction timeout.\n")
 
-    def transfer_coin(self, sender_account, recevier_address, micro_libra, is_blocking=False):
-        t = Transaction.gen_transfer_transaction(recevier_address, micro_libra)
+    def transfer_coin(self, sender_account, recevier_address, micro_libra,
+        max_gas=140_000, unit_price=0, is_blocking=False):
         sequence_number = self.get_sequence_number(sender_account.address)
-        raw_tx = t.to_raw_tx_proto(sender_account, sequence_number)
+        t = Transaction.gen_transfer_transaction(recevier_address, micro_libra)
+        raw_tx = t.to_raw_tx_proto(sender_account, sequence_number, max_gas, unit_price)
         #pdb.set_trace()
         raw_txn_bytes = raw_tx.SerializeToString()
         def raw_tx_hash_seed():

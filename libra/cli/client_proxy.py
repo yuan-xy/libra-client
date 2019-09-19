@@ -95,12 +95,12 @@ class ClientProxy:
         else:
             raise IOError(f"Unknown event type: {sent_received}, only sent and received are supported")
 
-    def transfer_coins(self, sender, recevier, coin, is_blocking):
+    def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking):
         sender_addr = self.parse_address_or_refid(sender)
         index, account = self.wallet.find_account_by_address_hex(sender_addr)
         if account is None:
             raise IOError(f"address {sender} not in wallet.")
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = int(coin) * 1_000_000
-        self.grpc_client.transfer_coin(account, recevier, micro_libra, is_blocking)
+        self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
         return (index, account.sequence_number)

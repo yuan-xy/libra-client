@@ -25,11 +25,18 @@ class TransferCommand(Command):
             )
             return
         try:
-            #TODO: gas support
+            if len(params) == 5:
+                gas_unit_price_in_micro_libras = int(params[4])
+            else:
+                gas_unit_price_in_micro_libras = 0
+            if len(params) == 6:
+                max_gas_amount_in_micro_libras = int(params[5])
+            else:
+                max_gas_amount_in_micro_libras = 140_000
             print(">> Transferring")
             is_blocking = blocking_cmd(params[0])
-            index, sequence_number = client.transfer_coins(
-                params[1], params[2], params[3], is_blocking)
+            index, sequence_number = client.transfer_coins(params[1], params[2], params[3],
+                max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking)
             if is_blocking:
                 print("Finished transaction!")
             else:
