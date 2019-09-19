@@ -124,8 +124,8 @@ class Client:
         return self.get_events_received(address, 2**64-1, False, limit)
 
 
-    def mint_coins_with_faucet_service(self, receiver, num_coins, is_blocking=False):
-        url = "http://{}?amount={}&address={}".format(self.faucet_host, num_coins, receiver)
+    def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
+        url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
         resp = requests.post(url)
         if resp.status_code != 200:
             raise IOError(

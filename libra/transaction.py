@@ -39,15 +39,15 @@ class Transaction:
                 raise ValueError("Unknown arg type: {}".format(kind))
 
     @classmethod
-    def gen_transfer_transaction(cls, receiver, value):
+    def gen_transfer_transaction(cls, receiver, micro_libra):
         code = cls.get_script_bytecode("transaction_scripts/peer_to_peer_transfer.bytecode")
-        tran = cls(code, ["address", "u64"], [receiver, value])
+        tran = cls(code, ["address", "u64"], [receiver, micro_libra])
         return tran
 
     @classmethod
-    def gen_mint_transaction(cls, receiver, value):
+    def gen_mint_transaction(cls, receiver, micro_libra):
         code = cls.get_script_bytecode("transaction_scripts/mint.bytecode")
-        tran = cls(code, ["address", "u64"], [receiver, value])
+        tran = cls(code, ["address", "u64"], [receiver, micro_libra])
         return tran
 
     @staticmethod
