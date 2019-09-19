@@ -26,6 +26,10 @@ def test_wallet():
                 assert int(arr0[1]) == int(arr1[1])
     tmp.close
 
+def test_new_wallet():
+    wallet = libra.WalletLibrary.new()
+    assert wallet.child_number == 0
+    assert len(wallet.mnemonic.split()) == 18
 
 
 
