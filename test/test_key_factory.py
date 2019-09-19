@@ -23,16 +23,3 @@ def test_key():
     child1_again = kfac.private_child(1)
     assert child1_again == child1
 
-def test_wallet():
-    kfac = libra.KeyFactory.read_wallet_file('test/test.wallet')
-    assert kfac.child_number == 2
-    child0 = kfac.private_child(0)
-    a0 = libra.Account(child0)
-    assert a0.address_hex == "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
-    assert a0.public_key_hex == "d1f4e85a3582015deb92d8aba35061a8032865d754a364d2429d475d10829c2a"
-    assert a0.private_key_hex == "177bb836b2bb9be29f5accdf74a95d917946001282d7ee74b18d0c81764ee383"
-    child1 = kfac.private_child(1)
-    a1 = libra.Account(child1)
-    assert a1.address_hex == "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde"
-    assert a1.public_key_hex == "6b72f3922ccbe671409c5ad0552f93888427f466ea0b7fdf3f066b31bce5c6a6"
-    assert a1.private_key_hex == "2aa7e79ffe6bcb110b2a736ef4d37ad471c88b6f5be833cf1f2989ef12db05be"

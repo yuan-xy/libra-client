@@ -50,11 +50,9 @@ def test_mint():
     assert (balance2 - balance) % 12345 == 0 # tolerate parallel mint
 
 def test_transfer_coin():
-    kfac = libra.KeyFactory.read_wallet_file('test/test.wallet')
-    child0 = kfac.private_child(0)
-    a0 = libra.Account(child0)
-    child1 = kfac.private_child(1)
-    a1 = libra.Account(child1)
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
     c = libra.Client("testnet")
     balance0 = c.get_balance(a0.address)
     balance1 = c.get_balance(a1.address)

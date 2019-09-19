@@ -39,15 +39,4 @@ class KeyFactory:
         hkdf_expand = self.hkdf_expand(self.master, info, 32)
         return hkdf_expand
 
-    @classmethod
-    def read_wallet_file(cls, filename):
-        with open(filename) as f:
-            data = f.read()
-            arr = data.split(";")
-            child_number = int(arr[1])
-            seed = cls.to_seed(arr[0])
-            kfac = cls(seed)
-            kfac.child_number = child_number
-            return kfac
-
 

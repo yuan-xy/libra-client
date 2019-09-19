@@ -7,3 +7,4 @@ from libra.account_config import AccountConfig
 from libra.key_factory import KeyFactory
 from libra.account import Account
 from libra.transaction import Transaction
+from libra.wallet_library import WalletLibrary

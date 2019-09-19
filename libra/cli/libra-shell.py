@@ -66,7 +66,7 @@ def print_help(client_info: str, commands):
 def main():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", help='Host address/name to connect to')
-    parser.add_argument('-p', "--port", help='Admission Control port to connect to. [default: 8000]')
+    parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
     #parser.print_help()
     AccountCommand()
     libra_args = parser.parse_args(sys.argv[1:])
