@@ -1,4 +1,5 @@
 import abc
+import sys
 
 class Command(metaclass = abc.ABCMeta):
     @abc.abstractmethod
@@ -51,15 +52,19 @@ def subcommand_execute(parent_command_name, commands, client, params):
 
 def print_subcommand_help(parent_command, commands):
     print(f"usage: {parent_command} <arg>\n\nUse the following args for this command:\n")
+    print_commands(commands)
+
+def print_commands(commands):
     for cmd in commands:
-        print(
-            "{} {}\n\t{}".format(
-                " | ".join(cmd.get_aliases()),
-                cmd.get_params_help(),
-                cmd.get_description()
-            )
-        )
-    print("\n")
+        print_color(" | ".join(cmd.get_aliases()), bcolors.OKGREEN, end='')
+        print_color(" " + cmd.get_params_help(), bcolors.OKBLUE)
+        print("\t" + cmd.get_description())
+
+def print_color(str, color, **kargs):
+    if sys.stdout.isatty():
+        print(color + str + bcolors.ENDC, **kargs)
+    else:
+        print(str, **kargs)
 
 
 def blocking_cmd(cmd: str) -> bool:
@@ -68,3 +73,13 @@ def blocking_cmd(cmd: str) -> bool:
 
 def debug_format_cmd(cmd: str) -> bool:
     return cmd.endswith('?')
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'

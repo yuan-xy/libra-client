@@ -33,7 +33,10 @@ def run_shell(libra_args):
     client_info = "Connected to validator at: {}:{}".format(libra_args.host, libra_args.port)
     (commands, alias_to_cmd) = get_commands(False)
     while True:
-        line = input('libra% ')
+        prompt = "libra% "
+        if sys.stdout.isatty():
+            prompt = f'\033[91m{prompt}\033[0m'
+        line = input(prompt)
         params = parse_cmd(line)
         if len(params) == 0:
             continue
@@ -52,16 +55,11 @@ def run_shell(libra_args):
 def print_help(client_info: str, commands):
     print(client_info)
     print("usage: <command> <args>\n\nUse the following commands:\n")
-    for cmd in commands:
-        print(
-            "{} {}\n\t{}".format(
-            " | ".join(cmd.get_aliases()),
-            cmd.get_params_help(),
-            cmd.get_description()
-            )
-        )
-    print("help | h \n\tPrints this help")
-    print("quit | q! \n\tExit this client")
+    print_commands(commands)
+    print_color("help | h", bcolors.OKGREEN)
+    print("\tPrints this help")
+    print_color("quit | q!", bcolors.OKGREEN)
+    print("\tExit this client")
     print("\n")
 
 

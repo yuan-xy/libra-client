@@ -48,8 +48,8 @@ class QueryCommandGetSeqNum(Command):
         return "<account_ref_id>|<account_address> [reset_sequence_number=true|false]"
 
     def get_description(self):
-        return "Get the current sequence number for an account, \
-         and reset current sequence number in CLI (optional, default is false)"
+        return ("Get the current sequence number for an account, "
+         "and reset current sequence number in CLI (optional, default is false)")
 
     def execute(self, client, params):
         print(">> Getting current sequence number")
@@ -97,8 +97,8 @@ class QueryCommandGetTxnByAccountSeq(Command):
         return "<account_ref_id>|<account_address> <sequence_number> <fetch_events=true|false>"
 
     def get_description(self):
-        return "Get the committed transaction by account and sequence number.  \
-         Optionally also fetch events emitted by this transaction."
+        return ("Get the committed transaction by account and sequence number.  "
+         "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params):
         print(">> Getting committed transaction by account and sequence number")
@@ -129,8 +129,8 @@ class QueryCommandGetTxnByRange(Command):
         return "<start_version> <limit> <fetch_events=true|false>"
 
     def get_description(self):
-        return "Get the committed transactions by version range. \
-         Optionally also fetch events emitted by these transactions."
+        return ("Get the committed transactions by version range. "
+         "Optionally also fetch events emitted by these transactions.")
 
     def execute(self, client, params):
         try:

@@ -6,10 +6,10 @@ class TransferCommand(Command):
         return ["transfer", "transferb", "t", "tb"]
 
     def get_params_help(self):
-        return "\n\t<sender_account_address>|<sender_account_ref_id> \
-         <receiver_account_address>|<receiver_account_ref_id> <number_of_coins> \
-         [gas_unit_price_in_micro_libras (default=0)] [max_gas_amount_in_micro_libras (default 140000)] \
-         Suffix 'b' is for blocking. "
+        return ("\n\t<sender_account_address>|<sender_account_ref_id>"
+         " <receiver_account_address>|<receiver_account_ref_id> <number_of_coins>"
+         " [gas_unit_price_in_micro_libras (default=0)] [max_gas_amount_in_micro_libras (default 140000)]"
+         " Suffix 'b' is for blocking. ")
 
     def get_description(self):
         return "Transfer coins (in libra) from account to another."
