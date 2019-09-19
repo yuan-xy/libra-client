@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import readline
 import sys
 import os
 import pdb
@@ -65,10 +66,11 @@ def print_help(client_info: str, commands):
 
 
 def main():
+    readline.set_history_length(1000)
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
-    parser.add_argument('-r', "--sync", default=True, help='If set, client will sync with validator during wallet recovery.')
+    parser.add_argument('-r', "--sync", default=False, help='If set, client will sync with validator during wallet recovery.')
     AccountCommand()
     libra_args = parser.parse_args(sys.argv[1:])
     run_shell(libra_args)
