@@ -35,7 +35,7 @@ class Client:
         self.stub = AdmissionControlStub(self.channel)
         self.faucet_host = NETWORKS[network]['faucet_host']
 
-    def get_account_state(self, address):
+    def get_account_blob(self, address):
         if isinstance(address, str):
             address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
@@ -43,7 +43,13 @@ class Client:
         item.get_account_state_request.address = address
         resp = self.stub.UpdateToLatestLedger(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
+        version = resp.ledger_info_with_sigs.ledger_info.version
+        return (blob, version)
+
+    def get_account_resource(self, address):
+        blob, version = self.get_account_blob(address)
         if len(blob.__str__()) == 0:
+            #TODO: bad smell
             raise AccountError("Account state blob is empty.")
         amap = AccountState.deserialize(blob.blob).blob
         resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
@@ -51,11 +57,11 @@ class Client:
         return AccountResource.deserialize(bstr)
 
     def get_sequence_number(self, address):
-        state = self.get_account_state(address)
+        state = self.get_account_resource(address)
         return state.sequence_number
 
     def get_balance(self, address):
-        state = self.get_account_state(address)
+        state = self.get_account_resource(address)
         return state.balance
 
     def get_latest_transaction_version(self):

@@ -57,7 +57,14 @@ class ClientProxy:
     def get_sequence_number(self, address_or_refid):
         address = self.parse_address_or_refid(address_or_refid)
         seq = self.grpc_client.get_sequence_number(address)
+        #TODO sync seq
         return seq
+
+    def get_latest_account_state(self, address_or_refid):
+        address = self.parse_address_or_refid(address_or_refid)
+        blob, version = self.grpc_client.get_account_blob(address)
+        #update local account if address in local wallet.
+        return (blob, address, version)
 
 
 

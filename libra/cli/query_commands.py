@@ -72,18 +72,20 @@ class QueryCommandGetLatestAccountState(Command):
         return "Get the latest state for an account"
 
     def execute(self, client, params):
+        if len(params) != 2:
+            print("Invalid number of arguments for account_state query")
+            return
         print(">> Getting latest account state")
-        (acc, version) = client.get_latest_account_state(params)
-        get_account_resource_or_default(acc)
-        addr = client.get_account_address_from_parameter(params[1])
-        print(
-            f"Latest account state is: \n \
-            Account: {addr}\n \
-            State: {acc}\n \
-            Blockchain Version: {version}\n"
-        )
-        #report_error("Error converting account blob to account resource", e)
-        #report_error("Error getting latest account state", e)
+        try:
+            (acc, addr, version) = client.get_latest_account_state(params[1])
+            print(
+                f"Latest account state is: \n \
+                Account: {addr}\n \
+                State: {acc}\n \
+                Blockchain Version: {version}\n"
+            )
+        except Exception as err:
+            report_error("Error getting latest account state", err)
 
 
 
