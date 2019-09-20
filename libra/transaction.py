@@ -1,4 +1,4 @@
-from libra.proto.transaction_pb2 import RawTransaction
+#from libra.proto.transaction_pb2 import RawTransaction
 from libra.proto.transaction_pb2 import TransactionArgument
 import libra
 from datetime import datetime

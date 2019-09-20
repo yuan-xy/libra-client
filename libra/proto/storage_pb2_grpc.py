@@ -43,6 +43,11 @@ class StorageStub(object):
         request_serializer=storage__pb2.GetStartupInfoRequest.SerializeToString,
         response_deserializer=storage__pb2.GetStartupInfoResponse.FromString,
         )
+    self.GetLatestLedgerInfosPerEpoch = channel.unary_unary(
+        '/storage.Storage/GetLatestLedgerInfosPerEpoch',
+        request_serializer=storage__pb2.GetLatestLedgerInfosPerEpochRequest.SerializeToString,
+        response_deserializer=storage__pb2.GetLatestLedgerInfosPerEpochResponse.FromString,
+        )
 
 
 class StorageServicer(object):
@@ -96,6 +101,13 @@ class StorageServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def GetLatestLedgerInfosPerEpoch(self, request, context):
+    """Returns latest ledger infos per epoch.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_StorageServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -123,6 +135,11 @@ def add_StorageServicer_to_server(servicer, server):
           servicer.GetStartupInfo,
           request_deserializer=storage__pb2.GetStartupInfoRequest.FromString,
           response_serializer=storage__pb2.GetStartupInfoResponse.SerializeToString,
+      ),
+      'GetLatestLedgerInfosPerEpoch': grpc.unary_unary_rpc_method_handler(
+          servicer.GetLatestLedgerInfosPerEpoch,
+          request_deserializer=storage__pb2.GetLatestLedgerInfosPerEpochRequest.FromString,
+          response_serializer=storage__pb2.GetLatestLedgerInfosPerEpochResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

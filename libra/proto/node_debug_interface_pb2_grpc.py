@@ -24,11 +24,6 @@ class NodeDebugInterfaceStub(object):
         request_serializer=node__debug__interface__pb2.GetEventsRequest.SerializeToString,
         response_deserializer=node__debug__interface__pb2.GetEventsResponse.FromString,
         )
-    self.DumpJemallocHeapProfile = channel.unary_unary(
-        '/debug.NodeDebugInterface/DumpJemallocHeapProfile',
-        request_serializer=node__debug__interface__pb2.DumpJemallocHeapProfileRequest.SerializeToString,
-        response_deserializer=node__debug__interface__pb2.DumpJemallocHeapProfileResponse.FromString,
-        )
 
 
 class NodeDebugInterfaceServicer(object):
@@ -49,13 +44,6 @@ class NodeDebugInterfaceServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def DumpJemallocHeapProfile(self, request, context):
-    """Triggers a dump of heap profile.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
 
 def add_NodeDebugInterfaceServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -68,11 +56,6 @@ def add_NodeDebugInterfaceServicer_to_server(servicer, server):
           servicer.GetEvents,
           request_deserializer=node__debug__interface__pb2.GetEventsRequest.FromString,
           response_serializer=node__debug__interface__pb2.GetEventsResponse.SerializeToString,
-      ),
-      'DumpJemallocHeapProfile': grpc.unary_unary_rpc_method_handler(
-          servicer.DumpJemallocHeapProfile,
-          request_deserializer=node__debug__interface__pb2.DumpJemallocHeapProfileRequest.FromString,
-          response_serializer=node__debug__interface__pb2.DumpJemallocHeapProfileResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

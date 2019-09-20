@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='network',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\x07network\x1a\x11ledger_info.proto\x1a\x11transaction.proto\"\x93\x02\n\x0c\x43onsensusMsg\x12%\n\x08proposal\x18\x01 \x01(\x0b\x32\x11.network.ProposalH\x00\x12\x1d\n\x04vote\x18\x02 \x01(\x0b\x32\r.network.VoteH\x00\x12.\n\rrequest_block\x18\x03 \x01(\x0b\x32\x15.network.RequestBlockH\x00\x12.\n\rrespond_block\x18\x04 \x01(\x0b\x32\x15.network.RespondBlockH\x00\x12*\n\x0btimeout_msg\x18\x05 \x01(\x0b\x32\x13.network.TimeoutMsgH\x00\x12&\n\tsync_info\x18\x06 \x01(\x0b\x32\x11.network.SyncInfoH\x00\x42\t\n\x07message\"X\n\x08Proposal\x12&\n\x0eproposed_block\x18\x01 \x01(\x0b\x32\x0e.network.Block\x12$\n\tsync_info\x18\x02 \x01(\x0b\x32\x11.network.SyncInfo\"a\n\x10PacemakerTimeout\x12\r\n\x05round\x18\x01 \x01(\x04\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\x0c\x12\x11\n\tsignature\x18\x03 \x01(\x0c\x12\x1b\n\x04vote\x18\x04 \x01(\x0b\x32\r.network.Vote\"{\n\nTimeoutMsg\x12$\n\tsync_info\x18\x01 \x01(\x0b\x32\x11.network.SyncInfo\x12\x34\n\x11pacemaker_timeout\x18\x02 \x01(\x0b\x32\x19.network.PacemakerTimeout\x12\x11\n\tsignature\x18\x03 \x01(\x0c\"\xb2\x01\n\x08SyncInfo\x12\x30\n\x13highest_quorum_cert\x18\x01 \x01(\x0b\x32\x13.network.QuorumCert\x12\x30\n\x13highest_ledger_info\x18\x02 \x01(\x0b\x32\x13.network.QuorumCert\x12\x42\n\x14highest_timeout_cert\x18\x03 \x01(\x0b\x32$.network.PacemakerTimeoutCertificate\"Y\n\x1bPacemakerTimeoutCertificate\x12\r\n\x05round\x18\x01 \x01(\x04\x12+\n\x08timeouts\x18\x02 \x03(\x0b\x32\x19.network.PacemakerTimeout\"\xbc\x01\n\x05\x42lock\x12\n\n\x02id\x18\x01 \x01(\x0c\x12\x11\n\tparent_id\x18\x02 \x01(\x0c\x12\x0f\n\x07payload\x18\x03 \x01(\x0c\x12\r\n\x05round\x18\x04 \x01(\x04\x12\x0e\n\x06height\x18\x05 \x01(\x04\x12\x17\n\x0ftimestamp_usecs\x18\x06 \x01(\x04\x12(\n\x0bquorum_cert\x18\x07 \x01(\x0b\x32\x13.network.QuorumCert\x12\x0e\n\x06\x61uthor\x18\x08 \x01(\x0c\x12\x11\n\tsignature\x18\t \x01(\x0c\"o\n\nQuorumCert\x12$\n\tvote_data\x18\x01 \x01(\x0b\x32\x11.network.VoteData\x12;\n\x12signed_ledger_info\x18\x02 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\xcb\x01\n\x08VoteData\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\x0c\x12\r\n\x05round\x18\x02 \x01(\x04\x12\x19\n\x11\x65xecuted_state_id\x18\x03 \x01(\x0c\x12\x0f\n\x07version\x18\x04 \x01(\x04\x12\x17\n\x0fparent_block_id\x18\x05 \x01(\x0c\x12\x1a\n\x12parent_block_round\x18\x06 \x01(\x04\x12\x1c\n\x14grandparent_block_id\x18\x07 \x01(\x0c\x12\x1f\n\x17grandparent_block_round\x18\x08 \x01(\x04\"w\n\x04Vote\x12$\n\tvote_data\x18\x01 \x01(\x0b\x32\x11.network.VoteData\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\x0c\x12&\n\x0bledger_info\x18\x03 \x01(\x0b\x32\x11.types.LedgerInfo\x12\x11\n\tsignature\x18\x04 \x01(\x0c\"4\n\x0cRequestBlock\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\x0c\x12\x12\n\nnum_blocks\x18\x02 \x01(\x04\"]\n\x0cRespondBlock\x12-\n\x06status\x18\x01 \x01(\x0e\x32\x1d.network.BlockRetrievalStatus\x12\x1e\n\x06\x62locks\x18\x02 \x03(\x0b\x32\x0e.network.Block*N\n\x14\x42lockRetrievalStatus\x12\r\n\tSUCCEEDED\x10\x00\x12\x10\n\x0cID_NOT_FOUND\x10\x01\x12\x15\n\x11NOT_ENOUGH_BLOCKS\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\x07network\x1a\x11ledger_info.proto\x1a\x11transaction.proto\"\x93\x02\n\x0c\x43onsensusMsg\x12%\n\x08proposal\x18\x01 \x01(\x0b\x32\x11.network.ProposalH\x00\x12\x1d\n\x04vote\x18\x02 \x01(\x0b\x32\r.network.VoteH\x00\x12.\n\rrequest_block\x18\x03 \x01(\x0b\x32\x15.network.RequestBlockH\x00\x12.\n\rrespond_block\x18\x04 \x01(\x0b\x32\x15.network.RespondBlockH\x00\x12*\n\x0btimeout_msg\x18\x05 \x01(\x0b\x32\x13.network.TimeoutMsgH\x00\x12&\n\tsync_info\x18\x06 \x01(\x0b\x32\x11.network.SyncInfoH\x00\x42\t\n\x07message\"X\n\x08Proposal\x12&\n\x0eproposed_block\x18\x01 \x01(\x0b\x32\x0e.network.Block\x12$\n\tsync_info\x18\x02 \x01(\x0b\x32\x11.network.SyncInfo\"a\n\x10PacemakerTimeout\x12\r\n\x05round\x18\x01 \x01(\x04\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\x0c\x12\x11\n\tsignature\x18\x03 \x01(\x0c\x12\x1b\n\x04vote\x18\x04 \x01(\x0b\x32\r.network.Vote\"{\n\nTimeoutMsg\x12$\n\tsync_info\x18\x01 \x01(\x0b\x32\x11.network.SyncInfo\x12\x34\n\x11pacemaker_timeout\x18\x02 \x01(\x0b\x32\x19.network.PacemakerTimeout\x12\x11\n\tsignature\x18\x03 \x01(\x0c\"\xb2\x01\n\x08SyncInfo\x12\x30\n\x13highest_quorum_cert\x18\x01 \x01(\x0b\x32\x13.network.QuorumCert\x12\x30\n\x13highest_ledger_info\x18\x02 \x01(\x0b\x32\x13.network.QuorumCert\x12\x42\n\x14highest_timeout_cert\x18\x03 \x01(\x0b\x32$.network.PacemakerTimeoutCertificate\"Y\n\x1bPacemakerTimeoutCertificate\x12\r\n\x05round\x18\x01 \x01(\x04\x12+\n\x08timeouts\x18\x02 \x03(\x0b\x32\x19.network.PacemakerTimeout\"\xbc\x01\n\x05\x42lock\x12\n\n\x02id\x18\x01 \x01(\x0c\x12\x11\n\tparent_id\x18\x02 \x01(\x0c\x12\x0f\n\x07payload\x18\x03 \x01(\x0c\x12\r\n\x05round\x18\x04 \x01(\x04\x12\x0e\n\x06height\x18\x05 \x01(\x04\x12\x17\n\x0ftimestamp_usecs\x18\x06 \x01(\x04\x12(\n\x0bquorum_cert\x18\x07 \x01(\x0b\x32\x13.network.QuorumCert\x12\x0e\n\x06\x61uthor\x18\x08 \x01(\x0c\x12\x11\n\tsignature\x18\t \x01(\x0c\"o\n\nQuorumCert\x12$\n\tvote_data\x18\x01 \x01(\x0b\x32\x11.network.VoteData\x12;\n\x12signed_ledger_info\x18\x02 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\xba\x01\n\x08VoteData\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\x0c\x12\x19\n\x11\x65xecuted_state_id\x18\x02 \x01(\x0c\x12\r\n\x05round\x18\x03 \x01(\x04\x12\x17\n\x0fparent_block_id\x18\x04 \x01(\x0c\x12\x1a\n\x12parent_block_round\x18\x05 \x01(\x04\x12\x1c\n\x14grandparent_block_id\x18\x06 \x01(\x0c\x12\x1f\n\x17grandparent_block_round\x18\x07 \x01(\x04\"w\n\x04Vote\x12$\n\tvote_data\x18\x01 \x01(\x0b\x32\x11.network.VoteData\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\x0c\x12&\n\x0bledger_info\x18\x03 \x01(\x0b\x32\x11.types.LedgerInfo\x12\x11\n\tsignature\x18\x04 \x01(\x0c\"4\n\x0cRequestBlock\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\x0c\x12\x12\n\nnum_blocks\x18\x02 \x01(\x04\"]\n\x0cRespondBlock\x12-\n\x06status\x18\x01 \x01(\x0e\x32\x1d.network.BlockRetrievalStatus\x12\x1e\n\x06\x62locks\x18\x02 \x03(\x0b\x32\x0e.network.Block*N\n\x14\x42lockRetrievalStatus\x12\r\n\tSUCCEEDED\x10\x00\x12\x10\n\x0cID_NOT_FOUND\x10\x01\x12\x15\n\x11NOT_ENOUGH_BLOCKS\x10\x02\x62\x06proto3')
   ,
   dependencies=[ledger__info__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,])
 
@@ -48,8 +48,8 @@ _BLOCKRETRIEVALSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1710,
-  serialized_end=1788,
+  serialized_start=1693,
+  serialized_end=1771,
 )
 _sym_db.RegisterEnumDescriptor(_BLOCKRETRIEVALSTATUS)
 
@@ -487,50 +487,43 @@ _VOTEDATA = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='round', full_name='network.VoteData.round', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='executed_state_id', full_name='network.VoteData.executed_state_id', index=2,
-      number=3, type=12, cpp_type=9, label=1,
+      name='executed_state_id', full_name='network.VoteData.executed_state_id', index=1,
+      number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='version', full_name='network.VoteData.version', index=3,
-      number=4, type=4, cpp_type=4, label=1,
+      name='round', full_name='network.VoteData.round', index=2,
+      number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parent_block_id', full_name='network.VoteData.parent_block_id', index=4,
-      number=5, type=12, cpp_type=9, label=1,
+      name='parent_block_id', full_name='network.VoteData.parent_block_id', index=3,
+      number=4, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parent_block_round', full_name='network.VoteData.parent_block_round', index=5,
-      number=6, type=4, cpp_type=4, label=1,
+      name='parent_block_round', full_name='network.VoteData.parent_block_round', index=4,
+      number=5, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='grandparent_block_id', full_name='network.VoteData.grandparent_block_id', index=6,
-      number=7, type=12, cpp_type=9, label=1,
+      name='grandparent_block_id', full_name='network.VoteData.grandparent_block_id', index=5,
+      number=6, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='grandparent_block_round', full_name='network.VoteData.grandparent_block_round', index=7,
-      number=8, type=4, cpp_type=4, label=1,
+      name='grandparent_block_round', full_name='network.VoteData.grandparent_block_round', index=6,
+      number=7, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -548,7 +541,7 @@ _VOTEDATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=1235,
-  serialized_end=1438,
+  serialized_end=1421,
 )
 
 
@@ -599,8 +592,8 @@ _VOTE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1440,
-  serialized_end=1559,
+  serialized_start=1423,
+  serialized_end=1542,
 )
 
 
@@ -637,8 +630,8 @@ _REQUESTBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1561,
-  serialized_end=1613,
+  serialized_start=1544,
+  serialized_end=1596,
 )
 
 
@@ -675,8 +668,8 @@ _RESPONDBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1615,
-  serialized_end=1708,
+  serialized_start=1598,
+  serialized_end=1691,
 )
 
 _CONSENSUSMSG.fields_by_name['proposal'].message_type = _PROPOSAL

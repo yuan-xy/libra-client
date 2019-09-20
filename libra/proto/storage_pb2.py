@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='storage',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rstorage.proto\x12\x07storage\x1a\x14get_with_proof.proto\x1a\x11ledger_info.proto\x1a\x11transaction.proto\x1a\x18\x61\x63\x63ount_state_blob.proto\x1a\x0bproof.proto\"\xaa\x01\n\x17SaveTransactionsRequest\x12\x32\n\x0etxns_to_commit\x18\x01 \x03(\x0b\x32\x1a.types.TransactionToCommit\x12\x15\n\rfirst_version\x18\x02 \x01(\x04\x12\x44\n\x1bledger_info_with_signatures\x18\x03 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\x1a\n\x18SaveTransactionsResponse\"q\n\x16GetTransactionsRequest\x12\x15\n\rstart_version\x18\x01 \x01(\x04\x12\x12\n\nbatch_size\x18\x02 \x01(\x04\x12\x16\n\x0eledger_version\x18\x03 \x01(\x04\x12\x14\n\x0c\x66\x65tch_events\x18\x04 \x01(\x08\"W\n\x17GetTransactionsResponse\x12<\n\x13txn_list_with_proof\x18\x01 \x01(\x0b\x32\x1f.types.TransactionListWithProof\"L\n(GetAccountStateWithProofByVersionRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x0c\x12\x0f\n\x07version\x18\x02 \x01(\x04\"\x97\x01\n)GetAccountStateWithProofByVersionResponse\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x01 \x01(\x0b\x32\x17.types.AccountStateBlob\x12\x35\n\x13sparse_merkle_proof\x18\x02 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\x17\n\x15GetStartupInfoRequest\"<\n\x16GetStartupInfoResponse\x12\"\n\x04info\x18\x01 \x01(\x0b\x32\x14.storage.StartupInfo\"\x94\x01\n\x0bStartupInfo\x12&\n\x0bledger_info\x18\x01 \x01(\x0b\x32\x11.types.LedgerInfo\x12\x16\n\x0elatest_version\x18\x02 \x01(\x04\x12\x1f\n\x17\x61\x63\x63ount_state_root_hash\x18\x03 \x01(\x0c\x12$\n\x1cledger_frozen_subtree_hashes\x18\x04 \x03(\x0c\x32\xf9\x03\n\x07Storage\x12W\n\x10SaveTransactions\x12 .storage.SaveTransactionsRequest\x1a!.storage.SaveTransactionsResponse\x12_\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\x12T\n\x0fGetTransactions\x12\x1f.storage.GetTransactionsRequest\x1a .storage.GetTransactionsResponse\x12\x8a\x01\n!GetAccountStateWithProofByVersion\x12\x31.storage.GetAccountStateWithProofByVersionRequest\x1a\x32.storage.GetAccountStateWithProofByVersionResponse\x12Q\n\x0eGetStartupInfo\x12\x1e.storage.GetStartupInfoRequest\x1a\x1f.storage.GetStartupInfoResponseb\x06proto3')
+  serialized_pb=_b('\n\rstorage.proto\x12\x07storage\x1a\x14get_with_proof.proto\x1a\x11ledger_info.proto\x1a\x11transaction.proto\x1a\x18\x61\x63\x63ount_state_blob.proto\x1a\x0bproof.proto\"\xaa\x01\n\x17SaveTransactionsRequest\x12\x32\n\x0etxns_to_commit\x18\x01 \x03(\x0b\x32\x1a.types.TransactionToCommit\x12\x15\n\rfirst_version\x18\x02 \x01(\x04\x12\x44\n\x1bledger_info_with_signatures\x18\x03 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\x1a\n\x18SaveTransactionsResponse\"q\n\x16GetTransactionsRequest\x12\x15\n\rstart_version\x18\x01 \x01(\x04\x12\x12\n\nbatch_size\x18\x02 \x01(\x04\x12\x16\n\x0eledger_version\x18\x03 \x01(\x04\x12\x14\n\x0c\x66\x65tch_events\x18\x04 \x01(\x08\"W\n\x17GetTransactionsResponse\x12<\n\x13txn_list_with_proof\x18\x01 \x01(\x0b\x32\x1f.types.TransactionListWithProof\"L\n(GetAccountStateWithProofByVersionRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x0c\x12\x0f\n\x07version\x18\x02 \x01(\x04\"\x97\x01\n)GetAccountStateWithProofByVersionResponse\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x01 \x01(\x0b\x32\x17.types.AccountStateBlob\x12\x35\n\x13sparse_merkle_proof\x18\x02 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\x17\n\x15GetStartupInfoRequest\"<\n\x16GetStartupInfoResponse\x12\"\n\x04info\x18\x01 \x01(\x0b\x32\x14.storage.StartupInfo\"\x94\x01\n\x0bStartupInfo\x12&\n\x0bledger_info\x18\x01 \x01(\x0b\x32\x11.types.LedgerInfo\x12\x16\n\x0elatest_version\x18\x02 \x01(\x04\x12\x1f\n\x17\x61\x63\x63ount_state_root_hash\x18\x03 \x01(\x0c\x12$\n\x1cledger_frozen_subtree_hashes\x18\x04 \x03(\x0c\":\n#GetLatestLedgerInfosPerEpochRequest\x12\x13\n\x0bstart_epoch\x18\x01 \x01(\x04\"d\n$GetLatestLedgerInfosPerEpochResponse\x12<\n\x13latest_ledger_infos\x18\x01 \x03(\x0b\x32\x1f.types.LedgerInfoWithSignatures2\xf6\x04\n\x07Storage\x12W\n\x10SaveTransactions\x12 .storage.SaveTransactionsRequest\x1a!.storage.SaveTransactionsResponse\x12_\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\x12T\n\x0fGetTransactions\x12\x1f.storage.GetTransactionsRequest\x1a .storage.GetTransactionsResponse\x12\x8a\x01\n!GetAccountStateWithProofByVersion\x12\x31.storage.GetAccountStateWithProofByVersionRequest\x1a\x32.storage.GetAccountStateWithProofByVersionResponse\x12Q\n\x0eGetStartupInfo\x12\x1e.storage.GetStartupInfoRequest\x1a\x1f.storage.GetStartupInfoResponse\x12{\n\x1cGetLatestLedgerInfosPerEpoch\x12,.storage.GetLatestLedgerInfosPerEpochRequest\x1a-.storage.GetLatestLedgerInfosPerEpochResponseb\x06proto3')
   ,
   dependencies=[get__with__proof__pb2.DESCRIPTOR,ledger__info__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,account__state__blob__pb2.DESCRIPTOR,proof__pb2.DESCRIPTOR,])
 
@@ -366,6 +366,68 @@ _STARTUPINFO = _descriptor.Descriptor(
   serialized_end=998,
 )
 
+
+_GETLATESTLEDGERINFOSPEREPOCHREQUEST = _descriptor.Descriptor(
+  name='GetLatestLedgerInfosPerEpochRequest',
+  full_name='storage.GetLatestLedgerInfosPerEpochRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='start_epoch', full_name='storage.GetLatestLedgerInfosPerEpochRequest.start_epoch', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1000,
+  serialized_end=1058,
+)
+
+
+_GETLATESTLEDGERINFOSPEREPOCHRESPONSE = _descriptor.Descriptor(
+  name='GetLatestLedgerInfosPerEpochResponse',
+  full_name='storage.GetLatestLedgerInfosPerEpochResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='latest_ledger_infos', full_name='storage.GetLatestLedgerInfosPerEpochResponse.latest_ledger_infos', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1060,
+  serialized_end=1160,
+)
+
 _SAVETRANSACTIONSREQUEST.fields_by_name['txns_to_commit'].message_type = transaction__pb2._TRANSACTIONTOCOMMIT
 _SAVETRANSACTIONSREQUEST.fields_by_name['ledger_info_with_signatures'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
 _GETTRANSACTIONSRESPONSE.fields_by_name['txn_list_with_proof'].message_type = transaction__pb2._TRANSACTIONLISTWITHPROOF
@@ -373,6 +435,7 @@ _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE.fields_by_name['account_state_blob'].
 _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE.fields_by_name['sparse_merkle_proof'].message_type = proof__pb2._SPARSEMERKLEPROOF
 _GETSTARTUPINFORESPONSE.fields_by_name['info'].message_type = _STARTUPINFO
 _STARTUPINFO.fields_by_name['ledger_info'].message_type = ledger__info__pb2._LEDGERINFO
+_GETLATESTLEDGERINFOSPEREPOCHRESPONSE.fields_by_name['latest_ledger_infos'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
 DESCRIPTOR.message_types_by_name['SaveTransactionsRequest'] = _SAVETRANSACTIONSREQUEST
 DESCRIPTOR.message_types_by_name['SaveTransactionsResponse'] = _SAVETRANSACTIONSRESPONSE
 DESCRIPTOR.message_types_by_name['GetTransactionsRequest'] = _GETTRANSACTIONSREQUEST
@@ -382,6 +445,8 @@ DESCRIPTOR.message_types_by_name['GetAccountStateWithProofByVersionResponse'] = 
 DESCRIPTOR.message_types_by_name['GetStartupInfoRequest'] = _GETSTARTUPINFOREQUEST
 DESCRIPTOR.message_types_by_name['GetStartupInfoResponse'] = _GETSTARTUPINFORESPONSE
 DESCRIPTOR.message_types_by_name['StartupInfo'] = _STARTUPINFO
+DESCRIPTOR.message_types_by_name['GetLatestLedgerInfosPerEpochRequest'] = _GETLATESTLEDGERINFOSPEREPOCHREQUEST
+DESCRIPTOR.message_types_by_name['GetLatestLedgerInfosPerEpochResponse'] = _GETLATESTLEDGERINFOSPEREPOCHRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 SaveTransactionsRequest = _reflection.GeneratedProtocolMessageType('SaveTransactionsRequest', (_message.Message,), {
@@ -447,6 +512,20 @@ StartupInfo = _reflection.GeneratedProtocolMessageType('StartupInfo', (_message.
   })
 _sym_db.RegisterMessage(StartupInfo)
 
+GetLatestLedgerInfosPerEpochRequest = _reflection.GeneratedProtocolMessageType('GetLatestLedgerInfosPerEpochRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTLEDGERINFOSPEREPOCHREQUEST,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestLedgerInfosPerEpochRequest)
+  })
+_sym_db.RegisterMessage(GetLatestLedgerInfosPerEpochRequest)
+
+GetLatestLedgerInfosPerEpochResponse = _reflection.GeneratedProtocolMessageType('GetLatestLedgerInfosPerEpochResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTLEDGERINFOSPEREPOCHRESPONSE,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestLedgerInfosPerEpochResponse)
+  })
+_sym_db.RegisterMessage(GetLatestLedgerInfosPerEpochResponse)
+
 
 
 _STORAGE = _descriptor.ServiceDescriptor(
@@ -455,8 +534,8 @@ _STORAGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1001,
-  serialized_end=1506,
+  serialized_start=1163,
+  serialized_end=1793,
   methods=[
   _descriptor.MethodDescriptor(
     name='SaveTransactions',
@@ -501,6 +580,15 @@ _STORAGE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_GETSTARTUPINFOREQUEST,
     output_type=_GETSTARTUPINFORESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetLatestLedgerInfosPerEpoch',
+    full_name='storage.Storage.GetLatestLedgerInfosPerEpoch',
+    index=5,
+    containing_service=None,
+    input_type=_GETLATESTLEDGERINFOSPEREPOCHREQUEST,
+    output_type=_GETLATESTLEDGERINFOSPEREPOCHRESPONSE,
     serialized_options=None,
   ),
 ])
