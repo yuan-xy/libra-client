@@ -17,6 +17,7 @@ setuptools.setup(
         'canoser==0.2.0',
         'grpcio',
         'PyNaCl',
+        'pysha3',
         'mnemonic'
     ],
     classifiers=[

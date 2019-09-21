@@ -1,5 +1,5 @@
 from nacl.signing import SigningKey
-import hashlib
+from libra.key_factory import new_sha3_256
 from enum import Enum
 
 
@@ -9,7 +9,7 @@ class Account:
     def __init__(self, private_key, sequence_number=0):
         self._signing_key = SigningKey(private_key)
         self._verify_key = self._signing_key.verify_key
-        shazer = hashlib.sha3_256()
+        shazer = new_sha3_256()
         shazer.update(self._verify_key.encode())
         self.address = shazer.digest()
         self.sequence_number = sequence_number

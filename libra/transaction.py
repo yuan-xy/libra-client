@@ -104,9 +104,8 @@ class RawTransaction(Struct):
 
     @classmethod
     def gen_mint_transaction(cls, receiver, micro_libra):
-        code = cls.get_script_bytecode("transaction_scripts/mint.bytecode")
-        tran = cls(code, ["address", "u64"], [receiver, micro_libra])
-        return tran
+        pass
+        #TODO:
 
     @staticmethod
     def get_script_bytecode(script_file):

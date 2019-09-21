@@ -3,12 +3,12 @@ from nacl.signing import VerifyKey
 import struct
 import requests
 import time
-import hashlib
-import pdb
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import *
+from libra.key_factory import new_sha3_256
+
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -162,7 +162,6 @@ class Client:
         sequence_number = self.get_sequence_number(sender_account.address)
         raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
             receiver_address, micro_libra, max_gas, unit_price)
-        pdb.set_trace()
         raw_txn_bytes = raw_tx.serialize()
         tx_hash = Client.raw_tx_hash(raw_txn_bytes)
         signature = sender_account.sign(tx_hash)[:64]
@@ -173,7 +172,7 @@ class Client:
 
     @staticmethod
     def raw_tx_hash_seed():
-        sha3 = hashlib.sha3_256()
+        sha3 = new_sha3_256()
         RAW_TRANSACTION_HASHER = b"RawTransaction"
         LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
         sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
@@ -182,7 +181,7 @@ class Client:
     @staticmethod
     def raw_tx_hash(raw_txn_bytes):
         salt = Client.raw_tx_hash_seed()
-        shazer = hashlib.sha3_256()
+        shazer = new_sha3_256()
         shazer.update(salt)
         shazer.update(raw_txn_bytes)
         return shazer.digest()
