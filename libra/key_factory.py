@@ -9,7 +9,7 @@ def sha3_256_mod():
         return hashlib.sha3_256
     else:
         import sha3
-        sha3.sha3_256
+        return sha3.sha3_256
 
 def new_sha3_256():
     return sha3_256_mod()()
