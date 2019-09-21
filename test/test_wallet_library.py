@@ -1,9 +1,13 @@
 import libra
 from tempfile import NamedTemporaryFile
+from libra.key_factory import has_sha3
+
 import pdb
 
 
 def test_wallet():
+    if not has_sha3():
+        return
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
