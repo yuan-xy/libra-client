@@ -13,6 +13,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+import validator_set_pb2 as validator__set__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,8 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='types',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x11ledger_info.proto\x12\x05types\"\xa8\x01\n\nLedgerInfo\x12\x0f\n\x07version\x18\x01 \x01(\x04\x12$\n\x1ctransaction_accumulator_hash\x18\x02 \x01(\x0c\x12\x1b\n\x13\x63onsensus_data_hash\x18\x03 \x01(\x0c\x12\x1a\n\x12\x63onsensus_block_id\x18\x04 \x01(\x0c\x12\x11\n\tepoch_num\x18\x05 \x01(\x04\x12\x17\n\x0ftimestamp_usecs\x18\x06 \x01(\x04\"q\n\x18LedgerInfoWithSignatures\x12-\n\nsignatures\x18\x01 \x03(\x0b\x32\x19.types.ValidatorSignature\x12&\n\x0bledger_info\x18\x02 \x01(\x0b\x32\x11.types.LedgerInfo\"=\n\x12ValidatorSignature\x12\x14\n\x0cvalidator_id\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\x62\x06proto3')
-)
+  serialized_pb=_b('\n\x11ledger_info.proto\x12\x05types\x1a\x13validator_set.proto\"\xd9\x01\n\nLedgerInfo\x12\x0f\n\x07version\x18\x01 \x01(\x04\x12$\n\x1ctransaction_accumulator_hash\x18\x02 \x01(\x0c\x12\x1b\n\x13\x63onsensus_data_hash\x18\x03 \x01(\x0c\x12\x1a\n\x12\x63onsensus_block_id\x18\x04 \x01(\x0c\x12\x11\n\tepoch_num\x18\x05 \x01(\x04\x12\x17\n\x0ftimestamp_usecs\x18\x06 \x01(\x04\x12/\n\x12next_validator_set\x18\x07 \x01(\x0b\x32\x13.types.ValidatorSet\"q\n\x18LedgerInfoWithSignatures\x12-\n\nsignatures\x18\x01 \x03(\x0b\x32\x19.types.ValidatorSignature\x12&\n\x0bledger_info\x18\x02 \x01(\x0b\x32\x11.types.LedgerInfo\"=\n\x12ValidatorSignature\x12\x14\n\x0cvalidator_id\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\x62\x06proto3')
+  ,
+  dependencies=[validator__set__pb2.DESCRIPTOR,])
 
 
 
@@ -75,6 +77,13 @@ _LEDGERINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='next_validator_set', full_name='types.LedgerInfo.next_validator_set', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -87,8 +96,8 @@ _LEDGERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=29,
-  serialized_end=197,
+  serialized_start=50,
+  serialized_end=267,
 )
 
 
@@ -125,8 +134,8 @@ _LEDGERINFOWITHSIGNATURES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=199,
-  serialized_end=312,
+  serialized_start=269,
+  serialized_end=382,
 )
 
 
@@ -163,10 +172,11 @@ _VALIDATORSIGNATURE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=314,
-  serialized_end=375,
+  serialized_start=384,
+  serialized_end=445,
 )
 
+_LEDGERINFO.fields_by_name['next_validator_set'].message_type = validator__set__pb2._VALIDATORSET
 _LEDGERINFOWITHSIGNATURES.fields_by_name['signatures'].message_type = _VALIDATORSIGNATURE
 _LEDGERINFOWITHSIGNATURES.fields_by_name['ledger_info'].message_type = _LEDGERINFO
 DESCRIPTOR.message_types_by_name['LedgerInfo'] = _LEDGERINFO

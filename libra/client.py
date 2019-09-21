@@ -1,19 +1,18 @@
 from grpc import insecure_channel
+from nacl.signing import VerifyKey
 import struct
 import requests
 import time
-import hashlib
-import pdb
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import Transaction
+from libra.transaction import *
+from libra.key_factory import new_sha3_256
 
-from libra.proto.admission_control_pb2 import SubmitTransactionRequest
+
+from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
-from libra.proto.transaction_pb2 import SignedTransaction, TransactionArgument
-from libra.proto.access_path_pb2 import AccessPath
 
 NETWORKS = {
     'testnet':{
@@ -22,6 +21,12 @@ NETWORKS = {
     }
 }
 
+class AccountError(Exception):
+    pass
+
+class TransactionError(Exception):
+    pass
+
 
 class Client:
     def __init__(self, network="testnet"):
@@ -29,7 +34,7 @@ class Client:
         self.stub = AdmissionControlStub(self.channel)
         self.faucet_host = NETWORKS[network]['faucet_host']
 
-    def get_account_state(self, address):
+    def get_account_blob(self, address):
         if isinstance(address, str):
             address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
@@ -37,17 +42,25 @@ class Client:
         item.get_account_state_request.address = address
         resp = self.stub.UpdateToLatestLedger(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
+        version = resp.ledger_info_with_sigs.ledger_info.version
+        return (blob, version)
+
+    def get_account_resource(self, address):
+        blob, version = self.get_account_blob(address)
+        if len(blob.__str__()) == 0:
+            #TODO: bad smell
+            raise AccountError("Account state blob is empty.")
         amap = AccountState.deserialize(blob.blob).blob
         resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
         bstr = struct.pack("<{}B".format(len(resource)),*resource)
         return AccountResource.deserialize(bstr)
 
     def get_sequence_number(self, address):
-        state = self.get_account_state(address)
+        state = self.get_account_resource(address)
         return state.sequence_number
 
     def get_balance(self, address):
-        state = self.get_account_state(address)
+        state = self.get_account_resource(address)
         return state.balance
 
     def get_latest_transaction_version(self):
@@ -116,8 +129,8 @@ class Client:
         return self.get_events_received(address, 2**64-1, False, limit)
 
 
-    def mint_coins_with_faucet_service(self, receiver, num_coins, is_blocking=False):
-        url = "http://{}?amount={}&address={}".format(self.faucet_host, num_coins, receiver)
+    def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
+        url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
         resp = requests.post(url)
         if resp.status_code != 200:
             raise IOError(
@@ -129,13 +142,13 @@ class Client:
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number):
-        max_iterations = 500
+        max_iterations = 50
         print("waiting", flush=True)
         while max_iterations > 0:
-            time.sleep(0.1)
+            time.sleep(1)
             max_iterations -= 1
             transaction = self.get_account_transaction(address, sequence_number, True)
-            if len(transaction.events.events) > 0:
+            if transaction.HasField("events"):
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:
                     print("no events emitted")
@@ -144,31 +157,60 @@ class Client:
                 print(".", end='', flush=True)
         print("wait_for_transaction timeout.\n")
 
-    def transfer_coin(self, sender, recevier, amount, is_blocking=False):
-        t = Transaction.gen_transfer_transaction(recevier, amount)
-        sequence_number = self.get_sequence_number(sender.address)
-        raw_tx = t.to_raw_tx_proto(sender, sequence_number)
-        #pdb.set_trace()
-        raw_txn_bytes = raw_tx.SerializeToString()
-        def raw_tx_hash_seed():
-            sha3 = hashlib.sha3_256()
-            RAW_TRANSACTION_HASHER = b"RawTransaction"
-            LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
-            sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
-            return sha3.digest()
-        salt = raw_tx_hash_seed()
-        shazer = hashlib.sha3_256()
+    def transfer_coin(self, sender_account, receiver_address, micro_libra,
+        max_gas=140_000, unit_price=0, is_blocking=False):
+        sequence_number = self.get_sequence_number(sender_account.address)
+        raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
+            receiver_address, micro_libra, max_gas, unit_price)
+        raw_txn_bytes = raw_tx.serialize()
+        tx_hash = Client.raw_tx_hash(raw_txn_bytes)
+        signature = sender_account.sign(tx_hash)[:64]
+        signed_txn = SignedTransaction.new_for_bytes_key(raw_tx, sender_account.public_key, signature)
+        request = SubmitTransactionRequest()
+        request.signed_txn.signed_txn = signed_txn.serialize()
+        return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
+
+    @staticmethod
+    def raw_tx_hash_seed():
+        sha3 = new_sha3_256()
+        RAW_TRANSACTION_HASHER = b"RawTransaction"
+        LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
+        sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
+        return sha3.digest()
+
+    @staticmethod
+    def raw_tx_hash(raw_txn_bytes):
+        salt = Client.raw_tx_hash_seed()
+        shazer = new_sha3_256()
         shazer.update(salt)
         shazer.update(raw_txn_bytes)
-        raw_hash = shazer.digest()
-        signature = sender.sign(raw_hash)[:64];
-        request = SubmitTransactionRequest()
-        signed_txn = request.signed_txn
-        signed_txn.sender_public_key = sender.public_key
-        signed_txn.raw_txn_bytes = raw_txn_bytes
-        signed_txn.sender_signature = signature
-        resp = self.stub.SubmitTransaction(request)
+        return shazer.digest()
+
+    @staticmethod
+    def verify_transaction(message, public_key, signature):
+        vkey = VerifyKey(bytes(public_key))
+        vkey.verify(message, bytes(signature))
+
+
+    def submit_transaction(self, request, address, sequence_number, is_blocking):
+        resp = self.submit_transaction_non_block(request)
         if is_blocking:
-            self.wait_for_transaction(sender.address, sequence_number)
+            self.wait_for_transaction(address, sequence_number)
         return resp
 
+
+    def submit_transaction_non_block(self, request):
+        resp = self.stub.SubmitTransaction(request)
+        status = resp.WhichOneof('status')
+        if status == 'ac_status':
+            if resp.ac_status.code == AdmissionControlStatusCode.Accepted:
+                return resp
+            else:
+                raise TransactionError(f"Status code: {resp.ac_status.code}")
+        elif status == 'vm_status':
+            raise TransactionError(resp.vm_status.__str__())
+        elif status == 'mempool_status':
+            raise TransactionError(resp.mempool_status.__str__())
+        else:
+            raise TransactionError(f"Unknown Error: {resp}")
+        raise AssertionError("unreacheable")

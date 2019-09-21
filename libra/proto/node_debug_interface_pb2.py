@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='debug',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x1anode_debug_interface.proto\x12\x05\x64\x65\x62ug\"\x17\n\x15GetNodeDetailsRequest\"\x7f\n\x16GetNodeDetailsResponse\x12\x37\n\x05stats\x18\x01 \x03(\x0b\x32(.debug.GetNodeDetailsResponse.StatsEntry\x1a,\n\nStatsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x12\n\x10GetEventsRequest\"1\n\x11GetEventsResponse\x12\x1c\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x0c.debug.Event\"6\n\x05\x45vent\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x0c\n\x04json\x18\x03 \x01(\t\" \n\x1e\x44umpJemallocHeapProfileRequest\"6\n\x1f\x44umpJemallocHeapProfileResponse\x12\x13\n\x0bstatus_code\x18\x01 \x01(\x05\x32\x93\x02\n\x12NodeDebugInterface\x12O\n\x0eGetNodeDetails\x12\x1c.debug.GetNodeDetailsRequest\x1a\x1d.debug.GetNodeDetailsResponse\"\x00\x12@\n\tGetEvents\x12\x17.debug.GetEventsRequest\x1a\x18.debug.GetEventsResponse\"\x00\x12j\n\x17\x44umpJemallocHeapProfile\x12%.debug.DumpJemallocHeapProfileRequest\x1a&.debug.DumpJemallocHeapProfileResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x1anode_debug_interface.proto\x12\x05\x64\x65\x62ug\"\x17\n\x15GetNodeDetailsRequest\"\x7f\n\x16GetNodeDetailsResponse\x12\x37\n\x05stats\x18\x01 \x03(\x0b\x32(.debug.GetNodeDetailsResponse.StatsEntry\x1a,\n\nStatsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x12\n\x10GetEventsRequest\"1\n\x11GetEventsResponse\x12\x1c\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x0c.debug.Event\"6\n\x05\x45vent\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x0c\n\x04json\x18\x03 \x01(\t2\xa7\x01\n\x12NodeDebugInterface\x12O\n\x0eGetNodeDetails\x12\x1c.debug.GetNodeDetailsRequest\x1a\x1d.debug.GetNodeDetailsResponse\"\x00\x12@\n\tGetEvents\x12\x17.debug.GetEventsRequest\x1a\x18.debug.GetEventsResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -217,61 +217,6 @@ _EVENT = _descriptor.Descriptor(
   serialized_end=316,
 )
 
-
-_DUMPJEMALLOCHEAPPROFILEREQUEST = _descriptor.Descriptor(
-  name='DumpJemallocHeapProfileRequest',
-  full_name='debug.DumpJemallocHeapProfileRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=318,
-  serialized_end=350,
-)
-
-
-_DUMPJEMALLOCHEAPPROFILERESPONSE = _descriptor.Descriptor(
-  name='DumpJemallocHeapProfileResponse',
-  full_name='debug.DumpJemallocHeapProfileResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='status_code', full_name='debug.DumpJemallocHeapProfileResponse.status_code', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=352,
-  serialized_end=406,
-)
-
 _GETNODEDETAILSRESPONSE_STATSENTRY.containing_type = _GETNODEDETAILSRESPONSE
 _GETNODEDETAILSRESPONSE.fields_by_name['stats'].message_type = _GETNODEDETAILSRESPONSE_STATSENTRY
 _GETEVENTSRESPONSE.fields_by_name['events'].message_type = _EVENT
@@ -280,8 +225,6 @@ DESCRIPTOR.message_types_by_name['GetNodeDetailsResponse'] = _GETNODEDETAILSRESP
 DESCRIPTOR.message_types_by_name['GetEventsRequest'] = _GETEVENTSREQUEST
 DESCRIPTOR.message_types_by_name['GetEventsResponse'] = _GETEVENTSRESPONSE
 DESCRIPTOR.message_types_by_name['Event'] = _EVENT
-DESCRIPTOR.message_types_by_name['DumpJemallocHeapProfileRequest'] = _DUMPJEMALLOCHEAPPROFILEREQUEST
-DESCRIPTOR.message_types_by_name['DumpJemallocHeapProfileResponse'] = _DUMPJEMALLOCHEAPPROFILERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 GetNodeDetailsRequest = _reflection.GeneratedProtocolMessageType('GetNodeDetailsRequest', (_message.Message,), {
@@ -327,20 +270,6 @@ Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Event)
 
-DumpJemallocHeapProfileRequest = _reflection.GeneratedProtocolMessageType('DumpJemallocHeapProfileRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DUMPJEMALLOCHEAPPROFILEREQUEST,
-  '__module__' : 'node_debug_interface_pb2'
-  # @@protoc_insertion_point(class_scope:debug.DumpJemallocHeapProfileRequest)
-  })
-_sym_db.RegisterMessage(DumpJemallocHeapProfileRequest)
-
-DumpJemallocHeapProfileResponse = _reflection.GeneratedProtocolMessageType('DumpJemallocHeapProfileResponse', (_message.Message,), {
-  'DESCRIPTOR' : _DUMPJEMALLOCHEAPPROFILERESPONSE,
-  '__module__' : 'node_debug_interface_pb2'
-  # @@protoc_insertion_point(class_scope:debug.DumpJemallocHeapProfileResponse)
-  })
-_sym_db.RegisterMessage(DumpJemallocHeapProfileResponse)
-
 
 _GETNODEDETAILSRESPONSE_STATSENTRY._options = None
 
@@ -350,8 +279,8 @@ _NODEDEBUGINTERFACE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=409,
-  serialized_end=684,
+  serialized_start=319,
+  serialized_end=486,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetNodeDetails',
@@ -369,15 +298,6 @@ _NODEDEBUGINTERFACE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_GETEVENTSREQUEST,
     output_type=_GETEVENTSRESPONSE,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='DumpJemallocHeapProfile',
-    full_name='debug.NodeDebugInterface.DumpJemallocHeapProfile',
-    index=2,
-    containing_service=None,
-    input_type=_DUMPJEMALLOCHEAPPROFILEREQUEST,
-    output_type=_DUMPJEMALLOCHEAPPROFILERESPONSE,
     serialized_options=None,
   ),
 ])
