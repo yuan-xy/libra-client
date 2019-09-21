@@ -79,7 +79,7 @@ def test_transfer_coin():
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     c = libra.Client("testnet")
-    c.mint_coins_with_faucet_service(a0.address, 1234, True)
+    c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
     balance0 = c.get_balance(a0.address)
     try:
         balance1 = c.get_balance(a1.address)
