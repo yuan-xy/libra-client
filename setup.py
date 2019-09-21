@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="libra-client",
-    version="0.0.1",
+    version="0.2.0",
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
     description="A python client for Libra network.",
