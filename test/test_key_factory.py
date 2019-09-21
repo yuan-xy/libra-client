@@ -1,10 +1,13 @@
 import libra
 from mnemonic import Mnemonic
 from nacl.signing import SigningKey
+from libra.key_factory import has_sha3
 
 import pdb
 
 def test_key():
+    if not has_sha3():
+        return
     m = Mnemonic("english")
     mnemonic = 'legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal will'
     data = b'\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f'

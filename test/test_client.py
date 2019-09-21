@@ -79,8 +79,12 @@ def test_transfer_coin():
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     c = libra.Client("testnet")
+    c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
     balance0 = c.get_balance(a0.address)
-    balance1 = c.get_balance(a1.address)
+    try:
+        balance1 = c.get_balance(a1.address)
+    except libra.client.AccountError:
+        balance1 = 0
     ret = c.transfer_coin(a0, a1.address, 1234, is_blocking=True)
     assert ret.ac_status.code == libra.proto.admission_control_pb2.AdmissionControlStatusCode.Accepted
     assert c.get_balance(a0.address) == balance0 - 1234
