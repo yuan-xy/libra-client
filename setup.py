@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/yuan-xy/libra-client.git",
     packages=setuptools.find_packages(),
     install_requires=[
-        'canoser==0.1.3',
+        'canoser==0.2.0',
         'grpcio',
         'PyNaCl',
         'mnemonic'

@@ -1,4 +1,5 @@
 from grpc import insecure_channel
+from nacl.signing import VerifyKey
 import struct
 import requests
 import time
@@ -7,13 +8,11 @@ import pdb
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import Transaction
+from libra.transaction import *
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
-from libra.proto.transaction_pb2 import SignedTransaction, TransactionArgument
-from libra.proto.access_path_pb2 import AccessPath
 
 NETWORKS = {
     'testnet':{
@@ -158,31 +157,41 @@ class Client:
                 print(".", end='', flush=True)
         print("wait_for_transaction timeout.\n")
 
-    def transfer_coin(self, sender_account, recevier_address, micro_libra,
+    def transfer_coin(self, sender_account, receiver_address, micro_libra,
         max_gas=140_000, unit_price=0, is_blocking=False):
         sequence_number = self.get_sequence_number(sender_account.address)
-        t = Transaction.gen_transfer_transaction(recevier_address, micro_libra)
-        raw_tx = t.to_raw_tx_proto(sender_account, sequence_number, max_gas, unit_price)
-        #pdb.set_trace()
-        raw_txn_bytes = raw_tx.SerializeToString()
-        def raw_tx_hash_seed():
-            sha3 = hashlib.sha3_256()
-            RAW_TRANSACTION_HASHER = b"RawTransaction"
-            LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
-            sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
-            return sha3.digest()
-        salt = raw_tx_hash_seed()
+        raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
+            receiver_address, micro_libra, max_gas, unit_price)
+        pdb.set_trace()
+        raw_txn_bytes = raw_tx.serialize()
+        tx_hash = Client.raw_tx_hash(raw_txn_bytes)
+        signature = sender_account.sign(tx_hash)[:64]
+        signed_txn = SignedTransaction.new_for_bytes_key(raw_tx, sender_account.public_key, signature)
+        request = SubmitTransactionRequest()
+        request.signed_txn.signed_txn = signed_txn.serialize()
+        return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
+
+    @staticmethod
+    def raw_tx_hash_seed():
+        sha3 = hashlib.sha3_256()
+        RAW_TRANSACTION_HASHER = b"RawTransaction"
+        LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
+        sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
+        return sha3.digest()
+
+    @staticmethod
+    def raw_tx_hash(raw_txn_bytes):
+        salt = Client.raw_tx_hash_seed()
         shazer = hashlib.sha3_256()
         shazer.update(salt)
         shazer.update(raw_txn_bytes)
-        raw_hash = shazer.digest()
-        signature = sender_account.sign(raw_hash)[:64];
-        request = SubmitTransactionRequest()
-        signed_txn = request.signed_txn
-        signed_txn.sender_public_key = sender_account.public_key
-        signed_txn.raw_txn_bytes = raw_txn_bytes
-        signed_txn.sender_signature = signature
-        return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
+        return shazer.digest()
+
+    @staticmethod
+    def verify_transaction(message, public_key, signature):
+        vkey = VerifyKey(bytes(public_key))
+        vkey.verify(message, bytes(signature))
+
 
     def submit_transaction(self, request, address, sequence_number, is_blocking):
         resp = self.submit_transaction_non_block(request)
