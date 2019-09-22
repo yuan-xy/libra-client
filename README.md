@@ -1,5 +1,4 @@
-# LibraClient  [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+# LibraClient  [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
 LibraClient is an unofficial client for [Libra blockchain](http://libra.org) written in python language. The Client allows you interact whith Libra Network easily. For Python programmers, you can also call the client side api to interact with Libra Network.
@@ -15,7 +14,7 @@ $ pip install libra-client
 
 ## Usage
 
-For programmers, please see URL.
+For programmers, please see [Client side Libra API for python programmer](https://github.com/yuan-xy/libra-client#client-side-libra-api-for-python-programmer).
 
 ### Start Libra Client and Connect to the Testnet
 

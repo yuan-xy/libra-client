@@ -93,8 +93,6 @@ Mint request submitted
 ```
 Note that when the request is submitted, it means that it has been added to the mempool (of a validator node on testnet) successfully. It does not necessarily imply that it will be successfully completed. Later, we will query the account balance to confirm if minting was successful.
 
-If your account mint command did not submit your request successfully, refer to
-[Troubleshooting](#minting-and-adding-money-to-account)
 
 ### Step 2: Add 52 LBR to Bob’s Account
 
@@ -112,8 +110,6 @@ Sample output on success:
 >> Minting coins
 Mint request submitted
 ```
-If your account mint command did not submit your request successfully, refer to
-[Troubleshooting](#minting-and-adding-money-to-account)
 
 ### Step 3: Check the Balance
 
@@ -172,7 +168,6 @@ You can use the command `query txn_acc_seq 0 0 true` (transaction by account and
 
 You just submitted your transaction to a validator node on testnet, and it was included in the [mempool](reference/glossary.md#mempool) of the validator. This doesn't necessarily mean your transaction has been executed. In theory, if the system were slow or overloaded, it would take some time to see the results, and you may have to check multiple times by querying the accounts. To query an account with index 0, you can use the command  `query account_state 0.` The expected output is shown in the [Sample Outputs](#query-events) section
 
-To troubleshoot the transfer command, refer to [Troubleshooting](#the-transfer-command).
 
 **The Blocking Transfer Command**: You can use the `transferb` command (as shown below), instead of the `transfer` command. `transferb` will submit the transaction and return to the client prompt only after the transaction has been committed to the blockchain. An example is shown below:
 
@@ -208,61 +203,6 @@ Balance is: 62
 
 You have successfully executed your transaction on the Libra testnet and transferred 10 LBR from Alice’s account to Bob’s account!
 
-## Troubleshooting
-
-### Setup
-
-* Update Rust:
-    * Run `rustup update` from your libra directory.
-* Update protoc:
-    * Update `protoc` to version 3.6.0 or above.
-* Re-run setup script from your libra directory:
-    * `./scripts/dev_setup.sh`
-
-### Client Build and Run
-
-If you are experiencing build failures, try to remove the cargo lock file from the libra directory:
-
-* `rm Cargo.lock`
-
-If your client did not connect to the testnet:
-
-* Check your internet connection.
-* Ensure that you are using the latest version of the client. Pull the latest Libra Core and rerun the client:
-    * `./scripts/cli/start_cli_testnet.sh`
-
-
-### Minting and Adding Money to Account
-
-* If the validator node you connected to on testnet is unavailable, you will get a “Server unavailable” message as shown below:
-
-  ```plaintext
-  libra% account mint 0 110
-  >> Minting coins
-  [ERROR] Error minting coins: Server unavailable, please retry and/or check **if** host passed to the client is running
-  ```
-* If your balance was not updated after submitting a transaction, wait a moment and query the balance again. There may be a delay if the blockchain is experiencing a very high volume of transactions.  If your balance still is not updated, please try minting again.
-
-* To check if an account exists, query the account state. For an account with index 0 enter this:
-
-  `libra% query account_state 0`
-
-### The Transfer Command
-
-If the testnet validator node (your client was connected to) is unavailable or your connection to the testnet has timed-out, you will see this error:
-
-```plaintext
-libra% transfer 0 1 10
->> Transferring
-[ERROR] Failed to perform transaction: Server unavailable, please retry and/or check if host passed to the client is running
-```
-To troubleshoot transfer errors:
-
-* Check the connection to testnet.
-* Query the sender account to make sure it exists. Use the following command for an account with index 0:
-    * `query account_state 0`
-* You can try quitting the client using `quit` or `q!`, and rerun the following command to connect to the testnet:
-    * `./scripts/cli/start_cli_testnet.sh` from the libra directory
 
 ## Sample Outputs of Additional Query Commands
 

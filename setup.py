@@ -1,11 +1,14 @@
 import setuptools
+from libra.version import version
 
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    content = fh.read()
+    arr = content.split("\n")
+    long_description = "\n".join(arr[3:])
 
 setuptools.setup(
     name="libra-client",
-    version="0.2.0",
+    version=version,
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
     description="A python client for Libra network.",
@@ -14,10 +17,9 @@ setuptools.setup(
     url="https://github.com/yuan-xy/libra-client.git",
     packages=setuptools.find_packages(),
     install_requires=[
-        'canoser==0.2.0',
+        'canoser>=0.2.0',
         'grpcio',
         'PyNaCl',
-        'pysha3',
         'mnemonic'
     ],
     classifiers=[
