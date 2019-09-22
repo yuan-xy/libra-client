@@ -25,3 +25,4 @@ def test_address():
     assert int_list_to_hex(int_a) == hex_a
     assert bytes_a.hex() == hex_a
     assert bytes_to_int_list(bytes_a) == int_a
+    assert hex_to_int_list(hex_a) == int_a

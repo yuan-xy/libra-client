@@ -83,8 +83,12 @@ class RawTransaction(Struct):
         micro_libra, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
         if isinstance(sender_address, bytes):
             sender_address = bytes_to_int_list(sender_address)
+        if isinstance(sender_address, str):
+            sender_address = hex_to_int_list(sender_address)
         if isinstance(receiver_address, bytes):
             receiver_address = bytes_to_int_list(receiver_address)
+        if isinstance(receiver_address, str):
+            receiver_address = hex_to_int_list(receiver_address)
         code = cls.get_script_bytecode("peer_to_peer_transfer")
         script = Script(
             code,
@@ -143,3 +147,6 @@ def int_list_to_hex(ints):
 def bytes_to_int_list(bytes_str):
     tp = struct.unpack("<{}B".format(len(bytes_str)), bytes_str)
     return list(tp)
+
+def hex_to_int_list(hex_str):
+    return bytes_to_int_list(bytes.fromhex(hex_str))
