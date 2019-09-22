@@ -27,9 +27,32 @@ To connect to a validator node running on the Libra testnet, run the client as s
 
 Once the client connects to a node on the testnet, you will see the following output.  To quit the client at any time, use the `quit` command.
 
-插入图片：
 
-Once your client is connected to the testnet, you can run CLI commands to create new accounts.  We will walk you through creating accounts for two users (let's call them Alice and Bob).
+```
+usage: <command> <args>
+
+Use the following commands:
+
+account | a
+  Account operations
+query | q
+  Query operations
+transfer | transferb | t | tb
+  <sender_account_address>|<sender_account_ref_id> <receiver_account_address>|<receiver_account_ref_id> <number_of_coins> [gas_unit_price (default=0)] [max_gas_amount (default 100000)] Suffix 'b' is for blocking.
+  Transfer coins from account to another.
+help | h
+  Prints this help
+quit | q!
+  Exit this client
+
+
+Please, input commands:
+
+libra%
+```
+
+
+Once your client is connected to the testnet, you can run CLI commands to create new accounts.  [This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
 
 
 ## Client side Libra API for python programmer
