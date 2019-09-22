@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-import readline
 import sys
 import os
-import pdb
+if os.name == 'posix':
+    import readline
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
@@ -35,7 +35,7 @@ def run_shell(libra_args):
     (commands, alias_to_cmd) = get_commands(False)
     while True:
         prompt = "libra% "
-        if sys.stdout.isatty():
+        if sys.stdout.isatty() and os.name == 'posix':
             prompt = f'\033[91m{prompt}\033[0m'
         line = input(prompt)
         params = parse_cmd(line)
@@ -65,7 +65,8 @@ def print_help(client_info: str, commands):
 
 
 def main():
-    readline.set_history_length(1000)
+    if os.name == 'posix':
+        readline.set_history_length(1000)
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')

@@ -1,5 +1,6 @@
 import abc
 import sys
+import os
 
 class Command(metaclass = abc.ABCMeta):
     @abc.abstractmethod
@@ -61,7 +62,7 @@ def print_commands(commands):
         print("\t" + cmd.get_description())
 
 def print_color(str, color, **kargs):
-    if sys.stdout.isatty():
+    if sys.stdout.isatty() and os.name == 'posix':
         print(color + str + bcolors.ENDC, **kargs)
     else:
         print(str, **kargs)
