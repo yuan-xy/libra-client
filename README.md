@@ -9,7 +9,7 @@ LibraClient is an unofficial client for [Libra blockchain](http://libra.org) wri
 Require python 3.6 or above installed.
 
 ```sh
-$ pip install libra-client
+$ python3 -m pip install libra-client
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ For programmers, please see [Client side Libra API for python programmer](https:
 To connect to a validator node running on the Libra testnet, run the client as shown below.
 
 ```bash
-./scripts/cli/start_cli_testnet.sh
+libra_shell
 ```
 
 Once the client connects to a node on the testnet, you will see the following output.  To quit the client at any time, use the `quit` command.

@@ -1,5 +1,6 @@
 import sys
-sys.path.append('./libra/proto')
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './proto')))
 
 from libra.client import Client
 from libra.account_resource import AccountState, AccountResource

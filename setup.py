@@ -11,15 +11,20 @@ setuptools.setup(
     version=version,
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
-    description="A python client for Libra network.",
+    description="A CLI inteface Libra client and Python API for Libra blockchain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yuan-xy/libra-client.git",
     packages=setuptools.find_packages(),
+    entry_points={
+        'console_scripts':['libra_shell = libra.cli.libra_shell:main']
+    },
     install_requires=[
         'canoser>=0.2.0',
+        'protobuf',
         'grpcio',
         'PyNaCl',
+        'requests'
         'mnemonic'
     ],
     classifiers=[

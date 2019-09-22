@@ -7,6 +7,7 @@ import os
 import pdb
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 
 from libra import Client, WalletLibrary
 from command import *
