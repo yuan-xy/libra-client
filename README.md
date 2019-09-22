@@ -21,7 +21,7 @@ For programmers, please see [Client side Libra API for python programmer](https:
 To connect to a validator node running on the Libra testnet, run the client as shown below.
 
 ```bash
-libra_shell
+$ libra_shell
 ```
 
 Once the client connects to a node on the testnet, you will see the following output.  To quit the client at any time, use the `quit` command.
@@ -51,7 +51,7 @@ libra%
 ```
 
 
-Once your client is connected to the testnet, you can run CLI commands to create new accounts.  [This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
+[This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
 
 
 ## Client side Libra API for python programmer
