@@ -1,6 +1,7 @@
 from canoser import *
 from canoser.types import *
 from datetime import datetime
+from libra.bytecode import bytecode
 
 # must define type by serialized sequence, not the sequence in the rust struct definition.
 # ack 'impl CanonicalSerialize for {type}' -A 20
@@ -84,7 +85,7 @@ class RawTransaction(Struct):
             sender_address = bytes_to_int_list(sender_address)
         if isinstance(receiver_address, bytes):
             receiver_address = bytes_to_int_list(receiver_address)
-        code = cls.get_script_bytecode("transaction_scripts/peer_to_peer_transfer.bytecode")
+        code = cls.get_script_bytecode("peer_to_peer_transfer")
         script = Script(
             code,
             [
@@ -108,7 +109,11 @@ class RawTransaction(Struct):
         #TODO:
 
     @staticmethod
-    def get_script_bytecode(script_file):
+    def get_script_bytecode(script_name):
+        return bytecode[script_name]
+
+    @staticmethod
+    def get_script_bytecode_deprecated(script_file):
         with open(script_file) as f:
             data = f.read()
             amap = eval(data)

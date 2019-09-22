@@ -19,7 +19,7 @@ def test_get_transaction():
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == TransactionPayload.Script
-    assert stx.raw_txn.payload.value.code == RawTransaction.get_script_bytecode("transaction_scripts/mint.bytecode")
+    assert stx.raw_txn.payload.value.code == RawTransaction.get_script_bytecode("mint")
     assert stx.raw_txn.payload.value.args[0].index == TransactionArgument.Address
     assert stx.raw_txn.payload.value.args[1].index == TransactionArgument.U64
     assert stx.raw_txn.payload.value.args[1].value == 999999000000
