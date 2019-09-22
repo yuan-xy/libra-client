@@ -30,6 +30,7 @@ class TransactionError(Exception):
 
 class Client:
     def __init__(self, network="testnet"):
+        #TODO: support local host and port.
         self.channel = insecure_channel(NETWORKS[network]['host'])
         self.stub = AdmissionControlStub(self.channel)
         self.faucet_host = NETWORKS[network]['faucet_host']
@@ -45,12 +46,15 @@ class Client:
         version = resp.ledger_info_with_sigs.ledger_info.version
         return (blob, version)
 
-    def get_account_resource(self, address):
+    def get_account_state(self, address):
         blob, version = self.get_account_blob(address)
         if len(blob.__str__()) == 0:
             #TODO: bad smell
             raise AccountError("Account state blob is empty.")
-        amap = AccountState.deserialize(blob.blob).blob
+        return AccountState.deserialize(blob.blob).blob
+
+    def get_account_resource(self, address):
+        amap = self.get_account_state(address)
         resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
         bstr = struct.pack("<{}B".format(len(resource)),*resource)
         return AccountResource.deserialize(bstr)
