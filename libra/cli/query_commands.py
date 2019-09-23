@@ -52,6 +52,9 @@ class QueryCommandGetSeqNum(Command):
          "and reset current sequence number in CLI (optional, default is false)")
 
     def execute(self, client, params):
+        if len(params) != 2:
+            print("Invalid number of arguments for sequence number query")
+            return
         print(">> Getting current sequence number")
         try:
             sn = client.get_sequence_number(params[1])
@@ -101,10 +104,12 @@ class QueryCommandGetTxnByAccountSeq(Command):
          "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params):
+        if len(params) != 4:
+            print("Invalid number of arguments for txn_acc_seq")
+            return
         print(">> Getting committed transaction by account and sequence number")
         try:
-            #TODO: params len check && parse fetch_events
-            fetch_events = False
+            fetch_events = parse_bool(params[3])
             transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
             print(f"Committed transaction: {transaction}") #transaction pretty print
             if transaction.HasField("signed_transaction"):
@@ -133,10 +138,12 @@ class QueryCommandGetTxnByRange(Command):
          "Optionally also fetch events emitted by these transactions.")
 
     def execute(self, client, params):
+        if len(params) != 4:
+            print("Invalid number of arguments for txn_range")
+            return
         try:
-            #TODO: params len check && parse fetch_events
             print(">> Getting committed transaction by range")
-            fetch_events = True
+            fetch_events = parse_bool(params[3])
             transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
             cur_version = int(params[1])
             for index, signed_tx in enumerate(transactions):
