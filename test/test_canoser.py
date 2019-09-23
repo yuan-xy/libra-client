@@ -63,7 +63,7 @@ def test_raw_transaction_with_a_program_canonical_serialization_example():
             0x8a, 0x49, 0xb9, 0xee,
         ],
         32,
-        EnumObj(TransactionPayload.Script, get_common_program()),
+        TransactionPayload('Script', get_common_program()),
         10000,
         20000,
         86400,
@@ -115,7 +115,7 @@ def test_raw_transaction_with_a_write_set_canonical_serialization_example():
 
 
 def test_transaction_argument_address_canonical_serialization_example():
-    input = EnumObj(TransactionArgument.Address, [
+    input = TransactionArgument('Address', [
         0x2c, 0x25, 0x99, 0x17, 0x85, 0x34, 0x3b, 0x23, 0xae, 0x07, 0x3a, 0x50, 0xe5, 0xfd, 0x80,
         0x9a, 0x2c, 0xd8, 0x67, 0x52, 0x6b, 0x3c, 0x1d, 0xb2, 0xb0, 0xbf, 0x5d, 0x19, 0x24, 0xc6,
         0x93, 0xed,
@@ -130,7 +130,7 @@ def test_transaction_argument_address_canonical_serialization_example():
 
 
 def test_transaction_argument_byte_array_canonical_serialization_example():
-    input = EnumObj(TransactionArgument.ByteArray, [0xCA, 0xFE, 0xD0, 0x0D])
+    input = TransactionArgument('ByteArray', [0xCA, 0xFE, 0xD0, 0x0D])
     expected_output = [
         0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xCA, 0xFE, 0xD0, 0x0D,
     ]
@@ -139,7 +139,7 @@ def test_transaction_argument_byte_array_canonical_serialization_example():
 
 
 def test_transaction_argument_string_canonical_serialization_example():
-    input = EnumObj(TransactionArgument.String, "Hello, World!")
+    input = TransactionArgument('String', "Hello, World!")
     expected_output = [
         0x02, 0x00, 0x00, 0x00, 0x0D, 0x00, 0x00, 0x00, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20,
         0x57, 0x6F, 0x72, 0x6C, 0x64, 0x21,
@@ -149,7 +149,7 @@ def test_transaction_argument_string_canonical_serialization_example():
 
 
 def test_transaction_argument_u64_canonical_serialization_example():
-    input = EnumObj(TransactionArgument.U64, 9_213_671_392_124_193_148)
+    input = TransactionArgument('U64', 9_213_671_392_124_193_148)
     expected_output = [
         0x00, 0x00, 0x00, 0x00, 0x7C, 0xC9, 0xBD, 0xA4, 0x50, 0x89, 0xDD, 0x7F,
     ]
@@ -158,7 +158,7 @@ def test_transaction_argument_u64_canonical_serialization_example():
 
 
 def test_transaction_payload_with_a_program_canonical_serialization_example():
-    input = EnumObj(TransactionPayload.Script, get_common_program())
+    input = TransactionPayload('Script', get_common_program())
     expected_output = [
         0x02, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x6D, 0x6F, 0x76, 0x65, 0x02, 0x00, 0x00,
         0x00, 0x02, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x43, 0x41, 0x46, 0x45, 0x20, 0x44,
@@ -170,7 +170,7 @@ def test_transaction_payload_with_a_program_canonical_serialization_example():
 
 
 def test_transaction_payload_with_a_write_set_canonical_serialization_example():
-    input = EnumObj(TransactionPayload.WriteSet, get_common_write_set())
+    input = TransactionPayload('WriteSet', get_common_write_set())
     expected_output = [
         0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0xA7, 0x1D, 0x76,
         0xFA, 0xA2, 0xD2, 0xD5, 0xC3, 0x22, 0x4E, 0xC3, 0xD4, 0x1D, 0xEB, 0x29, 0x39, 0x73, 0x56,
@@ -188,14 +188,14 @@ def test_transaction_payload_with_a_write_set_canonical_serialization_example():
 
 
 def test_write_op_delete_canonical_serialization_example():
-    input = EnumObj(WriteOp.Deletion)
+    input = WriteOp('Deletion')
     expected_output = [0x00, 0x00, 0x00, 0x00]
     actual_output = WriteOp.encode(input)
     assert bytes(expected_output) == actual_output
 
 
 def test_write_op_value_canonical_serialization_example():
-    input = EnumObj(WriteOp.Value, [0xca, 0xfe, 0xd0, 0x0d])
+    input = WriteOp('Value', [0xca, 0xfe, 0xd0, 0x0d])
     expected_output = [
         0x01, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xCA, 0xFE, 0xD0, 0x0D,
     ]
@@ -226,8 +226,8 @@ def get_common_program():
     return Script(
         list(b"move"),
         [
-            EnumObj(TransactionArgument.String, "CAFE D00D"),
-            EnumObj(TransactionArgument.String, "cafe d00d")
+            TransactionArgument('String', "CAFE D00D"),
+            TransactionArgument('String', "cafe d00d")
         ]
     )
 
@@ -247,7 +247,7 @@ def get_common_write_set():
                     0xf0, 0x0b, 0x37, 0x1b, 0x25, 0xcc, 0x97,
                 ]
             ),
-            EnumObj(WriteOp.Deletion)
+            WriteOp('Deletion')
         ),
         (
             AccessPath(
@@ -258,7 +258,7 @@ def get_common_write_set():
                 ],
                 [0x01, 0x21, 0x7d, 0xa6, 0xc6, 0xb3, 0xe1, 0x9f, 0x18],
             ),
-            EnumObj(WriteOp.Value, [0xca, 0xfe, 0xd0, 0x0d])
+            WriteOp('Value', [0xca, 0xfe, 0xd0, 0x0d])
         )
     ])
 

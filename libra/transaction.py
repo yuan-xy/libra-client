@@ -13,10 +13,19 @@ ED25519_SIGNATURE_LENGTH = 64
 
 #pub struct ByteArray(Vec<u8>);
 
-TransactionArgument = EnumT(U64=Uint64, Address=[Uint8, ADDRESS_LENGTH], String=str, ByteArray=[Uint8])
+class TransactionArgument(RustEnum):
+    _enums = [
+        ('U64', Uint64),
+        ('Address', [Uint8, ADDRESS_LENGTH]),
+        ('String', str),
+        ('ByteArray', [Uint8])
+    ]
 
-WriteOp = EnumT(Deletion=None, Value=[Uint8])
-
+class WriteOp(RustEnum):
+    _enums = [
+        ('Deletion', None),
+        ('Value', [Uint8])
+    ]
 
 class AccessPath(Struct):
     _fields = [
@@ -54,8 +63,13 @@ class Script(Struct):
         ('args', [TransactionArgument])
     ]
 
-
-TransactionPayload = EnumT(Program=Program, WriteSet=WriteSet, Script=Script, Module=Module)
+class TransactionPayload(RustEnum):
+    _enums = [
+        ('Program', Program),
+        ('WriteSet', WriteSet),
+        ('Script', Script),
+        ('Module', Module)
+    ]
 
 class RawTransaction(Struct):
     _fields = [
@@ -71,7 +85,7 @@ class RawTransaction(Struct):
     def new_write_set(cls, sender_address, sequence_number, write_set):
         return RawTransaction(
             sender_address, sequence_number,
-            EnumObj(TransactionPayload.WriteSet, write_set),
+            TransactionPayload('WriteSet', write_set),
             # Since write-set transactions bypass the VM, these fields aren't relevant.
             0, 0,
             # Write-set transactions are special and important and shouldn't expire.
@@ -93,14 +107,14 @@ class RawTransaction(Struct):
         script = Script(
             code,
             [
-                EnumObj(TransactionArgument.Address, receiver_address),
-                EnumObj(TransactionArgument.U64, micro_libra)
+                TransactionArgument('Address', receiver_address),
+                TransactionArgument('U64', micro_libra)
             ]
         )
         return RawTransaction(
             sender_address,
             sequence_number,
-            EnumObj(TransactionPayload.Script, script),
+            TransactionPayload('Script', script),
             max_gas_amount,
             gas_unit_price,
             int(datetime.utcnow().timestamp()) + txn_expiration

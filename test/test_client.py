@@ -18,10 +18,13 @@ def test_get_transaction():
     stx = SignedTransaction.deserialize(txn.signed_txn)
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
-    assert stx.raw_txn.payload.index == TransactionPayload.Script
+    assert stx.raw_txn.payload.index == 2
+    assert stx.raw_txn.payload.Script == True
     assert stx.raw_txn.payload.value.code == RawTransaction.get_script_bytecode("mint")
-    assert stx.raw_txn.payload.value.args[0].index == TransactionArgument.Address
-    assert stx.raw_txn.payload.value.args[1].index == TransactionArgument.U64
+    assert stx.raw_txn.payload.value.args[0].index == 1
+    assert stx.raw_txn.payload.value.args[0].Address == True
+    assert stx.raw_txn.payload.value.args[1].index == 0
+    assert stx.raw_txn.payload.value.args[1].U64 == True
     assert stx.raw_txn.payload.value.args[1].value == 999999000000
     assert stx.raw_txn.max_gas_amount == 140000
     assert stx.raw_txn.gas_unit_price == 0
