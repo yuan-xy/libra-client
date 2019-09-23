@@ -30,7 +30,7 @@ def get_commands(include_dev: bool):
 
 
 def run_shell(libra_args):
-    client = ClientProxy(Client("testnet"), libra_args)
+    client = ClientProxy(Client.new(libra_args.host, libra_args.port), libra_args)
     client_info = "Connected to validator at: {}:{}".format(libra_args.host, libra_args.port)
     (commands, alias_to_cmd) = get_commands(False)
     while True:

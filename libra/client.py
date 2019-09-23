@@ -16,24 +16,48 @@ from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 
 NETWORKS = {
     'testnet':{
-        'host': "ac.testnet.libra.org:8000",
+        'host': "ac.testnet.libra.org",
+        'port': "8000",
         'faucet_host': "faucet.testnet.libra.org"
     }
 }
 
-class AccountError(Exception):
+class LibraError(Exception):
     pass
 
-class TransactionError(Exception):
+class AccountError(LibraError):
     pass
 
+class TransactionError(LibraError):
+    pass
+
+class LibraNetError(LibraError):
+    pass
 
 class Client:
     def __init__(self, network="testnet"):
-        #TODO: support local host and port.
-        self.channel = insecure_channel(NETWORKS[network]['host'])
+        if network == "mainnet":
+            raise LibraNetError("Mainnet is not supported currently")
+        if network != "testnet":
+            raise LibraNetError(f"Unknown network: {network}")
+        self.host = NETWORKS[network]['host']
+        self.port = NETWORKS[network]['port']
+        self.init_grpc()
+        if network == "testnet":
+            self.faucet_host = NETWORKS[network]['faucet_host']
+
+    def init_grpc(self):
+        self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
-        self.faucet_host = NETWORKS[network]['faucet_host']
+
+    @classmethod
+    def new(cls, host, port):
+        ret = cls.__new__(cls)
+        ret.host = host
+        ret.port = port
+        ret.init_grpc()
+        return ret
+
 
     def get_account_blob(self, address):
         if isinstance(address, str):

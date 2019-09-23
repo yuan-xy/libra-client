@@ -93,3 +93,16 @@ def test_transfer_coin():
     assert c.get_balance(a0.address) == balance0 - 1234
     assert c.get_balance(a1.address) == balance1 + 1234
 
+def test_client_init():
+    c = libra.Client.new("localhost","8080")
+    assert c.host == "localhost"
+    assert c.port == "8080"
+    assert hasattr(c, "faucet_host") == False
+    c2 = libra.Client("testnet")
+    assert c2.host == "ac.testnet.libra.org"
+    assert c2.port == "8000"
+    assert c2.faucet_host == "faucet.testnet.libra.org"
+    with pytest.raises(libra.LibraNetError):
+        libra.Client("xnet")
+    with pytest.raises(libra.LibraNetError):
+        libra.Client("mainnet")
