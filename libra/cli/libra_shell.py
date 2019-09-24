@@ -29,9 +29,15 @@ def get_commands(include_dev: bool):
     return (commands, alias_to_cmd)
 
 
-def run_shell(libra_args):
-    client = ClientProxy(Client.new(libra_args.host, libra_args.port), libra_args)
-    client_info = "Connected to validator at: {}:{}".format(libra_args.host, libra_args.port)
+def run_shell(args):
+    grpc_client = Client.new(args.host, args.port)
+    try:
+        grpc_client.get_latest_transaction_version()
+    except Exception as err:
+        print(f"Not able to connect to validator at {args.host}:{args.port}")
+        return
+    client = ClientProxy(grpc_client, args)
+    client_info = f"Connected to validator at: {args.host}:{args.port}"
     (commands, alias_to_cmd) = get_commands(False)
     while True:
         prompt = "libra% "
