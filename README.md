@@ -97,7 +97,7 @@ A `Client` must be created in order to send protobuf message to a Libra node. Yo
 from libra import Client
 
 client1 = Client("testnet")  # Default client connecting to the official testnet
-client2 = LibraClient('localhost:8000')  # Client connecting to a local node
+client2 = Client.new('localhost', 8000)  # Client connecting to a local node
 ```
 
 ### Get Account Data of an Address

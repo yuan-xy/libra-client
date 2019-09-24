@@ -17,7 +17,7 @@ from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 NETWORKS = {
     'testnet':{
         'host': "ac.testnet.libra.org",
-        'port': "8000",
+        'port': 8000,
         'faucet_host': "faucet.testnet.libra.org"
     }
 }
@@ -47,6 +47,7 @@ class Client:
             self.faucet_host = NETWORKS[network]['faucet_host']
 
     def init_grpc(self):
+        #TODO: should check under ipv6, add [] around ipv6 host
         self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
 
@@ -54,6 +55,10 @@ class Client:
     def new(cls, host, port):
         ret = cls.__new__(cls)
         ret.host = host
+        if isinstance(port, str):
+            port = int(port)
+        if port <=0 or port > 65535:
+            raise LibraNetError("port must be between 1 and 65535")
         ret.port = port
         ret.init_grpc()
         return ret
