@@ -25,7 +25,7 @@ def test_get_transaction():
     assert stx.raw_txn.payload.value.args[0].Address == True
     assert stx.raw_txn.payload.value.args[1].index == 0
     assert stx.raw_txn.payload.value.args[1].U64 == True
-    assert stx.raw_txn.payload.value.args[1].value == 999999000000
+    assert stx.raw_txn.payload.value.args[1].value == 100000000
     assert stx.raw_txn.max_gas_amount == 140000
     assert stx.raw_txn.gas_unit_price == 0
     assert stx.raw_txn.expiration_time > 1_568_000_000
@@ -94,15 +94,24 @@ def test_transfer_coin():
     assert c.get_balance(a1.address) == balance1 + 1234
 
 def test_client_init():
-    c = libra.Client.new("localhost","8080")
+    c = libra.Client.new("localhost","8080", "libra/consensus_peers.config.toml")
     assert c.host == "localhost"
     assert c.port == 8080
     assert hasattr(c, "faucet_host") == False
+    assert len(c.validators) > 0
+    address, key = c.validators.popitem()
+    assert len(address) == 64
+    assert len(key._key) == 32
     c2 = libra.Client("testnet")
     assert c2.host == "ac.testnet.libra.org"
     assert c2.port == 8000
     assert c2.faucet_host == "faucet.testnet.libra.org"
+    assert len(c2.validators) > 0
     with pytest.raises(libra.LibraNetError):
         libra.Client("xnet")
     with pytest.raises(libra.LibraNetError):
         libra.Client("mainnet")
+    with pytest.raises(TypeError):
+        libra.Client.new("localhost", 8000)
+    with pytest.raises(FileNotFoundError):
+        libra.Client.new("localhost", 8000, "non_exsits_file")
