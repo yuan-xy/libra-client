@@ -38,6 +38,7 @@ def run_shell(args):
         return
     client = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"
+    print(client_info)
     (commands, alias_to_cmd) = get_commands(False)
     while True:
         prompt = "libra% "
@@ -69,15 +70,18 @@ def print_help(client_info: str, commands):
     print("\tExit this client")
     print("\n")
 
-
-def main():
-    if os.name == 'posix':
-        readline.set_history_length(1000)
+def get_parser():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
     parser.add_argument('-r', "--sync", default=False, help='If set, client will sync with validator during wallet recovery.')
     parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
+    return parser
+
+def main():
+    if os.name == 'posix':
+        readline.set_history_length(1000)
+    parser = get_parser()
     libra_args = parser.parse_args(sys.argv[1:])
     run_shell(libra_args)
 

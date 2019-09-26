@@ -45,16 +45,19 @@ class Client:
         self.port = NETWORKS[network]['port']
         self.init_validators(validator_set_file)
         self.init_grpc()
-        if network == "testnet":
-            self.faucet_host = NETWORKS[network]['faucet_host']
 
     def init_grpc(self):
         #TODO: should check under ipv6, add [] around ipv6 host
         self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
+        if self.is_testnet():
+            self.faucet_host = NETWORKS['testnet']['faucet_host']
+
+    def is_testnet(self):
+        return self.host == NETWORKS['testnet']['host']
 
     def init_validators(self, validator_set_file):
-        if self.host == NETWORKS['testnet']['host'] and validator_set_file is None:
+        if self.is_testnet() and validator_set_file is None:
             validator_set_file = ConsensusPeersConfig.testnet_file_path()
         if validator_set_file is None:
             raise LibraError("Validator_set_file is required except testnet.")
