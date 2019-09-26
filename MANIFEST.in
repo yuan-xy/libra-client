@@ -2,6 +2,6 @@ include README.md
 include LICENSE
 include setup.py
 include requirements.txt
-include libra/consensus_peers.config.toml
+graft libra
 global-exclude __pycache__
 global-exclude *.py[co]

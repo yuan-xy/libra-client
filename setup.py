@@ -30,6 +30,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/yuan-xy/libra-client.git",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     entry_points={
         'console_scripts':['libra_shell = libra.cli.libra_shell:main']
     },
