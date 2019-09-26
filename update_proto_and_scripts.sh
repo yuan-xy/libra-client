@@ -6,6 +6,8 @@ git clone https://github.com/libra/libra.git
 cd libra
 git checkout origin/testnet
 
+cp ./scripts/cli/consensus_peers.config.toml ../libra-client/
+
 rm ../../libra-client/proto/*.proto
 find . -name *.proto | xargs cp -t ../../libra-client/proto/
 cd ../../libra-client/

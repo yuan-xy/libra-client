@@ -8,6 +8,7 @@ from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import *
 from libra.key_factory import new_sha3_256
+from libra.trusted_peers import ConsensusPeersConfig
 
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
@@ -35,13 +36,14 @@ class LibraNetError(LibraError):
     pass
 
 class Client:
-    def __init__(self, network="testnet"):
+    def __init__(self, network="testnet", validator_set_file=None):
         if network == "mainnet":
             raise LibraNetError("Mainnet is not supported currently")
         if network != "testnet":
             raise LibraNetError(f"Unknown network: {network}")
         self.host = NETWORKS[network]['host']
         self.port = NETWORKS[network]['port']
+        self.init_validators(validator_set_file)
         self.init_grpc()
         if network == "testnet":
             self.faucet_host = NETWORKS[network]['faucet_host']
@@ -51,8 +53,15 @@ class Client:
         self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
 
+    def init_validators(self, validator_set_file):
+        if self.host == NETWORKS['testnet']['host'] and validator_set_file is None:
+            validator_set_file = ConsensusPeersConfig.testnet_file_path()
+        if validator_set_file is None:
+            raise LibraError("Validator_set_file is required except testnet.")
+        self.validators = ConsensusPeersConfig.parse(validator_set_file)
+
     @classmethod
-    def new(cls, host, port):
+    def new(cls, host, port, validator_set_file):
         ret = cls.__new__(cls)
         ret.host = host
         if isinstance(port, str):
@@ -60,6 +69,7 @@ class Client:
         if port <=0 or port > 65535:
             raise LibraNetError("port must be between 1 and 65535")
         ret.port = port
+        ret.init_validators(validator_set_file)
         ret.init_grpc()
         return ret
 

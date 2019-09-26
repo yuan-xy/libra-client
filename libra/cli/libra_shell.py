@@ -30,7 +30,7 @@ def get_commands(include_dev: bool):
 
 
 def run_shell(args):
-    grpc_client = Client.new(args.host, args.port)
+    grpc_client = Client.new(args.host, args.port, args.validator_set_file)
     try:
         grpc_client.get_latest_transaction_version()
     except Exception as err:
@@ -77,6 +77,7 @@ def main():
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
     parser.add_argument('-r', "--sync", default=False, help='If set, client will sync with validator during wallet recovery.')
+    parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
     libra_args = parser.parse_args(sys.argv[1:])
     run_shell(libra_args)
 

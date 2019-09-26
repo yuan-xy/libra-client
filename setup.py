@@ -13,6 +13,7 @@ install_requires=[
         'grpcio',
         'PyNaCl',
         'requests',
+        "toml",
         'mnemonic'
     ]
 
