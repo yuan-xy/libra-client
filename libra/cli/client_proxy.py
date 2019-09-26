@@ -40,9 +40,9 @@ class ClientProxy:
         self.wallet.write_recovery(filename)
 
     def mint_coins(self, address_or_refid, libra, is_blocking):
-        libra = int(libra)
+        micro_libra = int(libra) * 1_000_000
         address = self.parse_address_or_refid(address_or_refid)
-        self.grpc_client.mint_coins_with_faucet_service(address, libra, is_blocking)
+        self.grpc_client.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
 
     def parse_address_or_refid(self, address_or_refid):
         if len(address_or_refid) == 64:
