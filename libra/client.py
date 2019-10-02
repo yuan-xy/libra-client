@@ -114,7 +114,7 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request)
         return resp.ledger_info_with_sigs.ledger_info.version
 
-    def get_transactions(self, start_version, limit=1, fetch_events=False):
+    def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_transactions_request.start_version = start_version
@@ -122,12 +122,16 @@ class Client:
         item.get_transactions_request.fetch_events = fetch_events
         resp = self.stub.UpdateToLatestLedger(request)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        return txnp.transactions
+        return (txnp.transactions, txnp.events_for_versions)
+
+    def get_transactions(self, start_version, limit=1):
+        transactions, _ = self.get_transactions_proto(start_version, limit, False)
+        return [SignedTransaction.deserialize(x.signed_txn) for x in transactions]
 
     def get_transaction(self, start_version):
         return self.get_transactions(start_version)[0]
 
-    def get_account_transaction(self, address, sequence_number, fetch_events=False):
+    def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
         if isinstance(address, str):
             address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
@@ -193,7 +197,7 @@ class Client:
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1
-            transaction = self.get_account_transaction(address, sequence_number, True)
+            transaction = self.get_account_transaction_proto(address, sequence_number, True)
             if transaction.HasField("events"):
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:

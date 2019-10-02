@@ -80,7 +80,7 @@ class ClientProxy:
     def get_committed_txn_by_range(self, start, limit, fetch_events):
         start = int(start)
         limit = int(limit)
-        transactions = self.grpc_client.get_transactions(start, limit, fetch_events)
+        transactions = self.grpc_client.get_transactions(start, limit)
         return transactions
 
     def get_events_by_account_and_type(self, address_or_refid, sent_received, start_seq, ascending, limit):

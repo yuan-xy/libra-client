@@ -181,5 +181,33 @@ print(ret.ac_status.code)
 ```
 When is_blocking param is False, the call will return as the transaction is submit to the validator node. When is_blocking param is True, the call will not return until the tranfer is actually executed or transaction waiting timeout.
 
+
+### Query Transactions
+
+Get transaction by version:
+
+```py
+c = libra.Client("testnet")
+signed_txn = c.get_transaction(1)
+print(signed_txn.raw_txn)
+```
+above code get transaction no.1, the return type is a SignedTransaction.
+
+```py
+class SignedTransaction(Struct):
+    _fields = [
+        ('raw_txn', RawTransaction),
+        ('public_key', [Uint8, ED25519_PUBLIC_KEY_LENGTH]),
+        ('signature', [Uint8, ED25519_SIGNATURE_LENGTH])
+    ]
+```
+
+To get a list of transactions:
+
+```py
+c = libra.Client("testnet")
+c.get_transactions(start_version, limit)
+```
+
 ### Query Events
 TODO.

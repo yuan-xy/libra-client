@@ -13,9 +13,7 @@ def test_events():
 
 def test_get_transaction():
     c = libra.Client("testnet")
-    txn = c.get_transaction(1)
-    assert len(txn.signed_txn) > 0
-    stx = SignedTransaction.deserialize(txn.signed_txn)
+    stx = c.get_transaction(1)
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
@@ -54,10 +52,10 @@ def test_account_not_exsits():
     with pytest.raises(libra.client.AccountError):
         balance = c.get_balance(address)
 
-def test_get_account_transaction():
+def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
     c = libra.Client("testnet")
-    txn = c.get_account_transaction(address, 1, True)
+    txn = c.get_account_transaction_proto(address, 1, True)
     assert txn.events.events[0].sequence_number == 1
     assert len(txn.signed_transaction.signed_txn) > 0
     assert txn.version > 0
