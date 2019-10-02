@@ -1,7 +1,7 @@
 from canoser import *
-from canoser.types import *
 from datetime import datetime
 from libra.bytecode import bytecode
+import struct
 
 # must define type by serialized sequence, not the sequence in the rust struct definition.
 # ack 'impl CanonicalSerialize for {type}' -A 20
@@ -10,13 +10,14 @@ ADDRESS_LENGTH = 32
 ED25519_PUBLIC_KEY_LENGTH = 32
 ED25519_SIGNATURE_LENGTH = 64
 
+class Address(DelegateT):
+    delegate_type = [Uint8, ADDRESS_LENGTH]
 
-#pub struct ByteArray(Vec<u8>);
 
 class TransactionArgument(RustEnum):
     _enums = [
         ('U64', Uint64),
-        ('Address', [Uint8, ADDRESS_LENGTH]),
+        ('Address', Address),
         ('String', str),
         ('ByteArray', [Uint8])
     ]
@@ -29,7 +30,7 @@ class WriteOp(RustEnum):
 
 class AccessPath(Struct):
     _fields = [
-        ('address', [Uint8, ADDRESS_LENGTH]),
+        ('address', Address),
         ('path', [Uint8])
     ]
 
@@ -73,7 +74,7 @@ class TransactionPayload(RustEnum):
 
 class RawTransaction(Struct):
     _fields = [
-        ('sender', [Uint8, ADDRESS_LENGTH]),
+        ('sender', Address),
         ('sequence_number', Uint64),
         ('payload', TransactionPayload),
         ('max_gas_amount', Uint64),

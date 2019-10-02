@@ -201,7 +201,7 @@ class Client:
                 return
             else:
                 print(".", end='', flush=True)
-        print("wait_for_transaction timeout.\n")
+        print("wait_for_transaction timeout.\n") #TODO: timeout exception
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
         max_gas=140_000, unit_price=0, is_blocking=False):
