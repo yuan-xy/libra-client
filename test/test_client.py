@@ -30,8 +30,7 @@ def test_get_transaction():
     assert stx.raw_txn.expiration_time < 11_568_000_000
     assert len(stx.public_key) == 32
     assert len(stx.signature) == 64
-    raw_txn_bytes = stx.raw_txn.serialize()
-    raw_txn_hash = libra.Client.raw_tx_hash(raw_txn_bytes)
+    raw_txn_hash = libra.hasher.raw_tx_hash(stx.raw_txn)
     libra.Client.verify_transaction(raw_txn_hash, stx.public_key, stx.signature)
 
 

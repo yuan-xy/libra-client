@@ -7,10 +7,10 @@ import time
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import *
-from libra.key_factory import new_sha3_256
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
+from libra.hasher import raw_tx_hash
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -35,6 +35,7 @@ class TransactionError(LibraError):
 
 class LibraNetError(LibraError):
     pass
+
 
 class Client:
     def __init__(self, network="testnet", validator_set_file=None):
@@ -214,29 +215,12 @@ class Client:
         sequence_number = self.get_sequence_number(sender_account.address)
         raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
             receiver_address, micro_libra, max_gas, unit_price)
-        raw_txn_bytes = raw_tx.serialize()
-        tx_hash = Client.raw_tx_hash(raw_txn_bytes)
+        tx_hash = raw_tx_hash(raw_tx)
         signature = sender_account.sign(tx_hash)[:64]
         signed_txn = SignedTransaction.new_for_bytes_key(raw_tx, sender_account.public_key, signature)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
         return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
-
-    @staticmethod
-    def raw_tx_hash_seed():
-        sha3 = new_sha3_256()
-        RAW_TRANSACTION_HASHER = b"RawTransaction"
-        LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
-        sha3.update(RAW_TRANSACTION_HASHER+LIBRA_HASH_SUFFIX)
-        return sha3.digest()
-
-    @staticmethod
-    def raw_tx_hash(raw_txn_bytes):
-        salt = Client.raw_tx_hash_seed()
-        shazer = new_sha3_256()
-        shazer.update(salt)
-        shazer.update(raw_txn_bytes)
-        return shazer.digest()
 
     @staticmethod
     def verify_transaction(message, public_key, signature):
