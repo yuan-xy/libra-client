@@ -9,7 +9,8 @@ from libra.account_config import AccountConfig
 from libra.transaction import *
 from libra.key_factory import new_sha3_256
 from libra.trusted_peers import ConsensusPeersConfig
-
+from libra.ledger_info import LedgerInfo
+from libra.get_with_proof import verify
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -61,7 +62,7 @@ class Client:
             validator_set_file = ConsensusPeersConfig.testnet_file_path()
         if validator_set_file is None:
             raise LibraError("Validator_set_file is required except testnet.")
-        self.validators = ConsensusPeersConfig.parse(validator_set_file)
+        self.validator_verifier = ConsensusPeersConfig.parse(validator_set_file)
 
     @classmethod
     def new(cls, host, port, validator_set_file):
@@ -121,6 +122,7 @@ class Client:
         item.get_transactions_request.limit = limit
         item.get_transactions_request.fetch_events = fetch_events
         resp = self.stub.UpdateToLatestLedger(request)
+        verify(self.validator_verifier, request, resp)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         return (txnp.transactions, txnp.events_for_versions)
 

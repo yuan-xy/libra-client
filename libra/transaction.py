@@ -1,18 +1,14 @@
 from canoser import *
 from datetime import datetime
 from libra.bytecode import bytecode
+from libra.account_address import Address
 import struct
 
 # must define type by serialized sequence, not the sequence in the rust struct definition.
 # ack 'impl CanonicalSerialize for {type}' -A 20
 
-ADDRESS_LENGTH = 32
 ED25519_PUBLIC_KEY_LENGTH = 32
 ED25519_SIGNATURE_LENGTH = 64
-
-class Address(DelegateT):
-    delegate_type = [Uint8, ADDRESS_LENGTH]
-
 
 class TransactionArgument(RustEnum):
     _enums = [

@@ -96,15 +96,15 @@ def test_client_init():
     assert c.host == "localhost"
     assert c.port == 8080
     assert hasattr(c, "faucet_host") == False
-    assert len(c.validators) > 0
-    address, key = c.validators.popitem()
-    assert len(address) == 64
+    assert len(c.validator_verifier.validators) > 0
+    address, key = c.validator_verifier.validators.popitem()
+    assert len(address) == libra.account_address.ADDRESS_LENGTH
     assert len(key._key) == 32
     c2 = libra.Client("testnet")
     assert c2.host == "ac.testnet.libra.org"
     assert c2.port == 8000
     assert c2.faucet_host == "faucet.testnet.libra.org"
-    assert len(c2.validators) > 0
+    assert len(c2.validator_verifier.validators) > 0
     with pytest.raises(libra.LibraNetError):
         libra.Client("xnet")
     with pytest.raises(libra.LibraNetError):
