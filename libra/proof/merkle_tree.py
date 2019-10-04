@@ -19,6 +19,9 @@ def get_accumulator_root_hash(hasher, element_hashes):
         if len(t) == 2:
             return MerkleTreeInternalNode(t[0], t[1], hasher).hash()
         else:
+            import pdb
+            pdb.set_trace()
+            #TODO: how to test this branch
             return MerkleTreeInternalNode(t[0], ACCUMULATOR_PLACEHOLDER_HASH, hasher).hash()
     if not element_hashes:
         return ACCUMULATOR_PLACEHOLDER_HASH

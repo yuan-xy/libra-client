@@ -3,14 +3,11 @@ import canoser
 
 LIBRA_HASH_SUFFIX = b"@@$$LIBRA$$@@";
 
-class HashValue(canoser.Struct):
+class HashValue(canoser.DelegateT):
     LENGTH = 32
     LENGTH_IN_BITS = LENGTH * 8
     LENGTH_IN_NIBBLES = LENGTH * 2
-
-    _fields = [
-        ('hash', [canoser.Uint8, LENGTH])
-    ]
+    delegate_type = [canoser.Uint8, LENGTH]
 
 
 def hash_seed(clazz):
@@ -41,7 +38,7 @@ def create_literal_hash(word):
     assert len(arr) <= HashValue.LENGTH
     for _i in range(len(arr), HashValue.LENGTH):
         arr.append(0)
-    return HashValue(arr)
+    return arr
 
 ACCUMULATOR_PLACEHOLDER_HASH = create_literal_hash("ACCUMULATOR_PLACEHOLDER_HASH")
 SPARSE_MERKLE_PLACEHOLDER_HASH = create_literal_hash("SPARSE_MERKLE_PLACEHOLDER_HASH")

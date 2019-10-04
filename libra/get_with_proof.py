@@ -3,6 +3,7 @@ from libra.validator_verifier import VerifyError
 from libra.hasher import *
 from libra.event import ContractEvent
 from libra.proof import get_accumulator_root_hash
+from libra.transaction import SignedTransaction, TransactionInfo
 
 def verify(validator_verifier, request, response):
     verify_update_to_latest_ledger_response(
@@ -62,26 +63,44 @@ def verify_get_txns_resp(ledger_info, start_version, limit, fetch_events, txn_li
     ret_num = min(limit, ledger_info.version - start_version + 1)
     if num_txns != ret_num:
         raise VerifyError(f"transaction number expected:{ret_num}, returned:{num_txns}.")
-    verify_transaction_list(txn_list_with_proof, ledger_info, start_version)
+    verify_start_version(txn_list_with_proof, start_version)
+    verify_transaction_list(txn_list_with_proof, ledger_info)
 
-def verify_transaction_list(txn_list_with_proof, ledger_info, start_version):
+def verify_start_version(txn_list_with_proof, start_version):
     ver = txn_list_with_proof.first_transaction_version.value
     if ver != start_version:
         raise VerifyError(f"transaction version mismatch:{start_version}, returned:{ver}.")
+
+def verify_transaction_list(txn_list_with_proof, ledger_info):
     #TODO: all transactions should be same epoch
-    len_tx = len(txn_list_with_proof.transactions)
-    len_info = len(txn_list_with_proof.infos)
+    transactions = txn_list_with_proof.transactions
+    infos = txn_list_with_proof.infos
+    len_tx = len(transactions)
+    len_info = len(infos)
     if len_tx != len_info:
         raise VerifyError(f"transactions and infos mismatch:{len_tx}, {len_info}.")
     if txn_list_with_proof.HasField("events_for_versions"):
-        len_event = len(txn_list_with_proof.events_for_versions.events_for_version)
-        if len_tx != len_event:
-            raise VerifyError(f"transactions and events mismatch:{len_tx}, {len_event}.")
         event_lists = txn_list_with_proof.events_for_versions.events_for_version
-        infos = txn_list_with_proof.infos
-        zipped = zip(event_lists, infos)
-        for events, info in zipped:
-            event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
-            eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
-            if eroot_hash != info.event_root_hash:
-                raise VerifyError(f"event_root_hash mismatch.")
+        verify_event_root_hash(event_lists, infos)
+    #Get the hashes of all nodes at the accumulator leaf level.
+    zipped = zip(txn_list_with_proof.transactions, txn_list_with_proof.infos)
+    for tx, info in zipped:
+        stx = SignedTransaction.from_proto(tx)
+        if stx.hash() != info.signed_transaction_hash:
+            raise VerifyError(f"transaction hash mismatch:{stx}.")
+    # import pdb
+    # pdb.set_trace()
+    hashes = [TransactionInfo.from_proto(x).hash() for x in infos]
+
+#Verify event root hashes match what is carried on the transaction infos.
+def verify_event_root_hash(event_lists, infos):
+    len_event = len(event_lists)
+    len_info = len(infos)
+    if len_info != len_event:
+        raise VerifyError(f"transactions and events mismatch:{len_info}, {len_event}.")
+    zipped = zip(event_lists, infos)
+    for events, info in zipped:
+        event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
+        eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
+        if eroot_hash != info.event_root_hash:
+            raise VerifyError(f"event_root_hash mismatch.")
