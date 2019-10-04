@@ -2,7 +2,7 @@ from canoser import *
 from libra.validator_verifier import ValidatorSet
 from libra.transaction import bytes_to_int_list
 from libra.key_factory import new_sha3_256
-from libra.hasher import ledger_info_hash
+from libra.hasher import gen_hasher
 
 Version = Uint64
 
@@ -21,7 +21,9 @@ class LedgerInfo(Struct):
     ]
 
     def hash(self):
-        return ledger_info_hash(self)
+        shazer = gen_hasher(b"LedgerInfo")
+        shazer.update(self.serialize())
+        return shazer.digest()
 
     @classmethod
     def from_proto(cls, proto):

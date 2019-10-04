@@ -35,7 +35,7 @@ def test_get_transaction():
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
+    transactions, events_for_versions = c.get_transactions_proto(1, 3, True)
 
 def test_get_tx_zero():
     c = libra.Client("testnet")

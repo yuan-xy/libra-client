@@ -1,5 +1,8 @@
 from libra.ledger_info import LedgerInfo
 from libra.validator_verifier import VerifyError
+from libra.hasher import *
+from libra.event import ContractEvent
+from libra.proof import get_accumulator_root_hash
 
 def verify(validator_verifier, request, response):
     verify_update_to_latest_ledger_response(
@@ -76,9 +79,9 @@ def verify_transaction_list(txn_list_with_proof, ledger_info, start_version):
             raise VerifyError(f"transactions and events mismatch:{len_tx}, {len_event}.")
         event_lists = txn_list_with_proof.events_for_versions.events_for_version
         infos = txn_list_with_proof.infos
-        # import pdb
-        # pdb.set_trace()
         zipped = zip(event_lists, infos)
         for events, info in zipped:
-            print(events)
-            print(info)
+            event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
+            eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
+            if eroot_hash != info.event_root_hash:
+                raise VerifyError(f"event_root_hash mismatch.")
