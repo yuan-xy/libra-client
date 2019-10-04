@@ -33,6 +33,19 @@ def test_get_transaction():
     raw_txn_hash = libra.hasher.raw_tx_hash(stx.raw_txn)
     libra.Client.verify_transaction(raw_txn_hash, stx.public_key, stx.signature)
 
+def test_get_tx_with_events():
+    c = libra.Client("testnet")
+    transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
+
+def test_get_tx_zero():
+    c = libra.Client("testnet")
+    transactions, events_for_versions = c.get_transactions_proto(1, 0, True)
+    assert len(transactions) == 0
+
+def test_get_tx_invalid():
+    c = libra.Client("testnet")
+    with pytest.raises(ValueError):
+        c.get_transactions_proto(1, -1, True)
 
 def test_get_latest_transaction_version():
     c = libra.Client("testnet")

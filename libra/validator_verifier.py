@@ -15,6 +15,11 @@ class ValidatorPublicKeys(Struct):
 class ValidatorSet(DelegateT):
     delegate_type = [ValidatorPublicKeys]
 
+    @classmethod
+    def from_proto(cls, next_validator_set_proto):
+        #TODO: validator_set change
+        raise Exception("not implemented.")
+
 class ValidatorVerifier:
     def __init__(self, validators):
         self.validators = validators
@@ -43,6 +48,7 @@ class ValidatorVerifier:
                 raise VerifyError(f"UnknownAuthor: {validator_id}")
 
     def verify_aggregated_signature(self, ledger_info_hash, signatures):
+        #TODO: why validate all? according to proto file, there are >2/3 nodes signing this correctly
         for v_s_proto in signatures:
             validator_id = v_s_proto.validator_id
             signature = v_s_proto.signature
