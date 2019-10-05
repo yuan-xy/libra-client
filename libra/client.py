@@ -1,6 +1,5 @@
 from grpc import insecure_channel
 from nacl.signing import VerifyKey
-import struct
 import requests
 import time
 
@@ -100,8 +99,7 @@ class Client:
     def get_account_resource(self, address):
         amap = self.get_account_state(address)
         resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
-        bstr = struct.pack("<{}B".format(len(resource)),*resource)
-        return AccountResource.deserialize(bstr)
+        return AccountResource.deserialize(resource)
 
     def get_sequence_number(self, address):
         state = self.get_account_resource(address)

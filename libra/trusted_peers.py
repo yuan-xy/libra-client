@@ -2,7 +2,6 @@ import toml
 import os
 import libra
 from nacl.signing import VerifyKey
-from libra.transaction import hex_to_int_list
 from libra.validator_verifier import ValidatorVerifier
 
 # pub struct ConsensusPeerInfo {

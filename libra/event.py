@@ -1,6 +1,5 @@
 from canoser import *
 from libra.hasher import gen_hasher
-from libra.transaction import bytes_to_int_list
 
 
 EVENT_KEY_LENGTH = 32

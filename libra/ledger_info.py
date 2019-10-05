@@ -1,6 +1,5 @@
 from canoser import *
 from libra.validator_verifier import ValidatorSet
-from libra.transaction import bytes_to_int_list
 from libra.key_factory import new_sha3_256
 from libra.hasher import gen_hasher
 

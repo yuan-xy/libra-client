@@ -3,7 +3,6 @@ from datetime import datetime
 from libra.bytecode import bytecode
 from libra.account_address import Address
 from libra.hasher import gen_hasher, HashValue
-import struct
 
 # must define type by serialized sequence, not the sequence in the rust struct definition.
 # ack 'impl CanonicalSerialize for {type}' -A 20
@@ -184,14 +183,3 @@ class TransactionInfo(Struct):
         ret.gas_used = proto.gas_used
         ret.major_status = proto.major_status
         return ret
-
-
-def int_list_to_hex(ints):
-    return struct.pack("<{}B".format(len(ints)), *ints).hex()
-
-def bytes_to_int_list(bytes_str):
-    tp = struct.unpack("<{}B".format(len(bytes_str)), bytes_str)
-    return list(tp)
-
-def hex_to_int_list(hex_str):
-    return bytes_to_int_list(bytes.fromhex(hex_str))
