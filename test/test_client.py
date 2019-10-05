@@ -67,7 +67,9 @@ def test_account_not_exsits():
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
     c = libra.Client("testnet")
-    txn = c.get_account_transaction_proto(address, 1, True)
+    txn, usecs = c.get_account_transaction_proto(address, 1, True)
+    len(str(usecs)) == 16
+    assert usecs//1000_000 > 1570_000_000
     assert txn.events.events[0].sequence_number == 1
     assert len(txn.signed_transaction.signed_txn) > 0
     assert txn.version > 0
@@ -92,13 +94,19 @@ def test_transfer_coin():
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     c = libra.Client("testnet")
-    c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
-    balance0 = c.get_balance(a0.address)
+    try:
+        balance0 = c.get_balance(a0.address)
+        if balance0 < 1234:
+            c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
+            balance0 += 1234
+    except libra.client.AccountError:
+        c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
+        balance0 = 1234
     try:
         balance1 = c.get_balance(a1.address)
     except libra.client.AccountError:
         balance1 = 0
-    ret = c.transfer_coin(a0, a1.address, 1234, is_blocking=True)
+    ret = c.transfer_coin(a0, a1.address, 1234, unit_price=0, is_blocking=True)
     assert ret.ac_status.code == libra.proto.admission_control_pb2.AdmissionControlStatusCode.Accepted
     assert c.get_balance(a0.address) == balance0 - 1234
     assert c.get_balance(a1.address) == balance1 + 1234

@@ -74,7 +74,7 @@ class ClientProxy:
     def get_committed_txn_by_acc_seq(self, address_or_refid, seq, fetch_events):
         address = self.parse_address_or_refid(address_or_refid)
         seq = int(seq)
-        transaction = self.grpc_client.get_account_transaction(address, seq, fetch_events)
+        transaction, _usecs = self.grpc_client.get_account_transaction_proto(address, seq, fetch_events)
         return transaction
 
     def get_committed_txn_by_range(self, start, limit, fetch_events):

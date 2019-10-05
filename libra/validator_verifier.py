@@ -25,6 +25,7 @@ class ValidatorVerifier:
         self.validators = validators
         if len(validators) == 0:
             self.quorum_size = 0
+            #TODO: weighted voting
         else:
             self.quorum_size = len(validators) * 2 // 3 + 1
 

@@ -2,6 +2,7 @@ from grpc import insecure_channel
 from nacl.signing import VerifyKey
 import requests
 import time
+from canoser import Uint64
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
@@ -137,12 +138,14 @@ class Client:
             address = bytes.fromhex(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
-        item.get_account_transaction_by_sequence_number_request.account = address
-        item.get_account_transaction_by_sequence_number_request.sequence_number = sequence_number
-        item.get_account_transaction_by_sequence_number_request.fetch_events = fetch_events
+        itemreq = item.get_account_transaction_by_sequence_number_request
+        itemreq.account = address
+        itemreq.sequence_number = sequence_number
+        itemreq.fetch_events = fetch_events
         resp = self.stub.UpdateToLatestLedger(request)
+        usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
-        return transaction.signed_transaction_with_proof
+        return (transaction.signed_transaction_with_proof, usecs)
         #Types::SignedTransactionWithProof [:version, :signed_transaction, :proof, :events]
 
 
@@ -192,21 +195,25 @@ class Client:
             self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
         return sequence_number
 
-    def wait_for_transaction(self, address, sequence_number):
+    def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
         max_iterations = 50
         print("waiting", flush=True)
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1
-            transaction = self.get_account_transaction_proto(address, sequence_number, True)
+            transaction, usecs = self.get_account_transaction_proto(address, sequence_number, True)
             if transaction.HasField("events"):
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:
                     print("no events emitted")
                 return
             else:
+                if expiration_time <= (usecs // 1000_000):
+                    # import pdb
+                    # pdb.set_trace()
+                    raise TransactionError("Transaction expired.")
                 print(".", end='', flush=True)
-        print("wait_for_transaction timeout.\n") #TODO: timeout exception
+        raise TransactionError("wait_for_transaction timeout.")
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
         max_gas=140_000, unit_price=0, is_blocking=False):
@@ -218,7 +225,7 @@ class Client:
         signed_txn = SignedTransaction.new_for_bytes_key(raw_tx, sender_account.public_key, signature)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
-        return self.submit_transaction(request, sender_account.address, sequence_number, is_blocking)
+        return self.submit_transaction(request, raw_tx, is_blocking)
 
     @staticmethod
     def verify_transaction(message, public_key, signature):
@@ -226,10 +233,13 @@ class Client:
         vkey.verify(message, bytes(signature))
 
 
-    def submit_transaction(self, request, address, sequence_number, is_blocking):
+    def submit_transaction(self, request, raw_tx, is_blocking):
         resp = self.submit_transaction_non_block(request)
         if is_blocking:
-            self.wait_for_transaction(address, sequence_number)
+            address = bytes(raw_tx.sender)
+            sequence_number = raw_tx.sequence_number
+            expiration_time = raw_tx.expiration_time
+            self.wait_for_transaction(address, sequence_number, expiration_time)
         return resp
 
 
