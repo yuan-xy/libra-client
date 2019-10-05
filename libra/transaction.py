@@ -114,7 +114,7 @@ class RawTransaction(Struct):
             TransactionPayload('Script', script),
             max_gas_amount,
             gas_unit_price,
-            int(datetime.utcnow().timestamp()) + txn_expiration
+            int(datetime.now().timestamp()) + txn_expiration
         )
 
 
