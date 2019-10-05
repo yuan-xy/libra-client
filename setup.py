@@ -8,9 +8,10 @@ with open("README.md", "r") as fh:
     long_description = "\n".join(arr[3:5])
 
 install_requires=[
-        'canoser>=0.3.6',
+        'canoser>=0.4.2',
         'protobuf',
         'grpcio',
+        'more-itertools',
         'PyNaCl',
         'requests',
         "toml",
