@@ -1,18 +1,12 @@
 from canoser import *
+from libra.event import EventHandle
+
 
 class AccountState(Struct):
     _fields = [
         ('blob', {})
     ]
 
-EVENT_KEY_LENGTH = 32
-
-class EventHandle(Struct):
-    _fields = [
-        ('count', Uint64),
-        #('key', [Uint8, EVENT_KEY_LENGTH])
-        ('key', [Uint8])
-    ]
 
 class AccountResource(Struct):
     _fields = [

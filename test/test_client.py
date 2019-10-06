@@ -57,6 +57,21 @@ def test_get_balance():
     balance = c.get_balance(address)
     assert balance > 0
 
+def test_get_account_resource():
+    address = libra.AccountConfig.association_address()
+    c = libra.Client("testnet")
+    ret = c.get_account_resource(address)
+    assert len(ret.authentication_key) == 32
+    assert ret.balance > 0
+    assert ret.delegated_key_rotation_capability == False
+    assert ret.delegated_withdrawal_capability == False
+    assert ret.received_events.count > 0
+    assert len(ret.received_events.key) == 32
+    assert ret.sent_events.count > 0
+    assert len(ret.sent_events.key) == 32
+    assert ret.sequence_number > 0
+
+
 def test_account_not_exsits():
     address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
     c = libra.Client("testnet")
