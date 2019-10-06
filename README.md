@@ -26,7 +26,7 @@ $ libra_shell
 
 Once the client connects to a node on the testnet, you will see the following output.  To quit the client at any time, use the `quit` command.
 
-![libra shell](/docs/shell.jpg "libra shell")
+![libra shell](https://github.com/yuan-xy/libra-client/raw/master/docs/shell.jpg "libra shell")
 
 
 
