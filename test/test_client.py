@@ -99,9 +99,9 @@ def test_mint():
         balance = c.get_balance(address)
     except libra.client.AccountError:
         balance = 0
-    c.mint_coins_with_faucet_service(address, 12345, True)
+    c.mint_coins_with_faucet_service(address, 87654321, True)
     balance2 = c.get_balance(address)
-    assert (balance2 - balance) % 12345 == 0 # tolerate parallel mint
+    assert (balance2 - balance) % 87654321 == 0 # tolerate parallel mint
 
 def test_transfer_coin():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
