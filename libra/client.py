@@ -113,6 +113,11 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request)
         return resp.ledger_info_with_sigs.ledger_info.version
 
+    def get_latest_ledger_info(self):
+        request = UpdateToLatestLedgerRequest()
+        resp = self.stub.UpdateToLatestLedger(request)
+        return resp.ledger_info_with_sigs.ledger_info
+
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
