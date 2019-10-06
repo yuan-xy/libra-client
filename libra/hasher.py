@@ -24,6 +24,9 @@ def gen_hasher(name_in_bytes):
 def EventAccumulatorHasher():
     return gen_hasher(b"EventAccumulator")
 
+def TransactionAccumulatorHasher():
+    return gen_hasher(b"TransactionAccumulator")
+
 
 def create_literal_hash(word):
     arr = [ord(x) for x in list(word)]
