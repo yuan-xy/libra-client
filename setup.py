@@ -5,7 +5,7 @@ from libra.version import version
 with open("README.md", "r") as fh:
     content = fh.read()
     arr = content.split("\n")
-    long_description = "\n".join(arr[3:5])
+    long_description = "\n".join(arr[3:])
 
 install_requires=[
         'canoser>=0.4.2',
