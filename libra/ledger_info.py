@@ -1,6 +1,5 @@
 from canoser import *
 from libra.validator_verifier import ValidatorSet
-from libra.key_factory import new_sha3_256
 from libra.hasher import gen_hasher
 
 Version = Uint64

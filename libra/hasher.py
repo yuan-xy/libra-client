@@ -10,18 +10,10 @@ class HashValue(canoser.DelegateT):
     delegate_type = [canoser.Uint8, LENGTH]
 
 
-def hash_seed(clazz):
+def hash_seed(clazz_name):
     sha3 = new_sha3_256()
-    sha3.update(clazz+LIBRA_HASH_SUFFIX)
+    sha3.update(clazz_name+LIBRA_HASH_SUFFIX)
     return sha3.digest()
-
-def raw_tx_hash(raw_tx):
-    raw_txn_bytes = raw_tx.serialize()
-    salt = hash_seed(b"RawTransaction")
-    shazer = new_sha3_256()
-    shazer.update(salt)
-    shazer.update(raw_txn_bytes)
-    return shazer.digest()
 
 def gen_hasher(name_in_bytes):
     salt = hash_seed(name_in_bytes)

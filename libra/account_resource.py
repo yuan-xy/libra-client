@@ -1,5 +1,4 @@
-from canoser import Struct
-from canoser.types import *
+from canoser import *
 
 class AccountState(Struct):
     _fields = [

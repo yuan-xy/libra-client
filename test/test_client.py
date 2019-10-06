@@ -30,8 +30,7 @@ def test_get_transaction():
     assert stx.raw_txn.expiration_time < 11_568_000_000
     assert len(stx.public_key) == 32
     assert len(stx.signature) == 64
-    raw_txn_hash = libra.hasher.raw_tx_hash(stx.raw_txn)
-    libra.Client.verify_transaction(raw_txn_hash, stx.public_key, stx.signature)
+    stx.check_signature
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")

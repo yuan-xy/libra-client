@@ -1,5 +1,6 @@
 from canoser import *
 from datetime import datetime
+from nacl.signing import VerifyKey
 from libra.bytecode import bytecode
 from libra.account_address import Address
 from libra.hasher import gen_hasher, HashValue
@@ -78,6 +79,11 @@ class RawTransaction(Struct):
         ('expiration_time', Uint64)
     ]
 
+    def hash(self):
+        shazer = gen_hasher(b"RawTransaction")
+        shazer.update(self.serialize())
+        return shazer.digest()
+
     @classmethod
     def new_write_set(cls, sender_address, sequence_number, write_set):
         return RawTransaction(
@@ -144,9 +150,11 @@ class SignedTransaction(Struct):
     ]
 
     @classmethod
-    def new_for_bytes_key(cls, raw_tx, public_key, signature):
+    def gen_from_raw_txn(cls, raw_tx, sender_account):
+        tx_hash = raw_tx.hash()
+        signature = sender_account.sign(tx_hash)[:64]
         return SignedTransaction(raw_tx,
-                bytes_to_int_list(public_key),
+                bytes_to_int_list(sender_account.public_key),
                 bytes_to_int_list(signature)
             )
 
@@ -158,6 +166,11 @@ class SignedTransaction(Struct):
     @classmethod
     def from_proto(cls, proto):
         return cls.deserialize(proto.signed_txn)
+
+    def check_signature(self):
+        message = self.raw_txn.hash()
+        vkey = VerifyKey(bytes(self.public_key))
+        vkey.verify(message, bytes(self.signature))
 
 
 class TransactionInfo(Struct):

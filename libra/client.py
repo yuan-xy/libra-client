@@ -1,5 +1,4 @@
 from grpc import insecure_channel
-from nacl.signing import VerifyKey
 import requests
 import time
 from canoser import Uint64
@@ -10,7 +9,6 @@ from libra.transaction import *
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
-from libra.hasher import raw_tx_hash
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -220,18 +218,10 @@ class Client:
         sequence_number = self.get_sequence_number(sender_account.address)
         raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
             receiver_address, micro_libra, max_gas, unit_price)
-        tx_hash = raw_tx_hash(raw_tx)
-        signature = sender_account.sign(tx_hash)[:64]
-        signed_txn = SignedTransaction.new_for_bytes_key(raw_tx, sender_account.public_key, signature)
+        signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
         return self.submit_transaction(request, raw_tx, is_blocking)
-
-    @staticmethod
-    def verify_transaction(message, public_key, signature):
-        vkey = VerifyKey(bytes(public_key))
-        vkey.verify(message, bytes(signature))
-
 
     def submit_transaction(self, request, raw_tx, is_blocking):
         resp = self.submit_transaction_non_block(request)
@@ -241,7 +231,6 @@ class Client:
             expiration_time = raw_tx.expiration_time
             self.wait_for_transaction(address, sequence_number, expiration_time)
         return resp
-
 
     def submit_transaction_non_block(self, request):
         resp = self.stub.SubmitTransaction(request)
