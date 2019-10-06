@@ -57,7 +57,6 @@ def verify_transaction_list(txn_list_with_proof, ledger_info):
         hashes = parent_hashes
         first_idx //= 2
     assert len(hashes) == 1
-    pdb.set_trace()
     assert hashes[0] == bytes(ledger_info.transaction_accumulator_hash)
 
 

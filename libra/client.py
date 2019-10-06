@@ -118,13 +118,16 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request)
         return resp.ledger_info_with_sigs.ledger_info
 
-    def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
+    def _get_txs_without_verify(self, start_version, limit=1, fetch_events=False):
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_transactions_request.start_version = start_version
         item.get_transactions_request.limit = limit
         item.get_transactions_request.fetch_events = fetch_events
-        resp = self.stub.UpdateToLatestLedger(request)
+        return (request, self.stub.UpdateToLatestLedger(request))
+
+    def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
+        request, resp = self._get_txs_without_verify(start_version, limit, fetch_events)
         verify(self.validator_verifier, request, resp)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         return (txnp.transactions, txnp.events_for_versions)
