@@ -91,18 +91,6 @@ def test_get_account_transaction_proto():
     assert txn.proof.HasField("transaction_info")
 
 
-
-def test_mint():
-    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e20"
-    c = libra.Client("testnet")
-    try:
-        balance = c.get_balance(address)
-    except libra.client.AccountError:
-        balance = 0
-    c.mint_coins_with_faucet_service(address, 87654321, True)
-    balance2 = c.get_balance(address)
-    assert (balance2 - balance) % 87654321 == 0 # tolerate parallel mint
-
 def test_transfer_coin():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]

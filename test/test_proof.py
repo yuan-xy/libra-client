@@ -7,7 +7,7 @@ import pdb
 
 def test_merkle_tree_accumulator_invariants():
     c = libra.Client("testnet")
-    request, resp = c._get_txs_without_verify(1, 2, False)
+    request, resp = c._get_txs(1, 2, False)
     version = resp.ledger_info_with_sigs.ledger_info.version
     txn_list = resp.response_items[0].get_transactions_response.txn_list_with_proof
     first = txn_list.proof_of_first_transaction.non_default_siblings

@@ -83,7 +83,7 @@ class Client:
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_account_state_request.address = address
-        resp = self.stub.UpdateToLatestLedger(request)
+        resp = self.update_to_latest_ledger(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
         version = resp.ledger_info_with_sigs.ledger_info.version
         return (blob, version)
@@ -108,27 +108,29 @@ class Client:
         state = self.get_account_resource(address)
         return state.balance
 
-    def get_latest_transaction_version(self):
-        request = UpdateToLatestLedgerRequest()
+    def update_to_latest_ledger(self, request):
         resp = self.stub.UpdateToLatestLedger(request)
-        return resp.ledger_info_with_sigs.ledger_info.version
+        verify(self.validator_verifier, request, resp)
+        return resp
 
     def get_latest_ledger_info(self):
         request = UpdateToLatestLedgerRequest()
-        resp = self.stub.UpdateToLatestLedger(request)
+        resp = self.update_to_latest_ledger(request)
         return resp.ledger_info_with_sigs.ledger_info
 
-    def _get_txs_without_verify(self, start_version, limit=1, fetch_events=False):
+    def get_latest_transaction_version(self):
+        return self.get_latest_ledger_info().version
+
+    def _get_txs(self, start_version, limit=1, fetch_events=False):
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_transactions_request.start_version = start_version
         item.get_transactions_request.limit = limit
         item.get_transactions_request.fetch_events = fetch_events
-        return (request, self.stub.UpdateToLatestLedger(request))
+        return (request, self.update_to_latest_ledger(request))
 
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
-        request, resp = self._get_txs_without_verify(start_version, limit, fetch_events)
-        verify(self.validator_verifier, request, resp)
+        request, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         return (txnp.transactions, txnp.events_for_versions)
 
@@ -148,7 +150,7 @@ class Client:
         itemreq.account = address
         itemreq.sequence_number = sequence_number
         itemreq.fetch_events = fetch_events
-        resp = self.stub.UpdateToLatestLedger(request)
+        resp = self.update_to_latest_ledger(request)
         usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
         return (transaction.signed_transaction_with_proof, usecs)
@@ -169,7 +171,7 @@ class Client:
         item.get_events_by_event_access_path_request.start_event_seq_num = start_sequence_number
         item.get_events_by_event_access_path_request.ascending = ascending
         item.get_events_by_event_access_path_request.limit = limit
-        resp = self.stub.UpdateToLatestLedger(request)
+        resp = self.update_to_latest_ledger(request)
         return resp.response_items[0].get_events_by_event_access_path_response.events_with_proof
 
     def get_events_sent(self, address, start_sequence_number, ascending=True, limit=1):

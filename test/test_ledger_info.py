@@ -5,14 +5,12 @@ import time
 import pytest
 import pdb
 
-def time_offset_in_hours():
-    return time.localtime().tm_hour - time.gmtime().tm_hour
 
 def time_offset_in_seconds():
     return -time.timezone
 
 def test_time():
-    assert time_offset_in_hours()*3600 == time_offset_in_seconds()
+    assert time.localtime().tm_gmtoff == time_offset_in_seconds()
     utcnow = datetime.utcnow().timestamp()
     now = datetime.now().timestamp()
     diff = (now - time_offset_in_seconds()) - utcnow
