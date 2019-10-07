@@ -31,3 +31,15 @@ def get_accumulator_root_hash(hasher, element_hashes):
         next_level = [compute_tree_hash(x) for x in more_itertools.chunked(current_level, 2)]
         current_level = next_level
     return current_level[0]
+
+
+class SparseMerkleLeafNode:
+    def __init__(self, key, value_hash):
+        self.key = key
+        self.value_hash = value_hash
+
+    def hash(self):
+        shazer = gen_hasher(b"SparseMerkleLeaf")
+        shazer.update(self.key)
+        shazer.update(self.value_hash)
+        return shazer.digest()

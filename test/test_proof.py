@@ -1,7 +1,7 @@
 import libra
 from libra.transaction import TransactionInfo
 from libra.hasher import TransactionAccumulatorHasher
-from libra.proof import MerkleTreeInternalNode
+from libra.proof import *
 import pytest
 import pdb
 
@@ -38,3 +38,10 @@ def test_merkle_tree_accumulator_invariants():
         root_hash = MerkleTreeInternalNode(root_hash, item, hasher).hash()
     assert root_hash == resp.ledger_info_with_sigs.ledger_info.transaction_accumulator_hash
     #TODO: test bitmap
+
+def test_ensure():
+    ensure(1==1, "{} != {}", 1, 1)
+    with pytest.raises(AssertionError):
+        ensure(1==2, "{} != {}", 1, 2)
+    with pytest.raises(AssertionError):
+        ensure(1==2, "1 != 2")

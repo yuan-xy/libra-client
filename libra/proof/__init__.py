@@ -1,12 +1,20 @@
-from libra.proof.merkle_tree import get_accumulator_root_hash, MerkleTreeInternalNode
-from libra.proof.definition import AccumulatorProof, MAX_ACCUMULATOR_PROOF_DEPTH
+from libra.proof.merkle_tree import (get_accumulator_root_hash,
+    MerkleTreeInternalNode, SparseMerkleLeafNode)
+from libra.proof.definition import AccumulatorProof, SparseMerkleProof, MAX_ACCUMULATOR_PROOF_DEPTH
 from libra.event import ContractEvent
 from libra.hasher import *
 from libra.transaction import SignedTransaction, TransactionInfo
+from libra.account_resource import AccountStateBlob
+from libra.validator_verifier import VerifyError
+
 import collections
 import more_itertools
 import pdb
 
+def ensure(exp, hint, *args):
+    if not exp:
+        errstr = hint.format(*args)
+        raise AssertionError(errstr)
 
 
 # Verifies that a given `transaction_info` exists in the ledger using provided proof.
@@ -39,13 +47,91 @@ def verify_accumulator_element(
     hashv = element_hash
     for sibling_hash in reversed(siblings):
         hasher = hash_func()
-        hasher = TransactionAccumulatorHasher()
         if index % 2 == 0:
             hashv = MerkleTreeInternalNode(hashv, sibling_hash, hasher).hash()
         else:
             hashv = MerkleTreeInternalNode(sibling_hash, hashv, hasher).hash()
         index //= 2
     assert hashv == bytes(expected_root_hash)
+
+
+# If `element_blob` is present, verifies an element whose key is `element_key` and value
+# is `element_blob` exists in the Sparse Merkle Tree using the provided proof.
+# Otherwise verifies the proof is a valid non-inclusion proof that shows this key doesn't exist
+# in the tree.
+
+def verify_sparse_merkle_element(
+        expected_root_hash,
+        element_key,
+        element_blob,
+        sparse_merkle_proof):
+    proof = SparseMerkleProof.from_proto(sparse_merkle_proof)
+    siblings = proof.siblings
+    assert len(siblings) <= HashValue.LENGTH_IN_BITS
+    if proof.leaf is not None:
+        proof_key, proof_value_hash = proof.leaf
+        if len(element_blob.__str__()) > 0:
+            # This is an inclusion proof, so the key and value hash provided in the proof should
+            # match element_key and element_value_hash.
+            # `siblings` should prove the route from the leaf node to the root.
+            ensure(
+                element_key == proof_key,
+                "Keys do not match. Key in proof: {:x}. Expected key: {:x}.",
+                proof_key,
+                element_key
+            )
+            hashv = AccountStateBlob.from_proto(element_blob).hash()
+            ensure(
+                hashv == proof_value_hash,
+                "Value hashes do not match. Value hash in proof: {:x}. Expected value hash: {:x}",
+                proof_value_hash,
+                hashv
+            )
+        else:
+            # This is a non-inclusion proof.
+            # The proof intends to show that if a leaf node representing `element_key` is inserted,
+            # it will break a currently existing leaf node represented by `proof_key` into a
+            # branch.
+            # `siblings` should prove the route from that leaf node to the root.
+            ensure(
+                element_key != proof_key,
+                "Expected non-inclusion proof, but key exists in proof."
+            )
+            ensure(
+                common_prefix_bits_len(element_key, proof_key) >= len(siblings),
+                "Key would not have ended up in the subtree where the provided key in proof is \
+                 the only existing key, if it existed. So this is not a valid non-inclusion proof."
+            )
+    else:
+        if len(element_blob.__str__()) > 0:
+            raise VerifyError("Expected inclusion proof. Found non-inclusion proof.")
+        else:
+            # This is a non-inclusion proof.
+            # The proof intends to show that if a leaf node representing `element_key` is inserted,
+            # it will show up at a currently empty position.
+            # `sibling` should prove the route from this empty position to the root.
+            pass
+    if proof.leaf:
+        key, value_hash = proof.leaf
+        current_hash = SparseMerkleLeafNode(key, value_hash).hash()
+    else:
+        current_hash = bytes(SPARSE_MERKLE_PLACEHOLDER_HASH)
+    iter_bits = bytes_to_bits(element_key)[0:len(siblings)]
+    zipped = zip(reversed(siblings), reversed(iter_bits))
+    for sibling_hash, bit in zipped:
+        hasher = SparseMerkleInternalHasher()
+        if bit == '1':
+            current_hash = MerkleTreeInternalNode(sibling_hash, current_hash, hasher).hash()
+        else:
+            current_hash = MerkleTreeInternalNode(current_hash, sibling_hash, hasher).hash()
+    ensure(
+        current_hash == bytes(expected_root_hash),
+        "Root hashes do not match. Actual root hash: {:x}. Expected root hash: {:x}.",
+        current_hash,
+        bytes(expected_root_hash)
+    )
+
+
 
 
 # Verifies that the state of an account at version `state_version` is correct using the provided
@@ -59,12 +145,12 @@ def verify_account_state(
         account_state_proof
         ):
     transaction_info = TransactionInfo.from_proto(account_state_proof.transaction_info)
-    # verify_sparse_merkle_element(
-    #     transaction_info.state_root_hash(),
-    #     account_address_hash,
-    #     account_state_blob,
-    #     account_state_proof.transaction_info_to_account_proof(),
-    # )?;
+    verify_sparse_merkle_element(
+        transaction_info.state_root_hash,
+        account_address_hash,
+        account_state_blob,
+        account_state_proof.transaction_info_to_account_proof
+    )
     verify_transaction_info(
         ledger_info,
         state_version,
@@ -147,3 +233,4 @@ def verify_event_root_hash(event_lists, infos):
         eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
         if eroot_hash != info.event_root_hash:
             raise VerifyError(f"event_root_hash mismatch.")
+

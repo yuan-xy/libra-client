@@ -1,7 +1,7 @@
 from libra.ledger_info import LedgerInfo
 from libra.validator_verifier import VerifyError
 from libra.hasher import *
-from libra.proof import get_accumulator_root_hash, verify_transaction_list, verify_account_state
+from libra.proof import verify_transaction_list, verify_account_state
 from libra.transaction import SignedTransaction, TransactionInfo
 from libra.account_address import Address
 

@@ -9,6 +9,21 @@ class HashValue(canoser.DelegateT):
     LENGTH_IN_NIBBLES = LENGTH * 2
     delegate_type = [canoser.Uint8, LENGTH]
 
+def uint8_to_bits(uint8):
+    return format(uint8, '8b').replace(' ', '0')
+
+def bytes_to_bits(abytes):
+    return ''.join([uint8_to_bits(x) for x in abytes])
+
+def common_prefix_bits_len(bytes1, bytes2):
+    assert len(bytes1) == len(bytes2)
+    bit_str1 = ''.join([uint8_to_bits(x) for x in bytes1])
+    bit_str2 = ''.join([uint8_to_bits(x) for x in bytes2])
+    for idx, bit in enumerate(bit_str1):
+        if bit != bit_str2[idx]:
+            return idx
+    return len(bit_str1)
+
 
 def hash_seed(clazz_name):
     sha3 = new_sha3_256()
@@ -27,6 +42,8 @@ def EventAccumulatorHasher():
 def TransactionAccumulatorHasher():
     return gen_hasher(b"TransactionAccumulator")
 
+def SparseMerkleInternalHasher():
+    return gen_hasher(b"SparseMerkleInternal")
 
 def create_literal_hash(word):
     arr = [ord(x) for x in list(word)]
