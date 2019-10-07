@@ -46,7 +46,7 @@ class ClientProxy:
 
     def parse_address_or_refid(self, address_or_refid):
         if len(address_or_refid) == 64:
-            return address
+            return address_or_refid
         else:
             idx = int(address_or_refid)
             if idx >=0 and idx < self.wallet.child_count:
