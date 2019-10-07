@@ -1,8 +1,10 @@
 from libra.ledger_info import LedgerInfo
 from libra.validator_verifier import VerifyError
 from libra.hasher import *
-from libra.proof import get_accumulator_root_hash, verify_transaction_list
+from libra.proof import get_accumulator_root_hash, verify_transaction_list, verify_account_state
 from libra.transaction import SignedTransaction, TransactionInfo
+from libra.account_address import Address
+
 
 def verify(validator_verifier, request, response):
     verify_update_to_latest_ledger_response(
@@ -40,15 +42,72 @@ def verify_response_item(ledger_info, requested_item, response_item):
     resp_type2 = response_item.WhichOneof('response_items')
     if resp_type != resp_type2:
         raise VerifyError(f"RequestItem/ResponseItem types mismatch:{resp_type} - {resp_type2}.")
-    if resp_type == "get_transactions_response":
+    if resp_type == "get_account_state_response":
+        asp = response_item.get_account_state_response.account_state_with_proof
+        assert asp.version == ledger_info.version
+        verify_account_state(
+            ledger_info,
+            asp.version,
+            Address.hash(requested_item.get_account_state_request.address),
+            asp.blob,
+            asp.proof
+        )
+    elif resp_type == "get_account_transaction_by_sequence_number_response":
+        atreq = requested_item.get_account_transaction_by_sequence_number_request
+        atresp = response_item.get_account_transaction_by_sequence_number_response
+        verify_get_txn_by_seq_num_resp(
+            ledger_info,
+            atreq.account,
+            atreq.sequence_number,
+            atreq.fetch_events,
+            atresp.signed_transaction_with_proof,
+            atresp.proof_of_current_sequence_number
+        )
+    elif resp_type == "get_events_by_event_access_path_response":
+        ereq = requested_item.get_events_by_event_access_path_request
+        eresp = response_item.get_events_by_event_access_path_response
+        verify_get_events_by_access_path_resp(
+            ledger_info,
+            ereq.access_path,
+            ereq.start_event_seq_num,
+            ereq.ascending,
+            ereq.limit,
+            eresp.events_with_proof,
+            eresp.proof_of_latest_event
+        )
+    elif resp_type == "get_transactions_response":
         req = requested_item.get_transactions_request
         ver = req.start_version
         limit = req.limit
         fetch_events = req.fetch_events
         txp = response_item.get_transactions_response.txn_list_with_proof
         verify_get_txns_resp(ledger_info, ver, limit, fetch_events, txp)
+    else:
+        raise VerifyError(f"unknown response type:{resp_type}")
 
 
+def verify_get_txn_by_seq_num_resp(
+        ledger_info,
+        account,
+        sequence_number,
+        fetch_events,
+        signed_transaction_with_proof,
+        proof_of_current_sequence_number
+    ):
+    pass
+
+def verify_get_events_by_access_path_resp(
+        ledger_info,
+        access_path,
+        start_event_seq_num,
+        ascending,
+        limit,
+        events_with_proof,
+        proof_of_latest_event,
+    ):
+    # import pdb
+    # pdb.set_trace()
+    pass
 
 
 def verify_get_txns_resp(ledger_info, start_version, limit, fetch_events, txn_list_with_proof):
