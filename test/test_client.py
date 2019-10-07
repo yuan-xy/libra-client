@@ -92,9 +92,9 @@ def test_get_account_transaction_proto():
 
 
 def test_transfer_coin():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
-    a0 = wallet.accounts[0]
-    a1 = wallet.accounts[1]
+    wallet = libra.WalletLibrary.new()
+    a0 = wallet.new_account()
+    a1 = wallet.new_account()
     c = libra.Client("testnet")
     try:
         balance0 = c.get_balance(a0.address)
