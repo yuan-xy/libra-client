@@ -37,3 +37,4 @@ def test_merkle_tree_accumulator_invariants():
         hasher = TransactionAccumulatorHasher()
         root_hash = MerkleTreeInternalNode(root_hash, item, hasher).hash()
     assert root_hash == resp.ledger_info_with_sigs.ledger_info.transaction_accumulator_hash
+    #TODO: test bitmap
