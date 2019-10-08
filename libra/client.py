@@ -93,7 +93,7 @@ class Client:
         if len(blob.__str__()) == 0:
             #TODO: bad smell
             raise AccountError("Account state blob is empty.")
-        return AccountState.deserialize(blob.blob).blob
+        return AccountState.deserialize(blob.blob).ordered_map
 
     def get_account_resource(self, address):
         amap = self.get_account_state(address)

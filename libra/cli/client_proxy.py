@@ -1,3 +1,4 @@
+import libra
 from libra import Client, WalletLibrary
 from command import parse_bool
 import pdb
@@ -68,7 +69,9 @@ class ClientProxy:
     def get_latest_account_state(self, address_or_refid):
         address = self.parse_address_or_refid(address_or_refid)
         blob, version = self.grpc_client.get_account_blob(address)
-        #update local account if address in local wallet.
+        if len(blob.__str__()) > 0:
+            blob = libra.AccountState.deserialize(blob.blob)
+        #TODO: update local account if address in local wallet.
         return (blob, address, version)
 
     def get_committed_txn_by_acc_seq(self, address_or_refid, seq, fetch_events):

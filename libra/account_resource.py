@@ -1,6 +1,8 @@
 from canoser import *
 from libra.event import EventHandle
 from libra.hasher import gen_hasher
+from libra.account_config import AccountConfig
+from io import StringIO
 
 class AccountStateBlob:
     def __init__(self, blob):
@@ -18,8 +20,17 @@ class AccountStateBlob:
 
 class AccountState(Struct):
     _fields = [
-        ('blob', {})
+        ('ordered_map', {})
     ]
+
+    def __str__(self):
+        concat = StringIO()
+        concat.write(super().__str__())
+        resource = self.ordered_map[AccountConfig.ACCOUNT_RESOURCE_PATH]
+        ar = AccountResource.deserialize(resource)
+        concat.write("\nDecoded:\n")
+        concat.write(ar.__str__())
+        return concat.getvalue()
 
 
 class AccountResource(Struct):
