@@ -70,6 +70,13 @@ def test_get_account_resource():
     assert ret.sent_events.count > 0
     assert len(ret.sent_events.key) == 32
     assert ret.sequence_number > 0
+    addr = b'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\nU\x0c\x18'
+    assert addr == bytes.fromhex(address)
+    ret2 = c.get_account_resource(addr)
+    assert ret.delegated_withdrawal_capability == ret2.delegated_withdrawal_capability
+    assert ret2.received_events.count >= ret.received_events.count
+    assert ret2.sent_events.count >= ret.sent_events.count
+    assert ret2.sequence_number >= ret.sequence_number
 
 
 def test_account_not_exsits():
@@ -96,14 +103,8 @@ def test_transfer_coin():
     a0 = wallet.new_account()
     a1 = wallet.new_account()
     c = libra.Client("testnet")
-    try:
-        balance0 = c.get_balance(a0.address)
-        if balance0 < 1234:
-            c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
-            balance0 += 1234
-    except libra.client.AccountError:
-        c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
-        balance0 = 1234
+    c.mint_coins_with_faucet_service(a0.address.hex(), 1234, True)
+    balance0 = c.get_balance(a0.address)
     try:
         balance1 = c.get_balance(a1.address)
     except libra.client.AccountError:
