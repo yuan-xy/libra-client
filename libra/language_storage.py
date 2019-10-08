@@ -7,8 +7,8 @@ class StructTag(Struct):
     _fields = [
         ('address', Address),
         ('module', Identifier),
-        ('name', Identifier)
-        #('type_params', [StructTag])
+        ('name', Identifier),
+        ('type_params', ['libra.language_storage.StructTag'])
     ]
 
     def hash(self):
