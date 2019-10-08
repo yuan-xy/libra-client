@@ -4,6 +4,7 @@ from nacl.signing import VerifyKey
 from libra.bytecode import bytecode
 from libra.account_address import Address
 from libra.hasher import gen_hasher, HashValue
+from libra.access_path import AccessPath
 
 # must define type by serialized sequence, not the sequence in the rust struct definition.
 # ack 'impl CanonicalSerialize for {type}' -A 20
@@ -23,12 +24,6 @@ class WriteOp(RustEnum):
     _enums = [
         ('Deletion', None),
         ('Value', [Uint8])
-    ]
-
-class AccessPath(Struct):
-    _fields = [
-        ('address', Address),
-        ('path', [Uint8])
     ]
 
 

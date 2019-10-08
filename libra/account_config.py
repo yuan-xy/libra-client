@@ -1,4 +1,4 @@
-
+from libra.language_storage import StructTag
 
 class AccountConfig:
     # LibraCoin
@@ -27,7 +27,23 @@ class AccountConfig:
     def account_received_event_path(self):
         return self.ACCOUNT_RESOURCE_PATH + b"/received_events_count/"
 
+    @classmethod
+    def core_code_address(self):
+        return "0".rjust(64, '0')
 
     @classmethod
     def association_address(self):
-        return "000000000000000000000000000000000000000000000000000000000a550c18"
+        return "a550c18".rjust(64, '0')
+
+    @classmethod
+    def validator_set_address(self):
+        return "1d8".rjust(64, '0')
+
+    @classmethod
+    def account_struct_tag():
+        return StructTag(
+            core_code_address(),
+            ACCOUNT_MODULE_NAME,
+            ACCOUNT_STRUCT_NAME,
+            []
+        )
