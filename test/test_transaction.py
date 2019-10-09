@@ -1,5 +1,6 @@
 import libra
 from libra.transaction import *
+from libra.client import TransactionError, TransactionTimeoutError
 import pytest
 import nacl
 import pdb
@@ -36,4 +37,38 @@ def test_signed_txn():
         stx.signature = [0]*64
         stx.check_signature()
 
+def test_wait_for_transaction_timeout():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
+    c = libra.Client("testnet")
+    with pytest.raises(TransactionTimeoutError):
+        c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=True, txn_expiration=0)
+
+def test_gax_too_large():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
+    c = libra.Client("testnet")
+    balance0 = c.get_balance(a0.address)
+    with pytest.raises(TransactionError):
+        c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
+    with pytest.raises(TransactionError):
+        c.transfer_coin(a0, a1.address, 1, max_gas=1_000_001)
+    with pytest.raises(TransactionError):
+        c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
+
+def test_amount_illegal():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
+    c = libra.Client("testnet")
+    sequence_number = c.get_sequence_number(a0.address)
+    balance0 = c.get_balance(a0.address)
+    with pytest.raises(Exception):
+        c.transfer_coin(a0, a1.address, -1)
+    with pytest.raises(Exception):
+        c.transfer_coin(a0, a1.address, 0.1)
+    c.transfer_coin(a0, a1.address, balance0+1, is_blocking=False)
+    assert False == c.wait_for_transaction(a0.address, sequence_number) #no events emitted
 

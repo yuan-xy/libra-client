@@ -31,6 +31,9 @@ class AccountError(LibraError):
 class TransactionError(LibraError):
     pass
 
+class TransactionTimeoutError(LibraError):
+    pass
+
 class LibraNetError(LibraError):
     pass
 
@@ -214,20 +217,20 @@ class Client:
                 print("transaction is stored!")
                 if len(transaction.events.events) == 0:
                     print("no events emitted")
-                return
+                    return False
+                else:
+                    return True
             else:
                 if expiration_time <= (usecs // 1000_000):
-                    # import pdb
-                    # pdb.set_trace()
-                    raise TransactionError("Transaction expired.")
+                    raise TransactionTimeoutError("Transaction expired.")
                 print(".", end='', flush=True)
-        raise TransactionError("wait_for_transaction timeout.")
+        raise TransactionTimeoutError("wait_for_transaction timeout.")
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
-        max_gas=140_000, unit_price=0, is_blocking=False):
+        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address)
         raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
-            receiver_address, micro_libra, max_gas, unit_price)
+            receiver_address, micro_libra, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
