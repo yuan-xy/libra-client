@@ -167,6 +167,30 @@ class SignedTransaction(Struct):
         vkey = VerifyKey(bytes(self.public_key))
         vkey.verify(message, bytes(self.signature))
 
+    @property
+    def sender(self):
+        return self.raw_txn.sender
+
+    @property
+    def sequence_number(self):
+        return self.raw_txn.sequence_number
+
+    @property
+    def payload(self):
+        return self.raw_txn.payload
+
+    @property
+    def max_gas_amount(self):
+        return self.raw_txn.max_gas_amount
+
+    @property
+    def gas_unit_price(self):
+        return self.raw_txn.gas_unit_price
+
+    @property
+    def expiration_time(self):
+        return self.raw_txn.expiration_time
+
 
 class TransactionInfo(Struct):
     _fields = [

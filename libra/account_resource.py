@@ -27,9 +27,10 @@ class AccountState(Struct):
         concat = StringIO()
         concat.write(super().__str__())
         resource = self.ordered_map[AccountConfig.ACCOUNT_RESOURCE_PATH]
-        ar = AccountResource.deserialize(resource)
-        concat.write("\nDecoded:\n")
-        concat.write(ar.__str__())
+        if resource:
+            ar = AccountResource.deserialize(resource)
+            concat.write("\nDecoded:\n")
+            concat.write(ar.__str__())
         return concat.getvalue()
 
 
@@ -43,3 +44,12 @@ class AccountResource(Struct):
         ('sent_events', EventHandle),
         ('sequence_number', Uint64)
     ]
+
+    @classmethod
+    def get_account_resource_or_default(cls, blob):
+        if blob:
+            omap = AccountState.deserialize(blob.blob).ordered_map
+            resource = omap[AccountConfig.ACCOUNT_RESOURCE_PATH]
+            return cls.deserialize(resource)
+        else:
+            return cls()

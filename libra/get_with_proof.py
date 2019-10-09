@@ -4,6 +4,9 @@ from libra.hasher import *
 from libra.proof import verify_transaction_list, verify_account_state
 from libra.transaction import SignedTransaction, TransactionInfo
 from libra.account_address import Address
+from libra.proof import ensure, bail
+from libra.proof.signed_transaction_with_proof import SignedTransactionWithProof
+from libra.account_resource import AccountResource
 
 
 def verify(validator_verifier, request, response):
@@ -94,7 +97,48 @@ def verify_get_txn_by_seq_num_resp(
         signed_transaction_with_proof,
         proof_of_current_sequence_number
     ):
-    pass
+    has_stx = len(signed_transaction_with_proof.__str__()) > 0
+    has_cur = len(proof_of_current_sequence_number.__str__()) > 0
+    if has_stx and not has_cur:
+        ensure(
+            fetch_events == signed_transaction_with_proof.HasField("events"),
+            "Bad GetAccountTxnBySeqNum response. Events requested: {}, events returned: {}.",
+            fetch_events,
+            signed_transaction_with_proof.HasField("events")
+        )
+        SignedTransactionWithProof.verify(
+            signed_transaction_with_proof,
+            ledger_info,
+            signed_transaction_with_proof.version,
+            account,
+            sequence_number
+        )
+    elif has_cur and not has_stx:
+        sequence_number_in_ledger = AccountResource.get_account_resource_or_default(
+            proof_of_current_sequence_number.blob).sequence_number
+        ensure(
+            sequence_number_in_ledger <= sequence_number,
+            "Server returned no transactions while it should. Seq num requested: {}, latest seq num in ledger: {}.",
+            sequence_number,
+            sequence_number_in_ledger
+        )
+        assert proof_of_current_sequence_number.version == ledger_info.version
+        verify_account_state(
+            ledger_info,
+            ledger_info.version,
+            Address.hash(account),
+            proof_of_current_sequence_number.blob,
+            proof_of_current_sequence_number.proof
+        )
+    else:
+        bail(
+            "Bad GetAccountTxnBySeqNum response. txn_proof.is_none():{}, cur_seq_num_proof.is_none():{}",
+            has_stx,
+            has_cur
+        )
+
+
+
 
 def verify_get_events_by_access_path_resp(
         ledger_info,

@@ -1,7 +1,6 @@
-from libra.proof.merkle_tree import (get_accumulator_root_hash,
+from libra.proof.merkle_tree import (get_event_root_hash,
     MerkleTreeInternalNode, SparseMerkleLeafNode)
 from libra.proof.definition import AccumulatorProof, SparseMerkleProof, MAX_ACCUMULATOR_PROOF_DEPTH
-from libra.event import ContractEvent
 from libra.hasher import *
 from libra.transaction import SignedTransaction, TransactionInfo
 from libra.account_resource import AccountStateBlob
@@ -11,11 +10,14 @@ import collections
 import more_itertools
 import pdb
 
+
+def bail(hint, *args):
+    errstr = hint.format(*args)
+    raise AssertionError(errstr)
+
 def ensure(exp, hint, *args):
     if not exp:
-        errstr = hint.format(*args)
-        raise AssertionError(errstr)
-
+        bail(hint, *args)
 
 # Verifies that a given `transaction_info` exists in the ledger using provided proof.
 def verify_transaction_info(
@@ -76,14 +78,14 @@ def verify_sparse_merkle_element(
             # `siblings` should prove the route from the leaf node to the root.
             ensure(
                 element_key == proof_key,
-                "Keys do not match. Key in proof: {:x}. Expected key: {:x}.",
+                "Keys do not match. Key in proof: {}. Expected key: {}.",
                 proof_key,
                 element_key
             )
             hashv = AccountStateBlob.from_proto(element_blob).hash()
             ensure(
                 hashv == proof_value_hash,
-                "Value hashes do not match. Value hash in proof: {:x}. Expected value hash: {:x}",
+                "Value hashes do not match. Value hash in proof: {}. Expected value hash: {}",
                 proof_value_hash,
                 hashv
             )
@@ -126,7 +128,7 @@ def verify_sparse_merkle_element(
             current_hash = MerkleTreeInternalNode(current_hash, sibling_hash, hasher).hash()
     ensure(
         current_hash == bytes(expected_root_hash),
-        "Root hashes do not match. Actual root hash: {:x}. Expected root hash: {:x}.",
+        "Root hashes do not match. Actual root hash: {}. Expected root hash: {}.",
         current_hash,
         bytes(expected_root_hash)
     )
@@ -231,11 +233,7 @@ def verify_event_root_hash(event_lists, infos):
         raise VerifyError(f"transactions and events mismatch:{len_info}, {len_event}.")
     zipped = zip(event_lists, infos)
     for events, info in zipped:
-        if len(events.events) == 0:
-            #transaction 0 has no events; execution failed tx has no events.
-            continue
-        event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
-        eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
-        if eroot_hash != info.event_root_hash:
+        eroot_hash = get_event_root_hash(events.events)
+        if bytes(eroot_hash) != info.event_root_hash:
             raise VerifyError(f"event_root_hash mismatch.")
 
