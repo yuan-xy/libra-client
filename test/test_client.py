@@ -43,6 +43,10 @@ def test_get_tx_from_zero():
     transactions, events_for_versions = c.get_transactions_proto(0, 2, True)
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2
+    transactions, events_for_versions = c.get_transactions_proto(0, 1, True)
+    assert len(transactions) == 1
+    assert len(events_for_versions.events_for_version) == 1
+    assert len(events_for_versions.events_for_version[0].events) == 0
 
 def test_get_tx_latest():
     c = libra.Client("testnet")

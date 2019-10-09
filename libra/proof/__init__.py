@@ -165,7 +165,6 @@ def verify_transaction_list(txn_list_with_proof, ledger_info):
     infos = txn_list_with_proof.infos
     len_tx = len(transactions)
     len_info = len(infos)
-    pdb.set_trace()
     if len_tx != len_info:
         raise VerifyError(f"transactions and infos mismatch:{len_tx}, {len_info}.")
     if txn_list_with_proof.HasField("events_for_versions"):
@@ -232,6 +231,9 @@ def verify_event_root_hash(event_lists, infos):
         raise VerifyError(f"transactions and events mismatch:{len_info}, {len_event}.")
     zipped = zip(event_lists, infos)
     for events, info in zipped:
+        if len(events.events) == 0:
+            #transaction 0 has no events; execution failed tx has no events.
+            continue
         event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
         eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
         if eroot_hash != info.event_root_hash:
