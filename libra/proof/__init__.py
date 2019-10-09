@@ -165,6 +165,7 @@ def verify_transaction_list(txn_list_with_proof, ledger_info):
     infos = txn_list_with_proof.infos
     len_tx = len(transactions)
     len_info = len(infos)
+    pdb.set_trace()
     if len_tx != len_info:
         raise VerifyError(f"transactions and infos mismatch:{len_tx}, {len_info}.")
     if txn_list_with_proof.HasField("events_for_versions"):
@@ -174,9 +175,11 @@ def verify_transaction_list(txn_list_with_proof, ledger_info):
     #Get the hashes of all nodes at the accumulator leaf level.
     hashes = [TransactionInfo.from_proto(x).hash() for x in infos]
     hashes = collections.deque(hashes)
-    first = txn_list_with_proof.proof_of_first_transaction.non_default_siblings
+    firstp = AccumulatorProof.from_proto(txn_list_with_proof.proof_of_first_transaction)
+    first = firstp.siblings
     if txn_list_with_proof.HasField("proof_of_last_transaction"):
-        last = txn_list_with_proof.proof_of_last_transaction.non_default_siblings
+        lastp = AccumulatorProof.from_proto(txn_list_with_proof.proof_of_last_transaction)
+        last = lastp.siblings
     else:
         last = first
     first_idx = txn_list_with_proof.first_transaction_version.value

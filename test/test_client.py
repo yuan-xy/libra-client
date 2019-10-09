@@ -34,7 +34,22 @@ def test_get_transaction():
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(1, 5, True)
+    transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
+
+def test_get_tx_from_zero():
+    c = libra.Client("testnet")
+    transactions, events_for_versions = c.get_transactions_proto(0, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
+
+def test_get_tx_latest():
+    c = libra.Client("testnet")
+    ver = c.get_latest_transaction_version()
+    transactions, events_for_versions = c.get_transactions_proto(ver-2, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_zero():
     c = libra.Client("testnet")
