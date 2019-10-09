@@ -109,10 +109,12 @@ class AccountCommandMint(Command):
             print("Doesn't support mint on dev net.")
             return
         print(">> Minting coins")
-        is_blocking = blocking_cmd(params[0])
-        client.mint_coins(params[1], params[2], is_blocking)
-        if is_blocking:
-            print("Finished minting!")
-        else:
-            print("Mint request submitted")
-        #report_error("Error minting coins", e),
+        try:
+            is_blocking = blocking_cmd(params[0])
+            client.mint_coins(params[1], params[2], is_blocking)
+            if is_blocking:
+                print("Finished minting!")
+            else:
+                print("Mint request submitted")
+        except Exception as err:
+            report_error("Error minting coins", err)

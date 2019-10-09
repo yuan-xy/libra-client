@@ -200,7 +200,7 @@ class Client:
             )
         sequence_number = int(resp.text)
         if is_blocking:
-            self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
+            self.wait_for_transaction(AccountConfig.association_address(), sequence_number-1)
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
