@@ -157,8 +157,6 @@ class Client:
         usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
         return (transaction.signed_transaction_with_proof, usecs)
-        #Types::SignedTransactionWithProof [:version, :signed_transaction, :proof, :events]
-
 
     # Returns events specified by `access_path` with sequence number in range designated by
     # `start_seq_num`, `ascending` and `limit`. If ascending is true this query will return up to

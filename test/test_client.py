@@ -31,6 +31,7 @@ def test_get_transaction():
     assert len(stx.public_key) == 32
     assert len(stx.signature) == 64
     stx.check_signature
+    stx.__str__()
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")

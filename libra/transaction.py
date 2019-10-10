@@ -1,7 +1,7 @@
 from canoser import *
 from datetime import datetime
 from nacl.signing import VerifyKey
-from libra.bytecode import bytecode
+from libra.bytecode import bytecode, get_transaction_name
 from libra.account_address import Address
 from libra.hasher import gen_hasher, HashValue
 from libra.access_path import AccessPath
@@ -55,6 +55,14 @@ class Script(Struct):
         ('code', [Uint8]),
         ('args', [TransactionArgument])
     ]
+
+    @classmethod
+    def pretty_print_field(cls, field_name, field_type, field_value, buffer, ident):
+        if field_name == 'code':
+            transaction_name = get_transaction_name(field_value)
+            buffer.write(f'{field_name}: <{transaction_name}>')
+        else:
+            super().pretty_print_field(field_name, field_type, field_value, buffer, ident)
 
 class TransactionPayload(RustEnum):
     _enums = [
