@@ -26,6 +26,8 @@ def verify_transaction_info(
         transaction_info,
         ledger_info_to_transaction_info_proof):
     assert transaction_version <= ledger_info.version
+    if not isinstance(transaction_info, TransactionInfo):
+        transaction_info = TransactionInfo.from_proto(transaction_info)
     verify_accumulator_element(
         TransactionAccumulatorHasher,
         ledger_info.transaction_accumulator_hash,
@@ -132,33 +134,6 @@ def verify_sparse_merkle_element(
         current_hash,
         bytes(expected_root_hash)
     )
-
-
-
-
-# Verifies that the state of an account at version `state_version` is correct using the provided
-# proof.  If `account_state_blob` is present, we expect the account to exist, otherwise we
-# expect the account to not exist.
-def verify_account_state(
-        ledger_info,
-        state_version,
-        account_address_hash,
-        account_state_blob,
-        account_state_proof
-        ):
-    transaction_info = TransactionInfo.from_proto(account_state_proof.transaction_info)
-    verify_sparse_merkle_element(
-        transaction_info.state_root_hash,
-        account_address_hash,
-        account_state_blob,
-        account_state_proof.transaction_info_to_account_proof
-    )
-    verify_transaction_info(
-        ledger_info,
-        state_version,
-        transaction_info,
-        account_state_proof.ledger_info_to_transaction_info_proof)
-
 
 
 def verify_transaction_list(txn_list_with_proof, ledger_info):

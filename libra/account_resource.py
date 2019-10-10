@@ -53,3 +53,11 @@ class AccountResource(Struct):
             return cls.deserialize(resource)
         else:
             return cls()
+
+    def get_event_handle_by_query_path(self, query_path):
+        if AccountConfig.account_received_event_path() == query_path:
+            return self.received_events
+        elif AccountConfig.account_sent_event_path() == query_path:
+            return self.sent_events
+        else:
+            libra.proof.bail("Unrecognized query path: {}", query_path);
