@@ -4,6 +4,7 @@ from libra.account import AccountStatus
 from command import parse_bool
 import pdb
 
+CLIENT_WALLET_MNEMONIC_FILE = "client.mnemonic"
 
 class ClientProxy:
     def __init__(self, client, libra_args):
@@ -14,6 +15,7 @@ class ClientProxy:
             self.print_all_accounts()
         else:
             self.wallet = WalletLibrary.new()
+            self.wallet.write_recovery(CLIENT_WALLET_MNEMONIC_FILE)
         self.accounts = self.wallet.accounts
 
     def print_all_accounts(self):
