@@ -16,6 +16,7 @@ from query_commands import QueryCommand
 from transfer_commands import TransferCommand
 from dev_commands import DevCommand
 from client_proxy import ClientProxy
+from color import support_color
 
 
 def get_commands(include_dev: bool):
@@ -42,7 +43,7 @@ def run_shell(args):
     (commands, alias_to_cmd) = get_commands(False)
     while True:
         prompt = "libra% "
-        if sys.stdout.isatty() and os.name == 'posix':
+        if support_color():
             prompt = f'\033[91m{prompt}\033[0m'
         line = input(prompt)
         params = parse_cmd(line)

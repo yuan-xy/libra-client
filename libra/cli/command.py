@@ -1,6 +1,8 @@
 import abc
 import sys
 import os
+from color import print_color
+
 
 class Command(metaclass = abc.ABCMeta):
     @abc.abstractmethod
@@ -60,13 +62,6 @@ def print_commands(commands):
         print_color(" | ".join(cmd.get_aliases()), bcolors.OKGREEN, end='')
         print_color(" " + cmd.get_params_help(), bcolors.OKBLUE)
         print("\t" + cmd.get_description())
-
-def print_color(str, color, **kargs):
-    if sys.stdout.isatty() and os.name == 'posix':
-        print(color + str + bcolors.ENDC, **kargs)
-    else:
-        print(str, **kargs)
-
 
 def blocking_cmd(cmd: str) -> bool:
     return cmd.endswith('b')
