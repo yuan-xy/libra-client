@@ -203,7 +203,7 @@ class Client:
         resp = requests.post(url)
         if resp.status_code != 200:
             raise IOError(
-                "Failed to send request to faucent service: {}".format(self.faucet_host)
+                "Failed to send request to faucet service: {}".format(self.faucet_host)
             )
         sequence_number = int(resp.text)
         if is_blocking:
