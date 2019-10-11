@@ -121,6 +121,12 @@ class Client:
         resp = self.update_to_latest_ledger(request)
         return resp.ledger_info_with_sigs.ledger_info
 
+    def _get_time_diff(self):
+        from datetime import datetime
+        info = self.get_latest_ledger_info()
+        localtime = datetime.now().timestamp()
+        return localtime - info.timestamp_usecs / 1000_000
+
     def get_latest_transaction_version(self):
         return self.get_latest_ledger_info().version
 
