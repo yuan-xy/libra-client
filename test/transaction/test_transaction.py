@@ -43,7 +43,7 @@ def test_wait_for_transaction_timeout():
     a1 = wallet.accounts[1]
     c = libra.Client("testnet")
     diff = c._get_time_diff()
-    if diff > 0:
+    if diff < 0:
         with pytest.raises(TransactionTimeoutError):
             c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=True, txn_expiration=0)
 
