@@ -41,7 +41,7 @@ def run_shell(args):
     client = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"
     print(client_info)
-    (commands, alias_to_cmd) = get_commands(False)
+    (commands, alias_to_cmd) = get_commands(True)
     while True:
         prompt = "libra% "
         if support_color():

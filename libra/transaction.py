@@ -2,7 +2,7 @@ from canoser import *
 from datetime import datetime
 from nacl.signing import VerifyKey
 from libra.bytecode import bytecode, get_transaction_name
-from libra.account_address import Address
+from libra.account_address import Address, parse_address
 from libra.hasher import gen_hasher, HashValue
 from libra.access_path import AccessPath
 
@@ -19,6 +19,25 @@ class TransactionArgument(RustEnum):
         ('String', str),
         ('ByteArray', [Uint8])
     ]
+
+    @classmethod
+    #Parses the given string as any transaction argument type.
+    def parse_as_transaction_argument(cls, s):
+        address = parse_address(s)
+        if address is not None:
+            return TransactionArgument('Address', bytes_to_int_list(address))
+        elif s[0:2] == 'b"' and s[-1] == '"' and len(s) > 3:
+            barr = bytes.fromhex(s[2:-1])
+            return TransactionArgument('ByteArray', bytes_to_int_list(barr))
+        else:
+            try:
+                i = int(s)
+                return TransactionArgument('U64', i)
+            except Exception:
+                raise
+        raise TypeError(f"cannot parse {s} as transaction argument")
+        #TODO: why not support String type.
+
 
 class WriteOp(RustEnum):
     _enums = [
@@ -99,31 +118,40 @@ class RawTransaction(Struct):
         )
 
     @classmethod
-    def gen_transfer_transaction(cls, sender_address, sequence_number, receiver_address,
-        micro_libra, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
+    def new_script(cls, sender_address, sequence_number, script_code, script_args, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
         if isinstance(sender_address, bytes):
             sender_address = bytes_to_int_list(sender_address)
         if isinstance(sender_address, str):
             sender_address = hex_to_int_list(sender_address)
+        return RawTransaction(
+            sender_address,
+            sequence_number,
+            TransactionPayload('Script', Script(script_code, script_args)),
+            max_gas_amount,
+            gas_unit_price,
+            int(datetime.now().timestamp()) + txn_expiration
+        )
+
+    @classmethod
+    def gen_transfer_transaction(cls, sender_address, sequence_number, receiver_address,
+        micro_libra, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
         if isinstance(receiver_address, bytes):
             receiver_address = bytes_to_int_list(receiver_address)
         if isinstance(receiver_address, str):
             receiver_address = hex_to_int_list(receiver_address)
         code = cls.get_script_bytecode("peer_to_peer_transfer")
-        script = Script(
-            code,
-            [
+        args = [
                 TransactionArgument('Address', receiver_address),
                 TransactionArgument('U64', micro_libra)
             ]
-        )
-        return RawTransaction(
+        return RawTransaction.new_script(
             sender_address,
             sequence_number,
-            TransactionPayload('Script', script),
+            code,
+            args,
             max_gas_amount,
             gas_unit_price,
-            int(datetime.now().timestamp()) + txn_expiration
+            txn_expiration
         )
 
 
@@ -135,13 +163,6 @@ class RawTransaction(Struct):
     @staticmethod
     def get_script_bytecode(script_name):
         return bytecode[script_name]
-
-    @staticmethod
-    def get_script_bytecode_deprecated(script_file):
-        with open(script_file) as f:
-            data = f.read()
-            amap = eval(data)
-            return amap['code']
 
 
 class SignedTransaction(Struct):

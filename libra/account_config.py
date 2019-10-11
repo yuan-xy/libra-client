@@ -1,4 +1,5 @@
 from libra.language_storage import StructTag
+from libra.account_address import HEX_ADDRESS_LENGTH
 
 class AccountConfig:
     # LibraCoin
@@ -29,15 +30,15 @@ class AccountConfig:
 
     @classmethod
     def core_code_address(self):
-        return "0".rjust(64, '0')
+        return "0".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
     def association_address(self):
-        return "a550c18".rjust(64, '0')
+        return "a550c18".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
     def validator_set_address(self):
-        return "1d8".rjust(64, '0')
+        return "1d8".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
     def account_struct_tag():

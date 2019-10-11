@@ -240,6 +240,16 @@ class Client:
         request.signed_txn.signed_txn = signed_txn.serialize()
         return self.submit_transaction(request, raw_tx, is_blocking)
 
+    def submit_program(self, sender_account, script_code, script_args,
+        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
+        sequence_number = self.get_sequence_number(sender_account.address)
+        raw_tx = RawTransaction.new_script(sender_account.address, sequence_number,
+            script_code, script_args, max_gas, unit_price, txn_expiration)
+        signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
+        request = SubmitTransactionRequest()
+        request.signed_txn.signed_txn = signed_txn.serialize()
+        return self.submit_transaction(request, raw_tx, is_blocking)
+
     def submit_transaction(self, request, raw_tx, is_blocking):
         resp = self.submit_transaction_non_block(request)
         if is_blocking:

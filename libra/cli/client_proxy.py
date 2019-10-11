@@ -115,3 +115,10 @@ class ClientProxy:
         micro_libra = int(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
         return (index, account.sequence_number)
+
+    def execute_script(self, address_or_refid, script_code, script_args):
+        sender_addr = self.parse_address_or_refid(address_or_refid)
+        index, account = self.wallet.find_account_by_address_hex(sender_addr)
+        if account is None:
+            raise IOError(f"address {sender} not in wallet.")
+        self.grpc_client.submit_program(account, script_code, script_args)
