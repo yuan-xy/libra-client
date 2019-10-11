@@ -1,5 +1,6 @@
 import libra
 from libra import Client, WalletLibrary
+from libra.account import AccountStatus
 from command import parse_bool
 import pdb
 
@@ -8,7 +9,11 @@ class ClientProxy:
     def __init__(self, client, libra_args):
         self.grpc_client = client
         self.libra_args = libra_args
-        self.wallet = WalletLibrary.new()
+        if libra_args.mnemonic_file:
+            self.recover_wallet_accounts(libra_args.mnemonic_file)
+            self.print_all_accounts()
+        else:
+            self.wallet = WalletLibrary.new()
         self.accounts = self.wallet.accounts
 
     def print_all_accounts(self):
@@ -35,6 +40,7 @@ class ClientProxy:
         if self.libra_args.sync:
             for account in self.accounts:
                 account.sequence_number = self.grpc_client.get_sequence_number(account.address)
+                account.status = AccountStatus.Persisted
         return self.accounts
 
     def write_recovery(self, filename):

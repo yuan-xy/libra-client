@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from datetime import datetime
 import argparse
 import sys
 import os
@@ -9,6 +9,7 @@ if os.name == 'posix':
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 
+from libra.version import version
 from libra import Client, WalletLibrary
 from command import *
 from account_commands import AccountCommand
@@ -51,6 +52,8 @@ def run_shell(args):
             continue
         cmd = alias_to_cmd.get(params[0])
         if cmd is not None:
+            if args.verbose:
+                print(datetime.now().strftime("%Y-%m-%d,%H:%M:%S"))
             cmd.execute(client, params)
         else:
             if params[0] == "quit" or params[0] == "q!":
@@ -75,8 +78,11 @@ def get_parser():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
-    parser.add_argument('-r', "--sync", default=False, help='If set, client will sync with validator during wallet recovery.')
+    parser.add_argument('-r', "--sync", action='store_true', default=False, help='If set, client will sync with validator during wallet recovery.')
     parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
+    parser.add_argument('-n', "--mnemonic_file", help='File location from which to load mnemonic word for user account address/key generation.')
+    parser.add_argument('-v', "--verbose", action='store_true', default=False, help='Verbose output.')
+    parser.add_argument('-V', '--version', action='version', version=f'libra-client {version}')
     return parser
 
 def main():

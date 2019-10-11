@@ -9,3 +9,4 @@ from libra.key_factory import KeyFactory
 from libra.account import Account
 from libra.wallet_library import WalletLibrary
 from libra.transaction import SignedTransaction, RawTransaction
+from libra.version import version
