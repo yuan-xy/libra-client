@@ -1,4 +1,4 @@
-from libra.cli.libra_shell import *
+from libra.shell.libra_shell import *
 import libra
 import pdb
 
