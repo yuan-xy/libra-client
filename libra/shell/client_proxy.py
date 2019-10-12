@@ -1,7 +1,8 @@
 import libra
 from libra import Client, WalletLibrary
 from libra.account import AccountStatus
-from libra.transaction import Script
+from libra.transaction import Script, Module, TransactionPayload
+from libra.bytecode import get_code_by_filename
 from command import parse_bool
 import pdb
 
@@ -107,20 +108,30 @@ class ClientProxy:
         else:
             raise IOError(f"Unknown event type: {sent_received}, only sent and received are supported")
 
-    def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking):
-        sender_addr = self.parse_address_or_refid(sender)
-        index, account = self.wallet.find_account_by_address_hex(sender_addr)
+    def address_or_refid_to_account(self, address_or_refid):
+        sender_addr = self.parse_address_or_refid(address_or_refid)
+        _index, account = self.wallet.find_account_by_address_hex(sender_addr)
         if account is None:
             raise IOError(f"address {sender} not in wallet.")
+        return account
+
+    def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking):
+        account = self.address_or_refid_to_account(sender)
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = int(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
         return (index, account.sequence_number)
 
-    def execute_script(self, address_or_refid, script_code, script_args):
-        sender_addr = self.parse_address_or_refid(address_or_refid)
-        index, account = self.wallet.find_account_by_address_hex(sender_addr)
-        if account is None:
-            raise IOError(f"address {sender} not in wallet.")
-        self.grpc_client.submit_script(account, Script(script_code, script_args), is_blocking=True)
+    def execute_script(self, address_or_refid, code_file, script_args):
+        account = self.address_or_refid_to_account(address_or_refid)
+        code = get_code_by_filename(code_file)
+        arguments = [TransactionArgument.parse_as_transaction_argument(x) for x in script_args]
+        payload = TransactionPayload('Script', Script(code, arguments))
+        self.grpc_client.submit_payload(account, payload, is_blocking=True)
+
+    def publish_module(self, address_or_refid, module_file):
+        account = self.address_or_refid_to_account(address_or_refid)
+        code = get_code_by_filename(module_file)
+        payload = TransactionPayload('Module', Module(code))
+        self.grpc_client.submit_payload(account, payload, is_blocking=True)
 

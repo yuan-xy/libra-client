@@ -109,7 +109,7 @@ def test_transfer_coin(capsys):
     output = exec_input("t 0 1 123", capsys)
     assert 'Transaction submitted to validator' in output
 
-def test_dev_execute(capsys):
+def test_execute_script_on_testnet(capsys):
     c = libra.Client("testnet")
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
@@ -124,4 +124,8 @@ def test_dev_execute(capsys):
     #TODO: succeed in local env but failed in travis CI.
     #Compiling program\n[ERROR] Failed to execute: code: InvalidUpdate
     #message: "Failed to update gas price to 0
+
+def test_publish_module_to_testnet(capsys):
+    output = exec_input(f"dev p 0 transaction_scripts/peer_to_peer_transfer.mv", capsys)
+    assert 'Failed to published module: major_status: 12' in output
 

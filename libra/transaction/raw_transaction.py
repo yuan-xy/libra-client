@@ -34,7 +34,16 @@ class RawTransaction(Struct):
         )
 
     @classmethod
-    def new_script_tx(cls, sender_address, sequence_number, script, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
+    def new_script_tx(cls, sender_address, sequence_number, script, max_gas_amount=140_000,
+            gas_unit_price=0, txn_expiration=100):
+        payload = TransactionPayload('Script', script)
+        return cls.new_tx(sender_address, sequence_number, payload, max_gas_amount,
+            gas_unit_price, txn_expiration)
+
+
+    @classmethod
+    def new_tx(cls, sender_address, sequence_number, payload, max_gas_amount=140_000,
+            gas_unit_price=0, txn_expiration=100):
         if isinstance(sender_address, bytes):
             sender_address = bytes_to_int_list(sender_address)
         if isinstance(sender_address, str):
@@ -42,7 +51,7 @@ class RawTransaction(Struct):
         return RawTransaction(
             sender_address,
             sequence_number,
-            TransactionPayload('Script', script),
+            payload,
             max_gas_amount,
             gas_unit_price,
             int(datetime.now().timestamp()) + txn_expiration

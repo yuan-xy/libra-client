@@ -56,7 +56,7 @@ class DevCommandPublish(Command):
             return
         try:
             print(">> Compiling program");
-            client.publish_module(params)
+            client.publish_module(params[1], params[2])
             print("Successfully published module")
         except Exception as err:
             report_error("Failed to published module", err)
@@ -78,9 +78,7 @@ class DevCommandExecute(Command):
             return
         try:
             print(">> Compiling program")
-            code = get_code_by_filename(params[2])
-            arguments = [TransactionArgument.parse_as_transaction_argument(x) for x in params[3:]]
-            client.execute_script(params[1], code, arguments)
+            client.execute_script(params[1], params[2], params[3:])
             print("Successfully finished execution")
         except Exception as err:
             report_error("Failed to execute", err)

@@ -233,14 +233,16 @@ class Client:
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         script = Script.gen_transfer_script(receiver_address,micro_libra)
-        return self.submit_script(sender_account, script, max_gas, unit_price,
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)
 
-    def submit_script(self, sender_account, script,
+    def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address)
-        raw_tx = RawTransaction.new_script_tx(sender_account.address, sequence_number,
-            script, max_gas, unit_price, txn_expiration)
+        #TODO: cache sequence_number
+        raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
+            payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
