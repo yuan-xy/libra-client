@@ -197,6 +197,10 @@ class Client:
     def get_latest_events_received(self, address, limit=1):
         return self.get_events_received(address, 2**64-1, False, limit)
 
+    def mint_coins_with_faucet_account(self, faucet_account, receiver_address, micro_libra, is_blocking=False):
+        script = Script.gen_mint_script(receiver_address, micro_libra)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(faucet_account, payload, 0, 0, is_blocking)
 
     def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
         url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)

@@ -21,6 +21,19 @@ class Script(Struct):
             ]
         return Script(code, args)
 
+    @classmethod
+    def gen_mint_script(cls, receiver_address,micro_libra):
+        if isinstance(receiver_address, bytes):
+            receiver_address = bytes_to_int_list(receiver_address)
+        if isinstance(receiver_address, str):
+            receiver_address = hex_to_int_list(receiver_address)
+        code = bytecodes["mint"]
+        args = [
+                TransactionArgument('Address', receiver_address),
+                TransactionArgument('U64', micro_libra)
+            ]
+        return Script(code, args)
+
     @staticmethod
     def get_script_bytecode(script_name):
         return bytecodes[script_name]

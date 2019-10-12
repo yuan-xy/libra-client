@@ -105,9 +105,6 @@ class AccountCommandMint(Command):
         if len(params) != 3:
             print("Invalid number of arguments for mint")
             return
-        if not hasattr(client.grpc_client, "faucet_host"):
-            print("Doesn't support mint on dev net.")
-            return
         print(">> Minting coins")
         try:
             is_blocking = blocking_cmd(params[0])
