@@ -19,6 +19,16 @@ class ClientProxy:
             self.wallet = WalletLibrary.new()
             self.wallet.write_recovery(CLIENT_WALLET_MNEMONIC_FILE)
         self.accounts = self.wallet.accounts
+        if libra_args.faucet_account_file:
+            with open(libra_args.faucet_account_file, 'rb') as f:
+                data = f.read()
+                assert len(data) == 80
+                assert b' \x00\x00\x00\x00\x00\x00\x00' == data[0:8]
+                assert b' \x00\x00\x00\x00\x00\x00\x00' == data[40:48]
+                private_key = data[8:40]
+                public_key = data[48:]
+                self.faucet_account = libra.Account(private_key)
+                assert self.faucet_account.public_key == public_key
 
     def print_all_accounts(self):
         if not self.accounts:
@@ -120,7 +130,7 @@ class ClientProxy:
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = int(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
-        return (index, account.sequence_number)
+        return account.sequence_number
 
     def execute_script(self, address_or_refid, code_file, script_args):
         account = self.address_or_refid_to_account(address_or_refid)

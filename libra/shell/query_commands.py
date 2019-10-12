@@ -58,6 +58,7 @@ class QueryCommandGetSeqNum(Command):
         print(">> Getting current sequence number")
         try:
             sn = client.get_sequence_number(params[1])
+            #TODO: support reset_sequence_number
             print(f"Sequence number is: {sn}")
         except Exception as err:
             report_error("Error getting sequence number", err)

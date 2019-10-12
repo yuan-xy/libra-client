@@ -5,7 +5,7 @@ from canoser import Uint64
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import RawTransaction, SignedTransaction, Script
+from libra.transaction import RawTransaction, SignedTransaction, Script, TransactionPayload
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify

@@ -41,7 +41,7 @@ def run_shell(args):
     client = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"
     print(client_info)
-    (commands, alias_to_cmd) = get_commands(True)
+    (commands, alias_to_cmd) = get_commands(args.faucet_account_file)
     while True:
         prompt = "libra% "
         if support_color():
@@ -81,6 +81,7 @@ def get_parser():
     parser.add_argument('-r', "--sync", action='store_true', default=False, help='If set, client will sync with validator during wallet recovery.')
     parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
     parser.add_argument('-n', "--mnemonic_file", help='File location from which to load mnemonic word for user account address/key generation.')
+    parser.add_argument('-m', "--faucet_account_file", help='Path to the generated keypair for the faucet account.')
     parser.add_argument('-v', "--verbose", action='store_true', default=False, help='Verbose output.')
     parser.add_argument('-V', '--version', action='version', version=f'libra-client {version}')
     return parser

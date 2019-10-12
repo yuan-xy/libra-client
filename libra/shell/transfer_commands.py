@@ -35,7 +35,7 @@ class TransferCommand(Command):
                 max_gas_amount_in_micro_libras = 140_000
             print(">> Transferring")
             is_blocking = blocking_cmd(params[0])
-            index, sequence_number = client.transfer_coins(params[1], params[2], params[3],
+            sequence_number = client.transfer_coins(params[1], params[2], params[3],
                 max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking)
             if is_blocking:
                 print("Finished transaction!")
@@ -44,7 +44,7 @@ class TransferCommand(Command):
             print(
                 "To query for transaction status, run: query txn_acc_seq {} {} \
                 <fetch_events=true|false>".format(
-                index, sequence_number
+                params[1], sequence_number
                 )
             )
         except Exception as err:

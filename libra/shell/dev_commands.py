@@ -11,7 +11,7 @@ class DevCommand(Command):
 
     def execute(self, client, params):
         commands = [
-            DevCommandCompile(),
+            # DevCommandCompile(),
             DevCommandPublish(),
             DevCommandExecute()
         ]
