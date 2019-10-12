@@ -1,6 +1,5 @@
 from canoser import Struct, Uint64, bytes_to_int_list, hex_to_int_list
 from datetime import datetime
-from libra.bytecode import bytecode, get_transaction_name
 from libra.account_address import Address
 from libra.hasher import gen_hasher, HashValue
 from libra.transaction.transaction_payload import TransactionPayload
@@ -24,7 +23,7 @@ class RawTransaction(Struct):
         return shazer.digest()
 
     @classmethod
-    def new_write_set(cls, sender_address, sequence_number, write_set):
+    def new_write_set_tx(cls, sender_address, sequence_number, write_set):
         return RawTransaction(
             sender_address, sequence_number,
             TransactionPayload('WriteSet', write_set),
@@ -35,7 +34,7 @@ class RawTransaction(Struct):
         )
 
     @classmethod
-    def new_script(cls, sender_address, sequence_number, script_code, script_args, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
+    def new_script_tx(cls, sender_address, sequence_number, script, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
         if isinstance(sender_address, bytes):
             sender_address = bytes_to_int_list(sender_address)
         if isinstance(sender_address, str):
@@ -43,41 +42,21 @@ class RawTransaction(Struct):
         return RawTransaction(
             sender_address,
             sequence_number,
-            TransactionPayload('Script', Script(script_code, script_args)),
+            TransactionPayload('Script', script),
             max_gas_amount,
             gas_unit_price,
             int(datetime.now().timestamp()) + txn_expiration
         )
 
     @classmethod
-    def gen_transfer_transaction(cls, sender_address, sequence_number, receiver_address,
+    def _gen_transfer_transaction(cls, sender_address, sequence_number, receiver_address,
         micro_libra, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
-        if isinstance(receiver_address, bytes):
-            receiver_address = bytes_to_int_list(receiver_address)
-        if isinstance(receiver_address, str):
-            receiver_address = hex_to_int_list(receiver_address)
-        code = cls.get_script_bytecode("peer_to_peer_transfer")
-        args = [
-                TransactionArgument('Address', receiver_address),
-                TransactionArgument('U64', micro_libra)
-            ]
-        return RawTransaction.new_script(
+        script = Script.gen_transfer_script(receiver_address,micro_libra)
+        return RawTransaction.new_script_tx(
             sender_address,
             sequence_number,
-            code,
-            args,
+            script,
             max_gas_amount,
             gas_unit_price,
             txn_expiration
         )
-
-
-    @classmethod
-    def gen_mint_transaction(cls, receiver, micro_libra):
-        pass
-        #TODO:
-
-    @staticmethod
-    def get_script_bytecode(script_name):
-        return bytecode[script_name]
-

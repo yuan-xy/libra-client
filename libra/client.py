@@ -5,7 +5,7 @@ from canoser import Uint64
 
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import *
+from libra.transaction import RawTransaction, SignedTransaction, Script
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
@@ -232,19 +232,15 @@ class Client:
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
-        sequence_number = self.get_sequence_number(sender_account.address)
-        raw_tx = RawTransaction.gen_transfer_transaction(sender_account.address, sequence_number,
-            receiver_address, micro_libra, max_gas, unit_price, txn_expiration)
-        signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
-        request = SubmitTransactionRequest()
-        request.signed_txn.signed_txn = signed_txn.serialize()
-        return self.submit_transaction(request, raw_tx, is_blocking)
+        script = Script.gen_transfer_script(receiver_address,micro_libra)
+        return self.submit_script(sender_account, script, max_gas, unit_price,
+            is_blocking, txn_expiration)
 
-    def submit_program(self, sender_account, script_code, script_args,
+    def submit_script(self, sender_account, script,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address)
-        raw_tx = RawTransaction.new_script(sender_account.address, sequence_number,
-            script_code, script_args, max_gas, unit_price, txn_expiration)
+        raw_tx = RawTransaction.new_script_tx(sender_account.address, sequence_number,
+            script, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()

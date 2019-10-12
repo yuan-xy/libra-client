@@ -18,7 +18,7 @@ def test_get_transaction():
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
     assert stx.raw_txn.payload.Script == True
-    assert stx.raw_txn.payload.value.code == RawTransaction.get_script_bytecode("mint")
+    assert stx.raw_txn.payload.value.code == Script.get_script_bytecode("mint")
     assert stx.raw_txn.payload.value.args[0].index == 1
     assert stx.raw_txn.payload.value.args[0].Address == True
     assert stx.raw_txn.payload.value.args[1].index == 0
