@@ -122,4 +122,5 @@ class ClientProxy:
         index, account = self.wallet.find_account_by_address_hex(sender_addr)
         if account is None:
             raise IOError(f"address {sender} not in wallet.")
-        self.grpc_client.submit_script(account, Script(script_code, script_args))
+        self.grpc_client.submit_script(account, Script(script_code, script_args), is_blocking=True)
+
