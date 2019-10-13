@@ -1,3 +1,5 @@
+import libra.proto.proof_pb2 as proof_pb2
+
 import libra
 from libra.transaction import TransactionInfo
 from libra.hasher import TransactionAccumulatorHasher
@@ -6,6 +8,10 @@ from libra.get_with_proof import gen_events_resp_idxs
 from canoser import Uint64
 import pytest
 import pdb
+
+def test_zero_accumulator_proof():
+    proof = proof_pb2.AccumulatorProof()
+    AccumulatorProof.from_proto(proof)
 
 def test_merkle_tree_accumulator_invariants():
     c = libra.Client("testnet")
