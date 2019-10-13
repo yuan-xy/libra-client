@@ -16,7 +16,6 @@ class Address(DelegateT):
 
     @staticmethod
     def normalize_to_bytes(address):
-        ret = address
         if isinstance(address, str):
             return bytes.fromhex(address)
         if isinstance(address, list):
