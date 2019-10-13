@@ -1,7 +1,7 @@
 from nacl.signing import SigningKey
 from libra.key_factory import new_sha3_256
 from enum import Enum
-
+from libra.account_config import AccountConfig
 
 AccountStatus = Enum('AccountStatus', ('Local','Persisted','Unknown'))
 
@@ -14,6 +14,12 @@ class Account:
         self.address = shazer.digest()
         self.sequence_number = sequence_number
         self.status = AccountStatus.Local
+
+    @classmethod
+    def faucet_account(cls, private_key):
+        ret = cls(private_key)
+        ret.address = bytes.fromhex(AccountConfig.association_address())
+        return ret
 
     def sign(self, message):
         return self._signing_key.sign(message)

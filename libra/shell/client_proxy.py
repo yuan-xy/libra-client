@@ -14,7 +14,6 @@ class ClientProxy:
         self.libra_args = libra_args
         if libra_args.mnemonic_file:
             self.recover_wallet_accounts(libra_args.mnemonic_file)
-            self.print_all_accounts()
         else:
             self.wallet = WalletLibrary.new()
             self.wallet.write_recovery(CLIENT_WALLET_MNEMONIC_FILE)
@@ -30,7 +29,7 @@ class ClientProxy:
                 assert b' \x00\x00\x00\x00\x00\x00\x00' == data[40:48]
                 private_key = data[8:40]
                 public_key = data[48:]
-                self.faucet_account = libra.Account(private_key)
+                self.faucet_account = libra.Account.faucet_account(private_key)
                 assert self.faucet_account.public_key == public_key
         else:
             self.faucet_account = None
@@ -48,6 +47,14 @@ class ClientProxy:
                     account.status
                     )
                 )
+        if self.faucet_account:
+            print(
+                "Faucet account address: {}, sequence_number: {}, status: {}".format(
+                self.faucet_account.address_hex,
+                self.faucet_account.sequence_number,
+                self.faucet_account.status
+                )
+            )
 
     def create_next_account(self):
         account = self.wallet.new_account()

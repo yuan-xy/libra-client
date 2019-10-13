@@ -103,7 +103,7 @@ def test_account_not_exsits():
     address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
     c = libra.Client("testnet")
     with pytest.raises(libra.client.AccountError):
-        balance = c.get_balance(address)
+        balance = c.get_account_state(address)
 
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()

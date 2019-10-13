@@ -24,9 +24,7 @@ def test_recover_account_on_init(capsys):
     grpc_client = libra.Client.new(args.host, args.port, args.validator_set_file)
     client = ClientProxy(grpc_client, args)
     assert len(client.accounts) == 2
-    output = capsys.readouterr().out
-    assert 'User account index: 0' in output
-    assert 'User account index: 1' in output
+
 
 def prepare_shell(shell_args):
     parser = get_parser()

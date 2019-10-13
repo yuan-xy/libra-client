@@ -104,12 +104,18 @@ class Client:
         return AccountResource.deserialize(resource)
 
     def get_sequence_number(self, address):
-        state = self.get_account_resource(address)
-        return state.sequence_number
+        try:
+            state = self.get_account_resource(address)
+            return state.sequence_number
+        except AccountError:
+            return 0
 
     def get_balance(self, address):
-        state = self.get_account_resource(address)
-        return state.balance
+        try:
+            state = self.get_account_resource(address)
+            return state.balance
+        except AccountError:
+            return 0
 
     def update_to_latest_ledger(self, request):
         resp = self.stub.UpdateToLatestLedger(request)
@@ -200,7 +206,7 @@ class Client:
     def mint_coins_with_faucet_account(self, faucet_account, receiver_address, micro_libra, is_blocking=False):
         script = Script.gen_mint_script(receiver_address, micro_libra)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(faucet_account, payload, 0, 0, is_blocking)
+        return self.submit_payload(faucet_account, payload, is_blocking=is_blocking)
 
     def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
         url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
