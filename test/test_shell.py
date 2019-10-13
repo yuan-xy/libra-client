@@ -136,3 +136,28 @@ def test_faucet_key_with_host(capsys):
     args = "-m test/faucet_key_for_test -a localhost -s libra/consensus_peers.config.toml"
     client, _ = prepare_shell(args)
     assert client.faucet_account
+
+
+def exec_input_with_client(input, client, alias_to_cmd):
+    params = parse_cmd(input)
+    cmd = alias_to_cmd.get(params[0])
+    cmd.execute(client, params)
+
+def test_with_local_libra_node(capsys):
+    #first, run 'cargo run -p libra-swarm'
+    #the follow args is copy from the stdout of libra-swarm
+    sfile = "/tmp/7cbb347846ada0c108777e063f9629b1/0/consensus_peers.config.toml"
+    mfile = "/tmp/ba1eabe239fb3a75602e8f29678be95d/temp_faucet_keys"
+    args = f'-a localhost -p 51013 -s {sfile} -m {mfile}'
+    from pathlib import Path
+    if not (Path(sfile).exists() and Path(mfile).exists()):
+        return
+    client, alias_to_cmd = prepare_shell(args)
+    exec_input_with_client("a r test/test.wallet", client, alias_to_cmd)
+    exec_input_with_client("a mb 0 123", client, alias_to_cmd)
+    exec_input_with_client("dev c 0 ../libra-client/test/pay_1.module.mvir module", client, alias_to_cmd)
+    exec_input_with_client("dev p 0 ../libra-client/test/pay_1.module.mv", client, alias_to_cmd)
+    exec_input_with_client("dev c 0 ../libra-client/test/use_pay.mvir script", client, alias_to_cmd)
+    exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde", client, alias_to_cmd)
+    assert 1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
+

@@ -10,3 +10,4 @@ __pycache__/
 *.sublime-workspace
 client.mnemonic
 ignore/
+test/*.mv
