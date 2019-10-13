@@ -189,4 +189,29 @@ c.get_transactions(start_version, limit)
 ```
 
 ### Query Events
-TODO.
+To get the latest 2 events send by an address:
+
+```py
+c = libra.Client("testnet")
+events = c.get_latest_events_sent(address, 2)
+```
+
+To get the latest 2 events received by an address:
+
+```py
+c = libra.Client("testnet")
+events = c.get_latest_events_received(address, 2)
+```
+
+Query events sent from an address, start from start_sequence_number(count begin with 0), get limit number of events, direction is ascending/descending:
+
+```py
+get_events_sent(self, address, start_sequence_number, ascending=True, limit=1)
+```
+
+Query events received from an address, start from start_sequence_number(count begin with 0), get limit number of events, direction is ascending/descending:
+
+```py
+get_events_received(self, address, start_sequence_number, ascending=True, limit=1)
+```
+
