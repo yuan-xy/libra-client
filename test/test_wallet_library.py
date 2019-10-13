@@ -28,7 +28,7 @@ def test_wallet():
                 arr1 = data1.split(";")
                 assert arr0[0] == arr1[0]
                 assert int(arr0[1]) == int(arr1[1])
-    tmp.close
+    tmp.close()
 
 def test_new_wallet():
     wallet = libra.WalletLibrary.new()

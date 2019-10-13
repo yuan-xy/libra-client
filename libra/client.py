@@ -3,6 +3,7 @@ import requests
 import time
 from canoser import Uint64
 
+from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import RawTransaction, SignedTransaction, Script, TransactionPayload
@@ -81,8 +82,7 @@ class Client:
 
 
     def get_account_blob(self, address):
-        if isinstance(address, str):
-            address = bytes.fromhex(address)
+        address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_account_state_request.address = address
@@ -157,8 +157,7 @@ class Client:
         return self.get_transactions(start_version)[0]
 
     def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
-        if isinstance(address, str):
-            address = bytes.fromhex(address)
+        address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         itemreq = item.get_account_transaction_by_sequence_number_request
@@ -175,8 +174,7 @@ class Client:
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
-        if isinstance(address, str):
-            address = bytes.fromhex(address)
+        address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_events_by_event_access_path_request.access_path.address = address

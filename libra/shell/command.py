@@ -21,6 +21,30 @@ class Command(metaclass = abc.ABCMeta):
     def execute(self, client, params):
         pass
 
+    def subcommand_execute(self, parent_command_name, commands, client, params):
+        if len(params) == 0:
+            self.print_subcommand_help(parent_command_name, commands)
+            return
+        commands_map = {}
+        for i, cmd in enumerate(commands):
+            for alias in cmd.get_aliases():
+                if commands_map.__contains__(alias):
+                    raise AssertionError(f"Duplicate alias {alias}")
+                commands_map[alias] = i
+        idx = commands_map.get(params[0])
+        if idx is not None:
+            commands[idx].execute(client, params)
+        else:
+            self.print_subcommand_help(parent_command_name, commands)
+
+    def print_subcommand_help(self, parent_command, commands):
+        print(f"usage: {parent_command} <arg>\n\nUse the following args for this command:\n")
+        if "get_notice" in dir(self):
+            print_color("\t" + self.get_notice(), bcolors.WARNING)
+            print("")
+        print_commands(commands)
+
+
 
 def report_error(msg, err, verbose):
     print(f"[ERROR] {msg}: {err}")
@@ -39,32 +63,14 @@ def parse_bool(para_str):
     else:
         raise IOError(f"Unknown support bool str: {para_str}")
 
-def subcommand_execute(parent_command_name, commands, client, params):
-    if len(params) == 0:
-        print_subcommand_help(parent_command_name, commands)
-        return
-    commands_map = {}
-    for i, cmd in enumerate(commands):
-        for alias in cmd.get_aliases():
-            if commands_map.__contains__(alias):
-                raise AssertionError(f"Duplicate alias {alias}")
-            commands_map[alias] = i
-    idx = commands_map.get(params[0])
-    if idx is not None:
-        commands[idx].execute(client, params)
-    else:
-        print_subcommand_help(parent_command_name, commands)
-
-
-def print_subcommand_help(parent_command, commands):
-    print(f"usage: {parent_command} <arg>\n\nUse the following args for this command:\n")
-    print_commands(commands)
 
 def print_commands(commands):
     for cmd in commands:
         print_color(" | ".join(cmd.get_aliases()), bcolors.OKGREEN, end='')
         print_color(" " + cmd.get_params_help(), bcolors.OKBLUE)
         print("\t" + cmd.get_description())
+        if "get_notice" in dir(cmd):
+            print_color("\t" + cmd.get_notice(), bcolors.WARNING)
 
 def blocking_cmd(cmd: str) -> bool:
     return cmd.endswith('b')

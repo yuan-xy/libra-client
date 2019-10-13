@@ -14,6 +14,22 @@ class Address(DelegateT):
         shazer.update(address)
         return shazer.digest()
 
+    @staticmethod
+    def normalize_to_bytes(address):
+        ret = address
+        if isinstance(address, str):
+            return bytes.fromhex(address)
+        if isinstance(address, list):
+            return bytes(address)
+        if isinstance(address, bytes):
+            return address
+        raise TypeError(f"Address: {address} has unknown type.")
+
+    @staticmethod
+    def equal_address(addr1, addr2):
+        return Address.normalize_to_bytes(addr1) == Address.normalize_to_bytes(addr2)
+
+
 def parse_address(s: str) -> bytes:
     if s[0:2] == '0x':
         s = s[2:]

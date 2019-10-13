@@ -1,9 +1,13 @@
 import libra
 from libra import Client, WalletLibrary
 from libra.account import AccountStatus
+from libra.account_address import Address
 from libra.transaction import Script, Module, TransactionPayload, TransactionArgument
 from libra.bytecode import get_code_by_filename
 from command import parse_bool
+import subprocess
+import json
+from tempfile import NamedTemporaryFile
 import pdb
 
 CLIENT_WALLET_MNEMONIC_FILE = "client.mnemonic"
@@ -163,4 +167,44 @@ class ClientProxy:
         code = get_code_by_filename(module_file)
         payload = TransactionPayload('Module', Module(code))
         self.grpc_client.submit_payload(account, payload, is_blocking=True)
+
+    def handle_dependencies(self, file_path, is_module):
+        args = f"cargo run -p compiler -- -l {file_path}"
+        if is_module:
+            args += " -m"
+        output = subprocess.check_output(args.split(), cwd="../libra/")
+        access_paths = json.loads(output)
+        dependencies = []
+        for path in access_paths:
+            if not Address.equal_address(path['address'], libra.AccountConfig.core_code_address()):
+                amap = self.grpc_client.get_account_state(path['address'])
+                code = amap[bytes(path['path'])]
+                if code:
+                    dependencies.append(code)
+        if not dependencies:
+            return None
+        tmp = NamedTemporaryFile('w+t')
+        with open(tmp.name, 'wt') as f:
+            json.dump(dependencies, f)
+        return tmp
+
+    def compile_program(self, address_or_refid, file_path, is_module, script_args):
+        address = self.parse_address_or_refid(address_or_refid)
+        dependencies_file = self.handle_dependencies(file_path, is_module)
+        if is_module:
+            module_flag = " -m"
+        else:
+            module_flag = ""
+        args = "cargo run -p compiler -- {} -a {}{}".format(
+            file_path,
+            address,
+            module_flag
+        )
+        if dependencies_file:
+            args += f" --deps={dependencies_file.name}"
+        subprocess.run(args.split(), cwd="../libra/", check=True)
+        if dependencies_file:
+            dependencies_file.close()
+        return file_path
+
 

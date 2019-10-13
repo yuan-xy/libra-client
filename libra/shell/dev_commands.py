@@ -8,13 +8,16 @@ class DevCommand(Command):
     def get_description(self):
         return "Local move development"
 
+    def get_notice(self):
+        return "Libra project should exsits in '../libra', as a parallel dir to libra-client project"
+
     def execute(self, client, params):
         commands = [
-            # DevCommandCompile(),
+            DevCommandCompile(),
             DevCommandPublish(),
             DevCommandExecute()
         ]
-        subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:])
 
 
 class DevCommandCompile(Command):
@@ -33,7 +36,14 @@ class DevCommandCompile(Command):
             return
         try:
             print(">> Compiling program");
-            path = client.compile_program(params)
+            file_path = params[2]
+            if params[3] == "module":
+                is_module = True
+            elif params[3] == "script":
+                is_module = False
+            else:
+                raise TypeError(f"{params[3]} is illegal.")
+            path = client.compile_program(params[1], file_path, is_module, params[4:])
             print(f"Successfully compiled a program at {path}")
         except Exception as err:
             report_error("Failed to compiled a program", err, client.verbose)

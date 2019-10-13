@@ -16,7 +16,7 @@ class QueryCommand(Command):
             QueryCommandGetTxnByRange(),
             QueryCommandGetEvent()
         ]
-        subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:])
 
 
 class QueryCommandGetBalance(Command):

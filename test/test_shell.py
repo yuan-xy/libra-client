@@ -67,7 +67,7 @@ def test_account_write(capsys):
     tmp = NamedTemporaryFile('w+t')
     output = exec_input(f"a w {tmp.name}", capsys, "")
     assert 'Saved mnemonic seed to disk' in output
-    tmp.close
+    tmp.close()
 
 def test_account_create(capsys):
     output = exec_input("a m 0 123", capsys)
