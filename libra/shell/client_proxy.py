@@ -1,7 +1,7 @@
 import libra
 from libra import Client, WalletLibrary
 from libra.account import AccountStatus
-from libra.transaction import Script, Module, TransactionPayload
+from libra.transaction import Script, Module, TransactionPayload, TransactionArgument
 from libra.bytecode import get_code_by_filename
 from command import parse_bool
 import pdb
@@ -55,6 +55,10 @@ class ClientProxy:
                 self.faucet_account.status
                 )
             )
+
+    @property
+    def verbose(self):
+        return self.libra_args.verbose
 
     def create_next_account(self):
         account = self.wallet.new_account()

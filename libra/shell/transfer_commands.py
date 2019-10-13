@@ -48,5 +48,5 @@ class TransferCommand(Command):
                 )
             )
         except Exception as err:
-            report_error("Failed to perform transaction", err)
+            report_error("Failed to perform transaction", err, client.verbose)
 

@@ -66,7 +66,7 @@ class AccountCommandRecoverWallet(Command):
             for index, data in enumerate(accounts):
                 print("#{} address {}".format(index, data.address.hex()))
         except Exception as err:
-            report_error("Error recovering Libra wallet", err)
+            report_error("Error recovering Libra wallet", err, client.verbose)
 
 
 class AccountCommandWriteRecovery(Command):
@@ -88,7 +88,7 @@ class AccountCommandWriteRecovery(Command):
             client.write_recovery(params[1])
             print("Saved mnemonic seed to disk")
         except Exception as err:
-            report_error("Error writing mnemonic recovery seed to file", err)
+            report_error("Error writing mnemonic recovery seed to file", err, client.verbose)
 
 
 class AccountCommandMint(Command):
@@ -114,4 +114,4 @@ class AccountCommandMint(Command):
             else:
                 print("Mint request submitted")
         except Exception as err:
-            report_error("Error minting coins", err)
+            report_error("Error minting coins", err, client.verbose)

@@ -1,5 +1,4 @@
 from command import *
-from libra.transaction import TransactionArgument
 from libra.bytecode import get_code_by_filename
 
 class DevCommand(Command):
@@ -37,7 +36,7 @@ class DevCommandCompile(Command):
             path = client.compile_program(params)
             print(f"Successfully compiled a program at {path}")
         except Exception as err:
-            report_error("Failed to compiled a program", err)
+            report_error("Failed to compiled a program", err, client.verbose)
 
 
 class DevCommandPublish(Command):
@@ -59,7 +58,7 @@ class DevCommandPublish(Command):
             client.publish_module(params[1], params[2])
             print("Successfully published module")
         except Exception as err:
-            report_error("Failed to published module", err)
+            report_error("Failed to published module", err, client.verbose)
 
 
 class DevCommandExecute(Command):
@@ -81,5 +80,5 @@ class DevCommandExecute(Command):
             client.execute_script(params[1], params[2], params[3:])
             print("Successfully finished execution")
         except Exception as err:
-            report_error("Failed to execute", err)
+            report_error("Failed to execute", err, client.verbose)
 

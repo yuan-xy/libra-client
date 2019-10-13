@@ -37,7 +37,7 @@ class QueryCommandGetBalance(Command):
             balance = client.get_balance(params[1])
             print(f"Balance is: {balance}")
         except Exception as err:
-            report_error("Failed to get balance", err)
+            report_error("Failed to get balance", err, client.verbose)
 
 
 class QueryCommandGetSeqNum(Command):
@@ -61,7 +61,7 @@ class QueryCommandGetSeqNum(Command):
             #TODO: support reset_sequence_number
             print(f"Sequence number is: {sn}")
         except Exception as err:
-            report_error("Error getting sequence number", err)
+            report_error("Error getting sequence number", err, client.verbose)
 
 
 
@@ -89,7 +89,7 @@ class QueryCommandGetLatestAccountState(Command):
                 Blockchain Version: {version}\n"
             )
         except Exception as err:
-            report_error("Error getting latest account state", err)
+            report_error("Error getting latest account state", err, client.verbose)
 
 
 
@@ -123,7 +123,7 @@ class QueryCommandGetTxnByAccountSeq(Command):
             else:
                 print("Transaction not available")
         except Exception as err:
-            report_error("Error getting committed transaction by account and sequence number", err)
+            report_error("Error getting committed transaction by account and sequence number", err, client.verbose)
 
 
 
@@ -151,7 +151,7 @@ class QueryCommandGetTxnByRange(Command):
                 #TODO: events print
                 print(f"Transaction at version {cur_version+index}: {signed_tx}")
         except Exception as err:
-            report_error("Error getting committed transactions by range", err)
+            report_error("Error getting committed transactions by range", err, client.verbose)
 
 
 
@@ -181,4 +181,4 @@ class QueryCommandGetEvent(Command):
                     print(event)
             #TODO: print("Last event state: {:#?}", last_event_state)
         except Exception as err:
-            report_error("Error getting events by access path", err)
+            report_error("Error getting events by access path", err, client.verbose)

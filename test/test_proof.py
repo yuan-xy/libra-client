@@ -11,7 +11,8 @@ import pdb
 
 def test_zero_accumulator_proof():
     proof = proof_pb2.AccumulatorProof()
-    AccumulatorProof.from_proto(proof)
+    ap = AccumulatorProof.from_proto(proof)
+    assert len(ap.siblings) == 0
 
 def test_merkle_tree_accumulator_invariants():
     c = libra.Client("testnet")

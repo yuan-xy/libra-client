@@ -1,6 +1,7 @@
 import abc
 import sys
 import os
+import traceback
 from color import print_color
 
 
@@ -21,8 +22,10 @@ class Command(metaclass = abc.ABCMeta):
         pass
 
 
-def report_error(msg, err):
+def report_error(msg, err, verbose):
     print(f"[ERROR] {msg}: {err}")
+    if verbose:
+        traceback.print_exc()
 
 def parse_cmd(cmd_str: str):
     return cmd_str.split()
