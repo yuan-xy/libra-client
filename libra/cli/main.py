@@ -15,21 +15,23 @@ from libra.cli.command import *
 from libra.cli.account_cmds import AccountCmd
 from libra.cli.transaction_cmds import TransactionCmd
 from libra.cli.wallet_cmds import WalletCmd
+from libra.cli.ledger_cmds import LedgerCmd
 from libra.cli.color import support_color
 
 
 def get_commands(include_dev: bool):
-    commands = [AccountCmd(), TransactionCmd(), WalletCmd()]
+    commands = [AccountCmd(), TransactionCmd(), WalletCmd(), LedgerCmd()]
     return get_commands_alias(commands)
 
 
 def run_cmd(parser, args):
     client_info = f"Connected to validator at: {args.host}:{args.port}"
     (commands, alias_to_cmd) = get_commands(args.faucet_account_file)
-    if args.help:
+    if args.help or len(args.command) == 0:
         parser.print_help()
         print("\nUse the following commands:\n")
         print_commands(commands)
+        print("")
         return
     client = Client.new(args.host, args.port, args.validator_set_file)
     params = args.command

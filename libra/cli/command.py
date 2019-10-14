@@ -43,6 +43,7 @@ class Command(metaclass = abc.ABCMeta):
             print_color("\t" + self.get_notice(), bcolors.WARNING)
             print("")
         print_commands(commands)
+        print("")
 
 
 def get_commands_alias(commands):

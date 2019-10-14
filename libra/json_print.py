@@ -24,6 +24,12 @@ def json_dumps(obj):
                     value = getattr(x, components[1])
             maps[name] = value
             to_dump = maps
+    elif hasattr(obj, "ListFields"):
+        maps = {}
+        fds = obj.ListFields()
+        for fd, value in fds:
+            maps[fd.name] = value
+        to_dump = maps
     else:
         to_dump = obj
     return json.dumps(to_dump, cls=LibraEncoder, sort_keys=True, indent=4)
