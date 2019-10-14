@@ -14,6 +14,7 @@ class WalletCmd(Command):
         commands = [
             WalletCmdShow(),
             WalletCmdAccount(),
+            WalletCmdBalance(),
             WalletCmdCreate()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:])
@@ -64,6 +65,31 @@ class WalletCmdAccount(Command):
         except Exception as err:
             report_error("Failed to get balance", err, client.verbose)
 
+
+class WalletCmdBalance(Command):
+    def get_aliases(self):
+        return ["balance", "b"]
+
+    def get_params_help(self):
+        return "<mnemonic_file_path>"
+
+    def get_description(self):
+        return "Get the balance of all accounts in a wallet"
+
+    def execute(self, client, params):
+        if len(params) != 2:
+            print("Invalid number of arguments for wallet balance query.")
+            return
+        try:
+            wallet = WalletLibrary.recover(params[1])
+            maps = {}
+            for account in wallet.accounts:
+                maps[account.address_hex] = client.get_balance(account.address_hex)
+                #TODO: multi query combine to one
+            maps["total balance"] = sum(maps.values())
+            json_print(maps)
+        except Exception as err:
+            report_error("Failed to get balance", err, client.verbose)
 
 
 class WalletCmdCreate(Command):
