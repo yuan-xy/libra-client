@@ -17,6 +17,9 @@ class WalletLibrary:
         if child_count > 0:
             self._recover_accounts()
 
+    def json_print_fields(self):
+        return ["mnemonic", "seed", "child_count", "accounts.address"]
+
     def find_account_by_address_hex(self, address):
         for index, account in enumerate(self.accounts):
             if account.address.hex() == address:
