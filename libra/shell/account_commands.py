@@ -1,4 +1,4 @@
-from command import *
+from libra.cli.command import *
 
 class AccountCommand(Command):
     def get_aliases(self):

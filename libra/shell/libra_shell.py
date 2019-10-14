@@ -11,13 +11,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 
 from libra.version import version
 from libra import Client, WalletLibrary
-from command import *
+from libra.cli.command import *
 from account_commands import AccountCommand
 from query_commands import QueryCommand
 from transfer_commands import TransferCommand
 from dev_commands import DevCommand
 from client_proxy import ClientProxy
-from color import support_color
+from libra.cli.color import support_color, print_color
 
 
 def get_commands(include_dev: bool):

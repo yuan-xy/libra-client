@@ -4,7 +4,6 @@ from libra.account import AccountStatus
 from libra.account_address import Address
 from libra.transaction import Script, Module, TransactionPayload, TransactionArgument
 from libra.bytecode import get_code_by_filename
-from command import parse_bool
 import subprocess
 import json
 from tempfile import NamedTemporaryFile
@@ -133,7 +132,6 @@ class ClientProxy:
         address = self.parse_address_or_refid(address_or_refid)
         start_seq = int(start_seq)
         limit = int(limit)
-        ascending = parse_bool(ascending)
         if sent_received == "sent":
             return self.grpc_client.get_events_sent(address, start_seq, ascending, limit)
         elif sent_received == "received":

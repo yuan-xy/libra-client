@@ -1,4 +1,4 @@
-from command import *
+from libra.cli.command import *
 
 
 class TransferCommand(Command):

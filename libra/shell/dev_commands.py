@@ -1,4 +1,4 @@
-from command import *
+from libra.cli.command import *
 from libra.bytecode import get_code_by_filename
 
 class DevCommand(Command):

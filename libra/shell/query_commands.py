@@ -1,4 +1,4 @@
-from command import *
+from libra.cli.command import *
 
 class QueryCommand(Command):
     def get_aliases(self):
@@ -172,8 +172,9 @@ class QueryCommandGetEvent(Command):
             return
         try:
             print(">> Getting events by account and event type.")
+            ascending = parse_bool(params[4])
             events = client.get_events_by_account_and_type(
-                params[1], params[2], params[3], params[4], params[5])
+                params[1], params[2], params[3], ascending, params[5])
             if not events:
                 print("No events returned")
             else:

@@ -2,7 +2,7 @@ import abc
 import sys
 import os
 import traceback
-from color import print_color
+from libra.cli.color import print_color
 
 
 class Command(metaclass = abc.ABCMeta):
