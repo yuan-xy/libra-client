@@ -15,6 +15,9 @@ class Account:
         self.sequence_number = sequence_number
         self.status = AccountStatus.Local
 
+    def json_print_fields(self):
+        return ["address", "private_key", "public_key"]
+
     @classmethod
     def faucet_account(cls, private_key):
         ret = cls(private_key)

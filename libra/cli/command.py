@@ -45,6 +45,13 @@ class Command(metaclass = abc.ABCMeta):
         print_commands(commands)
 
 
+def get_commands_alias(commands):
+    alias_to_cmd = {}
+    for command in commands:
+        for alias in command.get_aliases():
+            alias_to_cmd[alias] = command
+    return (commands, alias_to_cmd)
+
 
 def report_error(msg, err, verbose):
     print(f"[ERROR] {msg}: {err}")

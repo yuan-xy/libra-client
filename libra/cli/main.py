@@ -14,16 +14,13 @@ from libra import Client, WalletLibrary
 from libra.cli.command import *
 from libra.cli.account_cmds import AccountCmd
 from libra.cli.transaction_cmds import TransactionCmd
+from libra.cli.wallet_cmds import WalletCmd
 from libra.cli.color import support_color
 
 
 def get_commands(include_dev: bool):
-    commands = [AccountCmd(), TransactionCmd()]
-    alias_to_cmd = {}
-    for command in commands:
-        for alias in command.get_aliases():
-            alias_to_cmd[alias] = command
-    return (commands, alias_to_cmd)
+    commands = [AccountCmd(), TransactionCmd(), WalletCmd()]
+    return get_commands_alias(commands)
 
 
 def run_cmd(parser, args):

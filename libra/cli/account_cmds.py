@@ -50,7 +50,7 @@ class AccountCmdGetSeqNum(Command):
 
     def execute(self, client, params):
         if len(params) != 2:
-            print("Invalid number of arguments for sequence number query")
+            print(f"Invalid number of arguments for sequence number query:{params}")
             return
         try:
             sn = client.get_sequence_number(params[1])

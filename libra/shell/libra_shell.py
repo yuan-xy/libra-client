@@ -24,11 +24,7 @@ def get_commands(include_dev: bool):
     commands = [AccountCommand(), QueryCommand(), TransferCommand()]
     if include_dev:
         commands.append(DevCommand())
-    alias_to_cmd = {}
-    for command in commands:
-        for alias in command.get_aliases():
-            alias_to_cmd[alias] = command
-    return (commands, alias_to_cmd)
+    return get_commands_alias(commands)
 
 
 def run_shell(args):

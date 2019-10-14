@@ -23,9 +23,10 @@ def json_dumps(obj):
                 else:
                     value = getattr(x, components[1])
             maps[name] = value
+            to_dump = maps
     else:
-        maps = vars(obj)
-    return json.dumps(maps, cls=LibraEncoder, sort_keys=True, indent=4)
+        to_dump = obj
+    return json.dumps(to_dump, cls=LibraEncoder, sort_keys=True, indent=4)
 
 def json_print(obj):
     print(json_dumps(obj))
