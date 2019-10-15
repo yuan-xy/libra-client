@@ -33,7 +33,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     entry_points={
-        'console_scripts':['libra_shell = libra.shell.libra_shell:main']
+        'console_scripts':[
+            'libra = libra.cli.main:main',
+            'libra_shell = libra.shell.libra_shell:main'
+        ]
     },
     install_requires=install_requires,
     classifiers=[
