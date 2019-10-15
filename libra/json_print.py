@@ -6,7 +6,7 @@ class LibraEncoder(json.JSONEncoder):
             return obj.hex()
         return json.JSONEncoder.default(self, obj)
 
-def json_dumps(obj):
+def json_dumps(obj, sort_keys=True):
     if hasattr(obj, "json_print_fields"):
         maps = {}
         names = obj.json_print_fields()
@@ -32,7 +32,7 @@ def json_dumps(obj):
         to_dump = maps
     else:
         to_dump = obj
-    return json.dumps(to_dump, cls=LibraEncoder, sort_keys=True, indent=4)
+    return json.dumps(to_dump, cls=LibraEncoder, sort_keys=sort_keys, indent=4)
 
-def json_print(obj):
-    print(json_dumps(obj))
+def json_print(obj, sort_keys=True):
+    print(json_dumps(obj, sort_keys))

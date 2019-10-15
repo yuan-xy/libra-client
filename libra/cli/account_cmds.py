@@ -95,4 +95,7 @@ class AccountCmdGetTxnByAccountSeq(Command):
          "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params):
-        print("TODO")
+        fetch_events = parse_bool(params[3])
+        seq = int(params[2])
+        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
+        print(f"Committed transaction: {transaction}")
