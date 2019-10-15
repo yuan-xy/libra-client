@@ -48,9 +48,13 @@ class Client:
             raise LibraNetError(f"Unknown network: {network}")
         self.host = NETWORKS[network]['host']
         self.port = NETWORKS[network]['port']
+        self.do_init(validator_set_file, faucet_file)
+
+    def do_init(self, validator_set_file=None, faucet_file=None):
         self.init_validators(validator_set_file)
         self.init_grpc()
         self.init_faucet_account(faucet_file)
+        self.verbose = True
 
     def init_grpc(self):
         #TODO: should check under ipv6, add [] around ipv6 host
@@ -83,9 +87,7 @@ class Client:
         if port <=0 or port > 65535:
             raise LibraNetError("port must be between 1 and 65535")
         ret.port = port
-        ret.init_validators(validator_set_file)
-        ret.init_grpc()
-        ret.init_faucet_account(faucet_file)
+        ret.do_init(validator_set_file, faucet_file)
         return ret
 
 
@@ -212,9 +214,10 @@ class Client:
 
     def mint_coins(self, address, micro_libra, is_blocking=False):
         if self.faucet_account:
-            self.mint_coins_with_faucet_account(address, micro_libra, is_blocking)
+            tx = self.mint_coins_with_faucet_account(address, micro_libra, is_blocking)
+            return tx.raw_txn.sequence_number
         else:
-            self.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
+            return self.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
 
     def mint_coins_with_faucet_account(self, receiver_address, micro_libra, is_blocking=False):
         script = Script.gen_mint_script(receiver_address, micro_libra)
@@ -235,22 +238,26 @@ class Client:
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
         max_iterations = 50
-        print("waiting", flush=True)
+        if self.verbose:
+            print("waiting", flush=True)
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1
             transaction, usecs = self.get_account_transaction_proto(address, sequence_number, True)
             if transaction.HasField("events"):
-                print("transaction is stored!")
+                if self.verbose:
+                    print("transaction is stored!")
                 if len(transaction.events.events) == 0:
-                    print("no events emitted")
+                    if self.verbose:
+                        print("no events emitted")
                     return False
                 else:
                     return True
             else:
                 if expiration_time <= (usecs // 1000_000):
                     raise TransactionTimeoutError("Transaction expired.")
-                print(".", end='', flush=True)
+                if self.verbose:
+                    print(".", end='', flush=True)
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
@@ -269,7 +276,8 @@ class Client:
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
         request.signed_txn.signed_txn = signed_txn.serialize()
-        return self.submit_transaction(request, raw_tx, is_blocking)
+        self.submit_transaction(request, raw_tx, is_blocking)
+        return signed_txn
 
     def submit_transaction(self, request, raw_tx, is_blocking):
         resp = self.submit_transaction_non_block(request)

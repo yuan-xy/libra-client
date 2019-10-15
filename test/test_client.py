@@ -130,7 +130,8 @@ def test_transfer_coin():
     except libra.client.AccountError:
         balance1 = 0
     ret = c.transfer_coin(a0, a1.address, 1234, unit_price=0, is_blocking=True)
-    assert ret.ac_status.code == libra.proto.admission_control_pb2.AdmissionControlStatusCode.Accepted
+    assert bytes(ret.raw_txn.sender) == a0.address
+    assert ret.raw_txn.sequence_number == 0
     assert c.get_balance(a0.address) == balance0 - 1234
     assert c.get_balance(a1.address) == balance1 + 1234
 

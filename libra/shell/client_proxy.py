@@ -26,6 +26,7 @@ class ClientProxy:
 
     @property
     def verbose(self):
+        """Notice: grpc_client also has a verbose attribute"""
         return self.libra_args.verbose
 
     @property

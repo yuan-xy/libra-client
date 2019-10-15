@@ -26,7 +26,7 @@ def get_commands(include_dev: bool):
 
 def run_cmd(args):
     client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
-    client.verbose = args.verbose #bad smell, verbose not define in Client class
+    client.verbose = args.verbose
     (commands, alias_to_cmd) = get_commands(client.faucet_account is not None)
     if args.help or len(args.command) == 0:
         print_help(commands)
