@@ -31,19 +31,16 @@ class DevCommandCompile(Command):
         return "Compile move program"
 
     def execute(self, client, params):
-        try:
-            print(">> Compiling program");
-            file_path = params[2]
-            if params[3] == "module":
-                is_module = True
-            elif params[3] == "script":
-                is_module = False
-            else:
-                raise TypeError(f"{params[3]} is illegal.")
-            path = client.compile_program(params[1], file_path, is_module, params[4:])
-            print(f"Successfully compiled a program at {path}")
-        except Exception as err:
-            report_error("Failed to compiled a program", err, client.verbose)
+        print(">> Compiling program");
+        file_path = params[2]
+        if params[3] == "module":
+            is_module = True
+        elif params[3] == "script":
+            is_module = False
+        else:
+            raise TypeError(f"{params[3]} is illegal.")
+        path = client.compile_program(params[1], file_path, is_module, params[4:])
+        print(f"Successfully compiled a program at {path}")
 
 
 class DevCommandPublish(Command):
@@ -57,12 +54,9 @@ class DevCommandPublish(Command):
         return "Publish move module on-chain"
 
     def execute(self, client, params):
-        try:
-            print(">> Compiling program");
-            client.publish_module(params[1], params[2])
-            print("Successfully published module")
-        except Exception as err:
-            report_error("Failed to published module", err, client.verbose)
+        print(">> Compiling program");
+        client.publish_module(params[1], params[2])
+        print("Successfully published module")
 
 
 class DevCommandExecute(Command):
@@ -76,10 +70,7 @@ class DevCommandExecute(Command):
         return "Execute custom move script"
 
     def execute(self, client, params):
-        try:
-            print(">> Compiling program")
-            client.execute_script(params[1], params[2], params[3:])
-            print("Successfully finished execution")
-        except Exception as err:
-            report_error("Failed to execute", err, client.verbose)
+        print(">> Compiling program")
+        client.execute_script(params[1], params[2], params[3:])
+        print("Successfully finished execution")
 

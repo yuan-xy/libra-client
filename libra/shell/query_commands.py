@@ -30,11 +30,8 @@ class QueryCommandGetBalance(Command):
         return "Get the current balance of an account"
 
     def execute(self, client, params):
-        try:
-            balance = client.get_balance(params[1])
-            print(f"Balance is: {balance}")
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        balance = client.get_balance(params[1])
+        print(f"Balance is: {balance}")
 
 
 class QueryCommandGetSeqNum(Command):
@@ -50,13 +47,9 @@ class QueryCommandGetSeqNum(Command):
 
     def execute(self, client, params):
         print(">> Getting current sequence number")
-        try:
-            sn = client.get_sequence_number(params[1])
-            #TODO: support reset_sequence_number
-            print(f"Sequence number is: {sn}")
-        except Exception as err:
-            report_error("Error getting sequence number", err, client.verbose)
-
+        sn = client.get_sequence_number(params[1])
+        #TODO: support reset_sequence_number
+        print(f"Sequence number is: {sn}")
 
 
 class QueryCommandGetLatestAccountState(Command):
@@ -71,17 +64,13 @@ class QueryCommandGetLatestAccountState(Command):
 
     def execute(self, client, params):
         print(">> Getting latest account state")
-        try:
-            (acc, addr, version) = client.get_latest_account_state(params[1])
-            print(
-                f"Latest account state is: \n \
-                Account: {addr}\n \
-                State: {acc}\n \
-                Blockchain Version: {version}\n"
-            )
-        except Exception as err:
-            report_error("Error getting latest account state", err, client.verbose)
-
+        (acc, addr, version) = client.get_latest_account_state(params[1])
+        print(
+            f"Latest account state is: \n \
+            Account: {addr}\n \
+            State: {acc}\n \
+            Blockchain Version: {version}\n"
+        )
 
 
 class QueryCommandGetTxnByAccountSeq(Command):
@@ -97,22 +86,18 @@ class QueryCommandGetTxnByAccountSeq(Command):
 
     def execute(self, client, params):
         print(">> Getting committed transaction by account and sequence number")
-        try:
-            fetch_events = parse_bool(params[3])
-            transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
-            print(f"Committed transaction: {transaction}") #transaction pretty print
-            if transaction.HasField("signed_transaction"):
-                print("Events: ")
-                for event in transaction.events.events:
-                    #TODO: event pretty print
-                    print(event)
-                if len(transaction.events.events) == 0:
-                    print("no events emitted")
-            else:
-                print("Transaction not available")
-        except Exception as err:
-            report_error("Error getting committed transaction by account and sequence number", err, client.verbose)
-
+        fetch_events = parse_bool(params[3])
+        transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
+        print(f"Committed transaction: {transaction}") #transaction pretty print
+        if transaction.HasField("signed_transaction"):
+            print("Events: ")
+            for event in transaction.events.events:
+                #TODO: event pretty print
+                print(event)
+            if len(transaction.events.events) == 0:
+                print("no events emitted")
+        else:
+            print("Transaction not available")
 
 
 class QueryCommandGetTxnByRange(Command):
@@ -127,18 +112,13 @@ class QueryCommandGetTxnByRange(Command):
          "Optionally also fetch events emitted by these transactions.")
 
     def execute(self, client, params):
-        try:
-            print(">> Getting committed transaction by range")
-            fetch_events = parse_bool(params[3])
-            transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
-            cur_version = int(params[1])
-            for index, signed_tx in enumerate(transactions):
-                #TODO: events print
-                print(f"Transaction at version {cur_version+index}: {signed_tx}")
-        except Exception as err:
-            report_error("Error getting committed transactions by range", err, client.verbose)
-
-
+        print(">> Getting committed transaction by range")
+        fetch_events = parse_bool(params[3])
+        transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
+        cur_version = int(params[1])
+        for index, signed_tx in enumerate(transactions):
+            #TODO: events print
+            print(f"Transaction at version {cur_version+index}: {signed_tx}")
 
 
 class QueryCommandGetEvent(Command):
@@ -152,16 +132,13 @@ class QueryCommandGetEvent(Command):
         return "Get events by account and event type (sent|received)."
 
     def execute(self, client, params):
-        try:
-            print(">> Getting events by account and event type.")
-            ascending = parse_bool(params[4])
-            events = client.get_events_by_account_and_type(
-                params[1], params[2], params[3], ascending, params[5])
-            if not events:
-                print("No events returned")
-            else:
-                for event in enumerate(events):
-                    print(event)
-            #TODO: print("Last event state: {:#?}", last_event_state)
-        except Exception as err:
-            report_error("Error getting events by access path", err, client.verbose)
+        print(">> Getting events by account and event type.")
+        ascending = parse_bool(params[4])
+        events = client.get_events_by_account_and_type(
+            params[1], params[2], params[3], ascending, params[5])
+        if not events:
+            print("No events returned")
+        else:
+            for event in enumerate(events):
+                print(event)
+        #TODO: print("Last event state: {:#?}", last_event_state)

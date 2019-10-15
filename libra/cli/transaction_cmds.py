@@ -29,12 +29,9 @@ class TransactionCmdGetByVer(Command):
         return "Get the transaction by version"
 
     def execute(self, client, params):
-        try:
-            tx = client.get_transaction(int(params[1]))
-            print(f"Transaction is: {tx}")
-            #json_print(tx)
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        tx = client.get_transaction(int(params[1]))
+        print(f"Transaction is: {tx}")
+        #json_print(tx)
 
 
 class TransactionCmdByRange(Command):
@@ -48,11 +45,8 @@ class TransactionCmdByRange(Command):
         return ("Get up to <limit> number transactions from <start_version>")
 
     def execute(self, client, params):
-        try:
-            sn = client.get_transactions(int(params[1]), int(params[2]))
-            print(sn)
-        except Exception as err:
-            report_error("Error getting sequence number", err, client.verbose)
+        sn = client.get_transactions(int(params[1]), int(params[2]))
+        print(sn)
 
 
 class TransactionCmdGetLatestVer(Command):
@@ -63,11 +57,8 @@ class TransactionCmdGetLatestVer(Command):
         return "Get the latest version of transaction on the blockchain"
 
     def execute(self, client, params):
-        try:
-            tx = client.get_latest_transaction_version()
-            json_print({"latest_version": tx})
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        tx = client.get_latest_transaction_version()
+        json_print({"latest_version": tx})
 
 
 class TransactionCmdGetLatest(Command):
@@ -78,9 +69,6 @@ class TransactionCmdGetLatest(Command):
         return "Get the latest transaction"
 
     def execute(self, client, params):
-        try:
-            ver = client.get_latest_transaction_version()
-            tx = client.get_transaction(ver)
-            print(f"Transaction is: {tx}")
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        ver = client.get_latest_transaction_version()
+        tx = client.get_transaction(ver)
+        print(f"Transaction is: {tx}")

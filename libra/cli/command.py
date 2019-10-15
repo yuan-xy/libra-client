@@ -3,6 +3,7 @@ import sys
 import os
 import traceback
 from libra.cli.color import print_color, bcolors
+from libra.json_print import json_print
 
 
 class Command(metaclass = abc.ABCMeta):
@@ -40,7 +41,10 @@ class Command(metaclass = abc.ABCMeta):
                 commands[idx].print_params_help_no_desc()
                 self.print_subcommand_help(parent_command_name, commands)
                 return
-            commands[idx].execute(client, params)
+            try:
+                commands[idx].execute(client, params)
+            except Exception as err:
+                report_error(commands[idx].get_description(), err, client.verbose)
         else:
             self.print_subcommand_help(parent_command_name, commands)
 
@@ -94,7 +98,7 @@ def get_commands_alias(commands):
 
 
 def report_error(msg, err, verbose):
-    print(f"[ERROR] {msg}: {err}")
+    json_print({"ERROR": f"{msg}: {err}"})
     if verbose:
         traceback.print_exc()
 

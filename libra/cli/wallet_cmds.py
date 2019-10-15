@@ -31,11 +31,8 @@ class WalletCmdShow(Command):
         return "Show the mnemonic words, seed and addresses of a wallet"
 
     def execute(self, client, params):
-        try:
-            wallet = WalletLibrary.recover(params[1])
-            json_print(wallet)
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        wallet = WalletLibrary.recover(params[1])
+        json_print(wallet)
 
 
 class WalletCmdAccount(Command):
@@ -49,15 +46,12 @@ class WalletCmdAccount(Command):
         return "Show the keypair and address of accounts in a wallet"
 
     def execute(self, client, params):
-        try:
-            wallet = WalletLibrary.recover(params[1])
-            print("[")
-            for account in wallet.accounts:
-                json_print(account)
-                print(",", end='')
-            print("\b]")
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        wallet = WalletLibrary.recover(params[1])
+        print("[")
+        for account in wallet.accounts:
+            json_print(account)
+            print(",", end='')
+        print("\b]")
 
 
 class WalletCmdBalance(Command):
@@ -71,16 +65,13 @@ class WalletCmdBalance(Command):
         return "Get the balance of all accounts in a wallet"
 
     def execute(self, client, params):
-        try:
-            wallet = WalletLibrary.recover(params[1])
-            maps = {}
-            for account in wallet.accounts:
-                maps[account.address_hex] = client.get_balance(account.address_hex)
-                #TODO: multi query combine to one
-            maps["total_balance"] = sum(maps.values())
-            json_print(maps)
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        wallet = WalletLibrary.recover(params[1])
+        maps = {}
+        for account in wallet.accounts:
+            maps[account.address_hex] = client.get_balance(account.address_hex)
+            #TODO: multi query combine to one
+        maps["total_balance"] = sum(maps.values())
+        json_print(maps)
 
 
 class WalletCmdCreate(Command):
@@ -94,10 +85,7 @@ class WalletCmdCreate(Command):
         return "create a new wallet and save the mnemonic file to <mnemonic_file_path>"
 
     def execute(self, client, params):
-        try:
-            wallet = WalletLibrary.new()
-            json_print(wallet)
-            wallet.write_recovery(params[1])
-            print(f"Wallet mnemonic file saved to '{params[1]}'.")
-        except Exception as err:
-            report_error("Failed to get balance", err, client.verbose)
+        wallet = WalletLibrary.new()
+        json_print(wallet)
+        wallet.write_recovery(params[1])
+        print(f"Wallet mnemonic file saved to '{params[1]}'.")

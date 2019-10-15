@@ -25,12 +25,12 @@ def get_commands(include_dev: bool):
 
 
 def run_cmd(parser, args):
-    client_info = f"Connected to validator at: {args.host}:{args.port}"
     (commands, alias_to_cmd) = get_commands(args.faucet_account_file)
     if args.help or len(args.command) == 0:
         print_help(commands)
         return
     client = Client.new(args.host, args.port, args.validator_set_file)
+    client.verbose = args.verbose #bad smell
     params = args.command
     cmd = alias_to_cmd.get(params[0])
     #pdb.set_trace()

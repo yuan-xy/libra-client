@@ -15,29 +15,27 @@ class TransferCommand(Command):
         return "Transfer coins (in libra) from account to another."
 
     def execute(self, client, params):
-        try:
-            if len(params) == 5:
-                gas_unit_price_in_micro_libras = int(params[4])
-            else:
-                gas_unit_price_in_micro_libras = 0
-            if len(params) == 6:
-                max_gas_amount_in_micro_libras = int(params[5])
-            else:
-                max_gas_amount_in_micro_libras = 140_000
-            print(">> Transferring")
-            is_blocking = blocking_cmd(params[0])
-            sequence_number = client.transfer_coins(params[1], params[2], params[3],
-                max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking)
-            if is_blocking:
-                print("Finished transaction!")
-            else:
-                print("Transaction submitted to validator")
-            print(
-                "To query for transaction status, run: query txn_acc_seq {} {} \
-                <fetch_events=true|false>".format(
-                params[1], sequence_number
-                )
+        if len(params) == 5:
+            gas_unit_price_in_micro_libras = int(params[4])
+        else:
+            gas_unit_price_in_micro_libras = 0
+        if len(params) == 6:
+            max_gas_amount_in_micro_libras = int(params[5])
+        else:
+            max_gas_amount_in_micro_libras = 140_000
+        print(">> Transferring")
+        is_blocking = blocking_cmd(params[0])
+        sequence_number = client.transfer_coins(params[1], params[2], params[3],
+            max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking)
+        if is_blocking:
+            print("Finished transaction!")
+        else:
+            print("Transaction submitted to validator")
+        print(
+            "To query for transaction status, run: query txn_acc_seq {} {} \
+            <fetch_events=true|false>".format(
+            params[1], sequence_number
             )
-        except Exception as err:
-            report_error("Failed to perform transaction", err, client.verbose)
+        )
+
 
