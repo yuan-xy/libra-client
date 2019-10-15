@@ -1,5 +1,9 @@
 from canoser import *
 from libra.account_address import Address
+from libra.language_storage import StructTag
+from libra.account_config import AccountConfig
+from libra.access_path import AccessPath
+
 
 class VerifyError(Exception):
     pass
@@ -14,6 +18,22 @@ class ValidatorPublicKeys(Struct):
 
 class ValidatorSet(DelegateT):
     delegate_type = [ValidatorPublicKeys]
+
+    VALIDATOR_SET_MODULE_NAME = "ValidatorSet"
+    VALIDATOR_SET_STRUCT_NAME = "T"
+
+    @classmethod
+    def validator_set_tag(cls) -> StructTag:
+        return StructTag(
+            hex_to_int_list(AccountConfig.core_code_address()),
+            cls.VALIDATOR_SET_MODULE_NAME,
+            cls.VALIDATOR_SET_STRUCT_NAME,
+            []
+        )
+
+    @classmethod
+    def validator_set_path(cls):
+        return AccessPath.resource_access_vec(cls.validator_set_tag(), [])
 
     @classmethod
     def from_proto(cls, next_validator_set_proto):

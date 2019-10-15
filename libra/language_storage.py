@@ -1,6 +1,7 @@
 from canoser import Struct
 from libra.account_address import Address
 from libra.identifier import Identifier
+from libra.hasher import gen_hasher
 
 
 class StructTag(Struct):

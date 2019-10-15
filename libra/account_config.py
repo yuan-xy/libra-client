@@ -1,3 +1,4 @@
+from canoser import hex_to_int_list
 from libra.language_storage import StructTag
 from libra.account_address import HEX_ADDRESS_LENGTH
 
@@ -45,7 +46,7 @@ class AccountConfig:
     @classmethod
     def account_struct_tag(cls):
         return StructTag(
-            bytes.fromhex(cls.core_code_address()),
+            hex_to_int_list(cls.core_code_address()),
             cls.ACCOUNT_MODULE_NAME,
             cls.ACCOUNT_STRUCT_NAME,
             []
