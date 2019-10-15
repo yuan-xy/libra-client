@@ -25,17 +25,15 @@ class ClientProxy:
             if libra_args.host == 'ac.testnet.libra.org':
                 print("[ERROR] faucet_account_file can't be used with testnet, need `host` to be set.")
                 exit(1)
-            with open(libra_args.faucet_account_file, 'rb') as f:
-                data = f.read()
-                assert len(data) == 80
-                assert b' \x00\x00\x00\x00\x00\x00\x00' == data[0:8]
-                assert b' \x00\x00\x00\x00\x00\x00\x00' == data[40:48]
-                private_key = data[8:40]
-                public_key = data[48:]
-                self.faucet_account = libra.Account.faucet_account(private_key)
-                assert self.faucet_account.public_key == public_key
-        else:
-            self.faucet_account = None
+
+    @property
+    def verbose(self):
+        return self.libra_args.verbose
+
+    @property
+    def faucet_account(self):
+        return self.grpc_client.faucet_account
+
 
     def print_all_accounts(self):
         if not self.accounts:
@@ -59,10 +57,6 @@ class ClientProxy:
                 )
             )
 
-    @property
-    def verbose(self):
-        return self.libra_args.verbose
-
     def create_next_account(self):
         account = self.wallet.new_account()
         return (self.wallet.child_count-1, account)
@@ -82,10 +76,7 @@ class ClientProxy:
     def mint_coins(self, address_or_refid, libra, is_blocking):
         micro_libra = int(libra) * 1_000_000
         address = self.parse_address_or_refid(address_or_refid)
-        if self.faucet_account:
-            self.grpc_client.mint_coins_with_faucet_account(self.faucet_account, address, micro_libra, is_blocking)
-        else:
-            self.grpc_client.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
+        self.grpc_client.mint_coins(address, micro_libra, is_blocking)
 
     def parse_address_or_refid(self, address_or_refid):
         if len(address_or_refid) == 64:

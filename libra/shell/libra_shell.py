@@ -28,7 +28,7 @@ def get_commands(include_dev: bool):
 
 
 def run_shell(args):
-    grpc_client = Client.new(args.host, args.port, args.validator_set_file)
+    grpc_client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
     try:
         grpc_client.get_latest_transaction_version()
     except Exception as err:
@@ -37,7 +37,7 @@ def run_shell(args):
     client = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"
     print(client_info)
-    (commands, alias_to_cmd) = get_commands(args.faucet_account_file)
+    (commands, alias_to_cmd) = get_commands(grpc_client.faucet_account is not None)
     while True:
         prompt = "libra% "
         if support_color():

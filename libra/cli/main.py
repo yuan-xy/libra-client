@@ -25,12 +25,12 @@ def get_commands(include_dev: bool):
 
 
 def run_cmd(parser, args):
-    (commands, alias_to_cmd) = get_commands(args.faucet_account_file)
+    client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
+    client.verbose = args.verbose #bad smell, verbose not define in Client class
+    (commands, alias_to_cmd) = get_commands(client.faucet_account is not None)
     if args.help or len(args.command) == 0:
         print_help(commands)
         return
-    client = Client.new(args.host, args.port, args.validator_set_file)
-    client.verbose = args.verbose #bad smell
     params = args.command
     cmd = alias_to_cmd.get(params[0])
     #pdb.set_trace()

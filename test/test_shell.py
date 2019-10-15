@@ -133,10 +133,10 @@ def test_publish_module_to_testnet(capsys):
 
 def test_faucet_key_no_host(capsys):
     with pytest.raises(SystemExit):
-        prepare_shell("-m test/faucet_key_for_test")
+        prepare_shell("-m libra/faucet_key_for_test")
 
 def test_faucet_key_with_host(capsys):
-    args = "-m test/faucet_key_for_test -a localhost -s libra/consensus_peers.config.toml"
+    args = "-m libra/faucet_key_for_test -a localhost -s libra/consensus_peers.config.toml"
     client, _ = prepare_shell(args)
     assert client.faucet_account
 

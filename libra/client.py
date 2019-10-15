@@ -3,6 +3,7 @@ import requests
 import time
 from canoser import Uint64
 
+from libra.account import Account
 from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
@@ -40,7 +41,7 @@ class LibraNetError(LibraError):
 
 
 class Client:
-    def __init__(self, network="testnet", validator_set_file=None):
+    def __init__(self, network="testnet", validator_set_file=None, faucet_file=None):
         if network == "mainnet":
             raise LibraNetError("Mainnet is not supported currently")
         if network != "testnet":
@@ -49,13 +50,19 @@ class Client:
         self.port = NETWORKS[network]['port']
         self.init_validators(validator_set_file)
         self.init_grpc()
+        self.init_faucet_account(faucet_file)
 
     def init_grpc(self):
         #TODO: should check under ipv6, add [] around ipv6 host
         self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
+
+    def init_faucet_account(self, faucet_file):
         if self.is_testnet():
             self.faucet_host = NETWORKS['testnet']['faucet_host']
+            self.faucet_account = None
+        else:
+            self.faucet_account = Account.gen_faucet_account(faucet_file)
 
     def is_testnet(self):
         return self.host == NETWORKS['testnet']['host']
@@ -68,7 +75,7 @@ class Client:
         self.validator_verifier = ConsensusPeersConfig.parse(validator_set_file)
 
     @classmethod
-    def new(cls, host, port, validator_set_file):
+    def new(cls, host, port, validator_set_file, faucet_file=None):
         ret = cls.__new__(cls)
         ret.host = host
         if isinstance(port, str):
@@ -78,6 +85,7 @@ class Client:
         ret.port = port
         ret.init_validators(validator_set_file)
         ret.init_grpc()
+        ret.init_faucet_account(faucet_file)
         return ret
 
 
@@ -201,10 +209,17 @@ class Client:
     def get_latest_events_received(self, address, limit=1):
         return self.get_events_received(address, 2**64-1, False, limit)
 
-    def mint_coins_with_faucet_account(self, faucet_account, receiver_address, micro_libra, is_blocking=False):
+
+    def mint_coins(self, address, micro_libra, is_blocking=False):
+        if self.faucet_account:
+            self.mint_coins_with_faucet_account(address, micro_libra, is_blocking)
+        else:
+            self.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
+
+    def mint_coins_with_faucet_account(self, receiver_address, micro_libra, is_blocking=False):
         script = Script.gen_mint_script(receiver_address, micro_libra)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(faucet_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
     def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
         url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
