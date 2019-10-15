@@ -2,7 +2,7 @@ import abc
 import sys
 import os
 import traceback
-from libra.cli.color import print_color
+from libra.cli.color import print_color, bcolors
 
 
 class Command(metaclass = abc.ABCMeta):
@@ -33,6 +33,13 @@ class Command(metaclass = abc.ABCMeta):
                 commands_map[alias] = i
         idx = commands_map.get(params[0])
         if idx is not None:
+            if not params_valid(commands[idx].get_params_help(), params[1:]):
+                print_color("\n\tParams number mismatch: ", bcolors.WARNING, end='')
+                print_color(f"{' '.join(params)}", bcolors.OKGREEN)
+                print_color("\n\t                  with: ", bcolors.WARNING, end='')
+                commands[idx].print_params_help_no_desc()
+                self.print_subcommand_help(parent_command_name, commands)
+                return
             commands[idx].execute(client, params)
         else:
             self.print_subcommand_help(parent_command_name, commands)
@@ -47,6 +54,36 @@ class Command(metaclass = abc.ABCMeta):
         print_commands(commands)
         print("")
 
+    def print_params_help(self):
+        self.print_params_help_no_desc()
+        print("\t" + self.get_description())
+        if "get_notice" in dir(self):
+            print_color("\t" + self.get_notice(), bcolors.WARNING)
+
+    def print_params_help_no_desc(self):
+        print_color(" | ".join(self.get_aliases()), bcolors.OKGREEN, end='')
+        print_color(" " + self.get_params_help(), bcolors.OKBLUE)
+
+
+def params_valid(spec: str, params: list) -> bool:
+    """
+    check the params in valid according to the spec.
+    required params syntax: <param>
+    optional params syntax: [param]
+    any params syntax(MUST BE LAST ONE): [params ...]
+    """
+    spec_arr = spec.split()
+    real_params_len = len(params)
+    required_len = len([x for x in spec_arr if x[0]=='<'])
+    if real_params_len < required_len:
+        return False
+    if spec.endswith("...]"):
+        return True
+    optionals = [x for x in spec_arr if x[0]=='[']
+    optional_len = len(optionals)
+    if real_params_len > required_len + optional_len:
+        return False
+    return True
 
 def get_commands_alias(commands):
     alias_to_cmd = {}
@@ -76,11 +113,7 @@ def parse_bool(para_str):
 
 def print_commands(commands):
     for cmd in commands:
-        print_color(" | ".join(cmd.get_aliases()), bcolors.OKGREEN, end='')
-        print_color(" " + cmd.get_params_help(), bcolors.OKBLUE)
-        print("\t" + cmd.get_description())
-        if "get_notice" in dir(cmd):
-            print_color("\t" + cmd.get_notice(), bcolors.WARNING)
+        cmd.print_params_help()
 
 def blocking_cmd(cmd: str) -> bool:
     return cmd.endswith('b')
@@ -88,13 +121,3 @@ def blocking_cmd(cmd: str) -> bool:
 
 def debug_format_cmd(cmd: str) -> bool:
     return cmd.endswith('?')
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'

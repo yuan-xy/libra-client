@@ -30,9 +30,6 @@ class QueryCommandGetBalance(Command):
         return "Get the current balance of an account"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for balance query")
-            return
         try:
             balance = client.get_balance(params[1])
             print(f"Balance is: {balance}")
@@ -52,9 +49,6 @@ class QueryCommandGetSeqNum(Command):
          "and reset current sequence number in CLI (optional, default is false)")
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for sequence number query")
-            return
         print(">> Getting current sequence number")
         try:
             sn = client.get_sequence_number(params[1])
@@ -76,9 +70,6 @@ class QueryCommandGetLatestAccountState(Command):
         return "Get the latest state for an account"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for account_state query")
-            return
         print(">> Getting latest account state")
         try:
             (acc, addr, version) = client.get_latest_account_state(params[1])
@@ -105,9 +96,6 @@ class QueryCommandGetTxnByAccountSeq(Command):
          "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params):
-        if len(params) != 4:
-            print("Invalid number of arguments for txn_acc_seq")
-            return
         print(">> Getting committed transaction by account and sequence number")
         try:
             fetch_events = parse_bool(params[3])
@@ -139,9 +127,6 @@ class QueryCommandGetTxnByRange(Command):
          "Optionally also fetch events emitted by these transactions.")
 
     def execute(self, client, params):
-        if len(params) != 4:
-            print("Invalid number of arguments for txn_range")
-            return
         try:
             print(">> Getting committed transaction by range")
             fetch_events = parse_bool(params[3])
@@ -167,9 +152,6 @@ class QueryCommandGetEvent(Command):
         return "Get events by account and event type (sent|received)."
 
     def execute(self, client, params):
-        if len(params) != 6:
-            print("Invalid number of arguments for events query")
-            return
         try:
             print(">> Getting events by account and event type.")
             ascending = parse_bool(params[4])

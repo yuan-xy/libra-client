@@ -56,9 +56,6 @@ class AccountCommandRecoverWallet(Command):
         return "Recover Libra wallet from the file path"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for recovering wallets")
-            return
         print(">> Recovering Wallet")
         try:
             accounts = client.recover_wallet_accounts(params[1])
@@ -80,9 +77,6 @@ class AccountCommandWriteRecovery(Command):
         return "Save Libra wallet mnemonic recovery seed to disk"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for writing recovery wallets")
-            return
         print(">> Saving Libra wallet mnemonic recovery seed to disk")
         try:
             client.write_recovery(params[1])
@@ -102,9 +96,6 @@ class AccountCommandMint(Command):
         return "Mint coins to the account. Suffix 'b' is for blocking"
 
     def execute(self, client, params):
-        if len(params) != 3:
-            print("Invalid number of arguments for mint")
-            return
         print(">> Minting coins")
         try:
             is_blocking = blocking_cmd(params[0])

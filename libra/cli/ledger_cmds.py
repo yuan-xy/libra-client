@@ -30,9 +30,6 @@ class LedgerCmdInfo(Command):
         return "Get the latest ledger info of Libra blockchain."
 
     def execute(self, client, params):
-        if len(params) != 1:
-            print("Invalid number of arguments for ledger info.")
-            return
         try:
             info = client.get_latest_ledger_info()
             json_print(info)
@@ -47,9 +44,6 @@ class LedgerCmdTime(Command):
         return "Get the latest ledger time of Libra blockchain."
 
     def execute(self, client, params):
-        if len(params) != 1:
-            print("Invalid number of arguments for ledger info.")
-            return
         try:
             info = client.get_latest_ledger_info()
             second = info.timestamp_usecs / 1000_000

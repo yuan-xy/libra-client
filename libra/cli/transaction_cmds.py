@@ -29,9 +29,6 @@ class TransactionCmdGetByVer(Command):
         return "Get the transaction by version"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for transaction query")
-            return
         try:
             tx = client.get_transaction(int(params[1]))
             print(f"Transaction is: {tx}")
@@ -51,9 +48,6 @@ class TransactionCmdByRange(Command):
         return ("Get up to <limit> number transactions from <start_version>")
 
     def execute(self, client, params):
-        if len(params) != 3:
-            print("Invalid number of arguments for transactions range query")
-            return
         try:
             sn = client.get_transactions(int(params[1]), int(params[2]))
             print(sn)
@@ -69,9 +63,6 @@ class TransactionCmdGetLatestVer(Command):
         return "Get the latest version of transaction on the blockchain"
 
     def execute(self, client, params):
-        if len(params) != 1:
-            print("Invalid number of arguments for transaction query")
-            return
         try:
             tx = client.get_latest_transaction_version()
             json_print({"latest_version": tx})
@@ -87,9 +78,6 @@ class TransactionCmdGetLatest(Command):
         return "Get the latest transaction"
 
     def execute(self, client, params):
-        if len(params) != 1:
-            print("Invalid number of arguments for transaction query")
-            return
         try:
             ver = client.get_latest_transaction_version()
             tx = client.get_transaction(ver)

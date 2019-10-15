@@ -31,9 +31,6 @@ class WalletCmdShow(Command):
         return "Show the mnemonic words, seed and addresses of a wallet"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for wallet show.")
-            return
         try:
             wallet = WalletLibrary.recover(params[1])
             json_print(wallet)
@@ -52,9 +49,6 @@ class WalletCmdAccount(Command):
         return "Show the keypair and address of accounts in a wallet"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for wallet account query.")
-            return
         try:
             wallet = WalletLibrary.recover(params[1])
             print("[")
@@ -77,9 +71,6 @@ class WalletCmdBalance(Command):
         return "Get the balance of all accounts in a wallet"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for wallet balance query.")
-            return
         try:
             wallet = WalletLibrary.recover(params[1])
             maps = {}
@@ -103,9 +94,6 @@ class WalletCmdCreate(Command):
         return "create a new wallet and save the mnemonic file to <mnemonic_file_path>"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for wallet create.")
-            return
         try:
             wallet = WalletLibrary.new()
             json_print(wallet)

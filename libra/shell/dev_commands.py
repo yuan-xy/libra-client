@@ -31,9 +31,6 @@ class DevCommandCompile(Command):
         return "Compile move program"
 
     def execute(self, client, params):
-        if len(params) < 4 or len(params) > 5:
-            print("Invalid number of arguments for compilation")
-            return
         try:
             print(">> Compiling program");
             file_path = params[2]
@@ -60,9 +57,6 @@ class DevCommandPublish(Command):
         return "Publish move module on-chain"
 
     def execute(self, client, params):
-        if len(params) != 3:
-            print("Invalid number of arguments to publish module")
-            return
         try:
             print(">> Compiling program");
             client.publish_module(params[1], params[2])
@@ -76,15 +70,12 @@ class DevCommandExecute(Command):
         return ["execute", "e"]
 
     def get_params_help(self):
-        return "<sender_account_address>|<sender_account_ref_id> <compiled_module_path> [parameters]"
+        return "<sender_account_address>|<sender_account_ref_id> <compiled_module_path> [parameters ...]"
 
     def get_description(self):
         return "Execute custom move script"
 
     def execute(self, client, params):
-        if len(params) < 3:
-            print("Invalid number of arguments to execute script")
-            return
         try:
             print(">> Compiling program")
             client.execute_script(params[1], params[2], params[3:])

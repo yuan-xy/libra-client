@@ -29,9 +29,6 @@ class AccountCmdGetBalance(Command):
         return "Get the current balance of an account by address"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for balance query")
-            return
         try:
             balance = client.get_balance(params[1])
             json_print({"balance": balance})
@@ -50,9 +47,6 @@ class AccountCmdGetSeqNum(Command):
         return ("Get the current sequence number for an account by address")
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print(f"Invalid number of arguments for sequence number query:{params}")
-            return
         try:
             sn = client.get_sequence_number(params[1])
             json_print({"sequence": sn})
@@ -72,9 +66,6 @@ class AccountCmdGetLatestAccountState(Command):
         return "Get the latest state for an account by address"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for account_state query")
-            return
         try:
             state = client.get_account_state(params[1])
             print(state)
@@ -95,9 +86,6 @@ class AccountCmdGetTxnByAccountSeq(Command):
          "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params):
-        if len(params) != 4:
-            print("Invalid number of arguments for txn_acc_seq")
-            return
         try:
             fetch_events = parse_bool(params[3])
             transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
