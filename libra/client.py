@@ -110,7 +110,7 @@ class Client:
 
     def get_account_resource(self, address):
         amap = self.get_account_state(address)
-        resource = amap[AccountConfig.ACCOUNT_RESOURCE_PATH]
+        resource = amap[AccountConfig.account_resource_path()]
         return AccountResource.deserialize(resource)
 
     def get_sequence_number(self, address):

@@ -26,7 +26,7 @@ class AccountState(Struct):
     def __str__(self):
         concat = StringIO()
         concat.write(super().__str__())
-        resource = self.ordered_map[AccountConfig.ACCOUNT_RESOURCE_PATH]
+        resource = self.ordered_map[AccountConfig.account_resource_path()]
         if resource:
             ar = AccountResource.deserialize(resource)
             concat.write("\nDecoded:\n")
@@ -49,7 +49,7 @@ class AccountResource(Struct):
     def get_account_resource_or_default(cls, blob):
         if blob:
             omap = AccountState.deserialize(blob.blob).ordered_map
-            resource = omap[AccountConfig.ACCOUNT_RESOURCE_PATH]
+            resource = omap[AccountConfig.account_resource_path()]
             return cls.deserialize(resource)
         else:
             return cls()

@@ -1,5 +1,6 @@
 from libra.cli.command import *
 from libra.transaction import SignedTransaction
+from libra.account_config import AccountConfig
 from libra.json_print import json_print
 
 class AccountCmd(Command):
@@ -11,6 +12,7 @@ class AccountCmd(Command):
 
     def execute(self, client, params):
         commands = [
+            AccountCmdConfig(),
             AccountCmdGetBalance(),
             AccountCmdGetSeqNum(),
             AccountCmdGetLatestAccountState(),
@@ -18,6 +20,17 @@ class AccountCmd(Command):
             AccountCmdGetTxnByAccountSeq()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:])
+
+
+class AccountCmdConfig(Command):
+    def get_aliases(self):
+        return ["config", "c"]
+
+    def get_description(self):
+        return "Show the config of Libra"
+
+    def execute(self, client, params):
+        json_print(AccountConfig.all_config(), sort_keys=False)
 
 
 class AccountCmdGetBalance(Command):

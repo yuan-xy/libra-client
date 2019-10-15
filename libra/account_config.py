@@ -13,38 +13,52 @@ class AccountConfig:
     # Hash
     HASH_MODULE_NAME = "Hash";
 
-    #ACCOUNT_RESOURCE_PATH = [1, 33, 125, 166, 198, 179, 225, 159, 24, 37, 207, 178, 103, 109, 174, 204, 227, 191, 61, 224, 60, 242, 102, 71, 199, 141, 240, 11, 55, 27, 37, 204, 151]
-
-    ACCOUNT_RESOURCE_PATH = bytes.fromhex(
-        "01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97"
-    )
 
     @classmethod
-    def account_sent_event_path(self):
-        return self.ACCOUNT_RESOURCE_PATH + b"/sent_events_count/"
-
-
-    @classmethod
-    def account_received_event_path(self):
-        return self.ACCOUNT_RESOURCE_PATH + b"/received_events_count/"
+    def account_resource_path(cls):
+        return bytes.fromhex("01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97")
 
     @classmethod
-    def core_code_address(self):
+    def account_sent_event_path(cls):
+        return cls.account_resource_path() + b"/sent_events_count/"
+
+    @classmethod
+    def account_received_event_path(cls):
+        return cls.account_resource_path() + b"/received_events_count/"
+
+    @classmethod
+    def core_code_address(cls):
         return "0".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
-    def association_address(self):
+    def association_address(cls):
         return "a550c18".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
-    def validator_set_address(self):
+    def transaction_fee_address(cls):
+        return "FEE".rjust(HEX_ADDRESS_LENGTH, '0')
+
+    @classmethod
+    def validator_set_address(cls):
         return "1d8".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
-    def account_struct_tag():
+    def account_struct_tag(cls):
         return StructTag(
-            core_code_address(),
-            ACCOUNT_MODULE_NAME,
-            ACCOUNT_STRUCT_NAME,
+            bytes.fromhex(cls.core_code_address()),
+            cls.ACCOUNT_MODULE_NAME,
+            cls.ACCOUNT_STRUCT_NAME,
             []
         )
+
+    @classmethod
+    def all_config(cls):
+        return {
+            "core_code_address" : AccountConfig.core_code_address(),
+            "association_address" : AccountConfig.association_address(),
+            "validator_set_address" : AccountConfig.validator_set_address(),
+            #"account_struct_tag" : AccountConfig.account_struct_tag(),
+            "account_resource_path": AccountConfig.account_resource_path(),
+            "account_sent_event_path" : AccountConfig.account_sent_event_path(),
+            "account_received_event_path" : AccountConfig.account_received_event_path()
+        }
