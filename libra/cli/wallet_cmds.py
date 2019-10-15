@@ -86,7 +86,7 @@ class WalletCmdBalance(Command):
             for account in wallet.accounts:
                 maps[account.address_hex] = client.get_balance(account.address_hex)
                 #TODO: multi query combine to one
-            maps["total balance"] = sum(maps.values())
+            maps["total_balance"] = sum(maps.values())
             json_print(maps)
         except Exception as err:
             report_error("Failed to get balance", err, client.verbose)

@@ -38,7 +38,9 @@ class Command(metaclass = abc.ABCMeta):
             self.print_subcommand_help(parent_command_name, commands)
 
     def print_subcommand_help(self, parent_command, commands):
-        print(f"usage: {parent_command} <arg>\n\nUse the following args for this command:\n")
+        print("USAGE: ")
+        print_color(f"\t{parent_command} <arg>\n", bcolors.OKGREEN)
+        print("Use one of the following args for this command:\n")
         if "get_notice" in dir(self):
             print_color("\t" + self.get_notice(), bcolors.WARNING)
             print("")

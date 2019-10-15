@@ -1,4 +1,5 @@
 from libra.cli.command import *
+from libra.json_print import json_print
 
 class TransactionCmd(Command):
     def get_aliases(self):
@@ -34,6 +35,7 @@ class TransactionCmdGetByVer(Command):
         try:
             tx = client.get_transaction(int(params[1]))
             print(f"Transaction is: {tx}")
+            #json_print(tx)
         except Exception as err:
             report_error("Failed to get balance", err, client.verbose)
 
@@ -54,7 +56,7 @@ class TransactionCmdByRange(Command):
             return
         try:
             sn = client.get_transactions(int(params[1]), int(params[2]))
-            print(f"Sequence number is: {sn}")
+            print(sn)
         except Exception as err:
             report_error("Error getting sequence number", err, client.verbose)
 
@@ -62,9 +64,6 @@ class TransactionCmdByRange(Command):
 class TransactionCmdGetLatestVer(Command):
     def get_aliases(self):
         return ["latest_version", "lv"]
-
-    # def get_params_help(self):
-    #     return "<version number>"
 
     def get_description(self):
         return "Get the latest version of transaction on the blockchain"
@@ -75,7 +74,7 @@ class TransactionCmdGetLatestVer(Command):
             return
         try:
             tx = client.get_latest_transaction_version()
-            print(f"latest version is: {tx}")
+            json_print({"latest_version": tx})
         except Exception as err:
             report_error("Failed to get balance", err, client.verbose)
 
@@ -83,9 +82,6 @@ class TransactionCmdGetLatestVer(Command):
 class TransactionCmdGetLatest(Command):
     def get_aliases(self):
         return ["latest", "l"]
-
-    # def get_params_help(self):
-    #     return "<version number>"
 
     def get_description(self):
         return "Get the latest transaction"

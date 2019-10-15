@@ -1,4 +1,5 @@
 from libra.cli.command import *
+from libra.json_print import json_print
 
 class AccountCmd(Command):
     def get_aliases(self):
@@ -33,7 +34,7 @@ class AccountCmdGetBalance(Command):
             return
         try:
             balance = client.get_balance(params[1])
-            print(f"Balance is: {balance}")
+            json_print({"balance": balance})
         except Exception as err:
             report_error("Failed to get balance", err, client.verbose)
 
@@ -54,7 +55,7 @@ class AccountCmdGetSeqNum(Command):
             return
         try:
             sn = client.get_sequence_number(params[1])
-            print(f"Sequence number is: {sn}")
+            json_print({"sequence": sn})
         except Exception as err:
             report_error("Error getting sequence number", err, client.verbose)
 
