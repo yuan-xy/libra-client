@@ -132,7 +132,7 @@ def test_publish_module_to_testnet(capsys):
     assert 'Publish move module on-chain: major_status: 12' in output
 
 def test_faucet_key_no_host(capsys):
-    with pytest.raises(SystemExit):
+    with pytest.raises(ValueError):
         prepare_shell("-m libra/faucet_key_for_test")
 
 def test_faucet_key_with_host(capsys):

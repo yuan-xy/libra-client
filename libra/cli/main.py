@@ -24,7 +24,7 @@ def get_commands(include_dev: bool):
     return get_commands_alias(commands)
 
 
-def run_cmd(parser, args):
+def run_cmd(args):
     client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
     client.verbose = args.verbose #bad smell, verbose not define in Client class
     (commands, alias_to_cmd) = get_commands(client.faucet_account is not None)
@@ -81,8 +81,11 @@ def print_help(commands):
 def main():
     parser = get_parser()
     libra_args = parser.parse_args(sys.argv[1:])
-    run_cmd(parser, libra_args)
-    #pdb.set_trace()
+    try:
+        run_cmd(libra_args)
+    except Exception as err:
+        report_error("some error occured", err, libra_args.verbose)
+
 
 
 if __name__ == '__main__':

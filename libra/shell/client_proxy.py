@@ -21,10 +21,8 @@ class ClientProxy:
             self.wallet = WalletLibrary.new()
             self.wallet.write_recovery(CLIENT_WALLET_MNEMONIC_FILE)
         self.accounts = self.wallet.accounts
-        if libra_args.faucet_account_file:
-            if libra_args.host == 'ac.testnet.libra.org':
-                print("[ERROR] faucet_account_file can't be used with testnet, need `host` to be set.")
-                exit(1)
+        if libra_args.faucet_account_file is not None and libra_args.host == 'ac.testnet.libra.org':
+            raise ValueError("faucet_account_file can't be used with testnet, need `host` to be set.")
 
     @property
     def verbose(self):

@@ -87,7 +87,10 @@ def main():
         readline.set_history_length(1000)
     parser = get_parser()
     libra_args = parser.parse_args(sys.argv[1:])
-    run_shell(libra_args)
+    try:
+        run_shell(libra_args)
+    except Exception as err:
+        report_error("some error occured", err, libra_args.verbose)
 
 
 
