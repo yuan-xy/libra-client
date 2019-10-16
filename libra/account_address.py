@@ -1,4 +1,4 @@
-from canoser import DelegateT, Uint8
+from canoser import DelegateT, Uint8, bytes_to_int_list
 from libra.hasher import gen_hasher
 
 
@@ -17,12 +17,24 @@ class Address(DelegateT):
     @staticmethod
     def normalize_to_bytes(address):
         if isinstance(address, str):
-            return bytes.fromhex(address)
+            return strict_parse_address(address)
         if isinstance(address, list):
+            if len(address) != ADDRESS_LENGTH:
+                raise ValueError(f"{address} is not a valid address.")
             return bytes(address)
         if isinstance(address, bytes):
+            if len(address) != ADDRESS_LENGTH:
+                raise ValueError(f"{address} is not a valid address.")
             return address
         raise TypeError(f"Address: {address} has unknown type.")
+
+    @staticmethod
+    def normalize_to_int_list(address):
+        if isinstance(address, list):
+            if len(address) != ADDRESS_LENGTH:
+                raise ValueError(f"{address} is not a valid address.")
+            return address
+        return bytes_to_int_list(Address.normalize_to_bytes(address))
 
     @staticmethod
     def equal_address(addr1, addr2):
@@ -37,3 +49,19 @@ def parse_address(s: str) -> bytes:
     if len(s) == HEX_ADDRESS_LENGTH:
         return bytes.fromhex(s)
     return None
+
+def strict_parse_address(s: str) -> bytes:
+    def strict_parse_address(s: str, orig_str: str) -> bytes:
+        if len(s) < HEX_ADDRESS_LENGTH:
+            raise ValueError(f"{orig_str} is not a valid address.")
+        elif len(s) == HEX_ADDRESS_LENGTH:
+            return bytes.fromhex(s)
+        elif s[0:2] == '0x':
+            return strict_parse_address(s[2:], orig_str)
+        elif s[0]=="'" and s[-1]=="'":
+            return strict_parse_address(s[1:-1], orig_str)
+        elif s[0]=='"' and s[-1]=='"':
+            return strict_parse_address(s[1:-1], orig_str)
+        else:
+            raise ValueError(f"{orig_str} is not a valid address.")
+    return strict_parse_address(s, s)

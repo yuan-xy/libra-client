@@ -1,6 +1,8 @@
 from canoser import Struct, Uint8, bytes_to_int_list, hex_to_int_list
 from libra.transaction.transaction_argument import TransactionArgument
 from libra.bytecode import bytecodes
+from libra.account_address import Address
+
 
 class Script(Struct):
     _fields = [
@@ -23,10 +25,7 @@ class Script(Struct):
 
     @classmethod
     def gen_mint_script(cls, receiver_address,micro_libra):
-        if isinstance(receiver_address, bytes):
-            receiver_address = bytes_to_int_list(receiver_address)
-        if isinstance(receiver_address, str):
-            receiver_address = hex_to_int_list(receiver_address)
+        receiver_address = Address.normalize_to_int_list(receiver_address)
         code = bytecodes["mint"]
         args = [
                 TransactionArgument('Address', receiver_address),

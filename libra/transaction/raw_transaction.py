@@ -44,10 +44,7 @@ class RawTransaction(Struct):
     @classmethod
     def new_tx(cls, sender_address, sequence_number, payload, max_gas_amount=140_000,
             gas_unit_price=0, txn_expiration=100):
-        if isinstance(sender_address, bytes):
-            sender_address = bytes_to_int_list(sender_address)
-        if isinstance(sender_address, str):
-            sender_address = hex_to_int_list(sender_address)
+        sender_address = Address.normalize_to_int_list(sender_address)
         return RawTransaction(
             sender_address,
             sequence_number,
