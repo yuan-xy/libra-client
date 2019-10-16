@@ -1,7 +1,7 @@
 # LibraClient  [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
-LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It contains three tools that provide three ways to access Libra:
+LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It provides three ways to access Libra:
 
 1. `libra_shell`, an interactive shell program. It is compatible with official Libra client. For beginners, it lets you get started directly to try your first transaction with libra without requiring time-consuming downloads and compiles the huge entire Libra project source code.
 2. `libra`, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
@@ -34,7 +34,10 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 ## Usage of 'libra' command
 
-The command 'libra' contains four subcommands 'account', 'transaction', 'wallet', 'ledger'. All subcommands have their own parameters. For example, using 'ledger' command to query the ledger start time and latest transaction time of testnet:
+The command 'libra' contains four subcommands 'account', 'transaction', 'wallet' and 'ledger'. All subcommands have their own parameters. 
+
+### Leger Time Example
+For example, using 'ledger' command to query the ledger start time and latest transaction time of testnet:
 
 ```bash
 $ libra ledger time
@@ -47,6 +50,8 @@ You will get the json output like this:
     "latest_time": "2019-10-16T17:04:17"
 }
 ```
+
+### Account Balance Example
 
 To query the balance of some account by address,
 ```bash
@@ -61,10 +66,12 @@ You will get the balance of that address:
 }
 ```
 
+### Wallet Example
+
 To query the total balance of a wallet, 
 
 ```bash
-$ libra wallet balance <mnemonic file of the wallet>
+$ libra wallet balance <some mnemonic file of the wallet>
 ```
 
 You will get the total balance and balance of every accounts in that wallet:
@@ -77,6 +84,7 @@ You will get the total balance and balance of every accounts in that wallet:
 }
 ```
 
+### Help message of `libra`
 
 If you input `libra` without any parameters as following,
 
@@ -110,6 +118,31 @@ wallet | w
 ledger | lg 
 	show ledger info of Libra blockchain
 ```
+
+### Help message of subcommand
+If you input the libra subcommand without any parameter, you will get the help message of that subcommand. For example:
+
+```bash
+$ libra wallet
+```
+You will get the help message:
+
+```
+USAGE:
+        wallet <arg>
+
+Use one of the following args for this command:
+
+show | s <mnemonic_file_path>
+        Show the mnemonic words, seed and addresses of a wallet
+account | a <mnemonic_file_path>
+        Show the keypair and address of accounts in a wallet
+balance | b <mnemonic_file_path>
+        Get the balance of all accounts in a wallet
+create | c <mnemonic_file_path>
+        create a new wallet and save the mnemonic file to <mnemonic_file_path>
+```
+
 
 More instructions can be found here [libra command help](https://raw.githubusercontent.com/yuan-xy/libra-client/master/docs/cli_help.html).
 
