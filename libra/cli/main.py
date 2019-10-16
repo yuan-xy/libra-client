@@ -16,7 +16,7 @@ from libra.cli.account_cmds import AccountCmd
 from libra.cli.transaction_cmds import TransactionCmd
 from libra.cli.wallet_cmds import WalletCmd
 from libra.cli.ledger_cmds import LedgerCmd
-from libra.cli.color import support_color
+from libra.cli.color import set_force_color
 
 
 def get_commands(include_dev: bool):
@@ -25,6 +25,10 @@ def get_commands(include_dev: bool):
 
 
 def run_cmd(args):
+    if args.color == 'always':
+        set_force_color(True)
+    if args.color == 'never':
+        set_force_color(False)
     client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
     client.verbose = args.verbose
     (commands, alias_to_cmd) = get_commands(client.faucet_account is not None)
@@ -33,7 +37,6 @@ def run_cmd(args):
         return
     params = args.command
     cmd = alias_to_cmd.get(params[0])
-    #pdb.set_trace()
     if cmd is not None:
         cmd.execute(client, params)
 
@@ -47,6 +50,7 @@ def get_parser():
     parser.add_argument('-m', "--faucet_account_file")
     parser.add_argument('-v', "--verbose", action='store_true', default=False)
     parser.add_argument('-V', '--version', action='version', version=f'libra {version}')
+    parser.add_argument('-c', '--color', choices=['always', 'auto', 'never'], default='auto')
     parser.add_argument('command', nargs='*')
     return parser
 

@@ -2,7 +2,7 @@ import abc
 import sys
 import os
 import traceback
-from libra.cli.color import print_color, bcolors
+from libra.cli.color import support_color, print_color, bcolors
 from libra.json_print import json_print
 
 
@@ -125,3 +125,7 @@ def blocking_cmd(cmd: str) -> bool:
 
 def debug_format_cmd(cmd: str) -> bool:
     return cmd.endswith('?')
+
+def json_print_in_cmd(obj, sort_keys=True):
+    json_print(obj, sort_keys=sort_keys, color=support_color())
+

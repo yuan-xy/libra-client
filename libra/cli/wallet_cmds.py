@@ -1,6 +1,5 @@
 from libra.cli.command import *
 from libra.wallet_library import WalletLibrary
-from libra.json_print import json_print
 
 
 class WalletCmd(Command):
@@ -32,7 +31,7 @@ class WalletCmdShow(Command):
 
     def execute(self, client, params):
         wallet = WalletLibrary.recover(params[1])
-        json_print(wallet)
+        json_print_in_cmd(wallet)
 
 
 class WalletCmdAccount(Command):
@@ -49,7 +48,7 @@ class WalletCmdAccount(Command):
         wallet = WalletLibrary.recover(params[1])
         print("[")
         for account in wallet.accounts:
-            json_print(account)
+            json_print_in_cmd(account)
             print(",", end='')
         print("\b]")
 
@@ -71,7 +70,7 @@ class WalletCmdBalance(Command):
             maps[account.address_hex] = client.get_balance(account.address_hex)
             #TODO: multi query combine to one
         maps["total_balance"] = sum(maps.values())
-        json_print(maps)
+        json_print_in_cmd(maps)
 
 
 class WalletCmdCreate(Command):
@@ -86,6 +85,6 @@ class WalletCmdCreate(Command):
 
     def execute(self, client, params):
         wallet = WalletLibrary.new()
-        json_print(wallet)
+        json_print_in_cmd(wallet)
         wallet.write_recovery(params[1])
         print(f"Wallet mnemonic file saved to '{params[1]}'.")

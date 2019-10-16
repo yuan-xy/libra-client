@@ -58,7 +58,6 @@ class AccountConfig:
             "core_code_address" : AccountConfig.core_code_address(),
             "association_address" : AccountConfig.association_address(),
             "validator_set_address" : AccountConfig.validator_set_address(),
-            #"account_struct_tag" : AccountConfig.account_struct_tag(),
             "account_resource_path": AccountConfig.account_resource_path(),
             "account_sent_event_path" : AccountConfig.account_sent_event_path(),
             "account_received_event_path" : AccountConfig.account_received_event_path()

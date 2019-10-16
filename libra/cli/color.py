@@ -1,8 +1,15 @@
 import sys
 import os
 
+_force_color = None
+
+def set_force_color(force_color):
+    global _force_color
+    _force_color = force_color
 
 def support_color():
+    if _force_color is not None:
+        return _force_color
     if not sys.stdout.isatty():
         return False
     if os.name == 'posix':

@@ -1,5 +1,4 @@
 from libra.cli.command import *
-from libra.json_print import json_print
 
 class TransactionCmd(Command):
     def get_aliases(self):
@@ -31,7 +30,7 @@ class TransactionCmdGetByVer(Command):
     def execute(self, client, params):
         tx = client.get_transaction(int(params[1]))
         print(f"Transaction is: {tx}")
-        #json_print(tx)
+        #json_print_in_cmd(tx)
 
 
 class TransactionCmdByRange(Command):
@@ -58,7 +57,7 @@ class TransactionCmdGetLatestVer(Command):
 
     def execute(self, client, params):
         tx = client.get_latest_transaction_version()
-        json_print({"latest_version": tx})
+        json_print_in_cmd({"latest_version": tx})
 
 
 class TransactionCmdGetLatest(Command):

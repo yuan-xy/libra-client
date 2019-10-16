@@ -1,7 +1,6 @@
 from libra.cli.command import *
 from libra.transaction import SignedTransaction
 from libra.account_config import AccountConfig
-from libra.json_print import json_print
 
 class AccountCmd(Command):
     def get_aliases(self):
@@ -30,7 +29,7 @@ class AccountCmdConfig(Command):
         return "Show the config of Libra"
 
     def execute(self, client, params):
-        json_print(AccountConfig.all_config(), sort_keys=False)
+        json_print_in_cmd(AccountConfig.all_config(), sort_keys=False)
 
 
 class AccountCmdGetBalance(Command):
@@ -45,7 +44,7 @@ class AccountCmdGetBalance(Command):
 
     def execute(self, client, params):
         balance = client.get_balance(params[1])
-        json_print({"balance": balance})
+        json_print_in_cmd({"balance": balance})
 
 
 class AccountCmdGetSeqNum(Command):
@@ -60,7 +59,7 @@ class AccountCmdGetSeqNum(Command):
 
     def execute(self, client, params):
         sn = client.get_sequence_number(params[1])
-        json_print({"sequence": sn})
+        json_print_in_cmd({"sequence": sn})
 
 
 
@@ -92,7 +91,7 @@ class AccountCmdMint(Command):
     def execute(self, client, params):
         is_blocking = blocking_cmd(params[0])
         resp = client.mint_coins(params[1], int(params[2]), is_blocking)
-        json_print({"sequence_number": resp})
+        json_print_in_cmd({"sequence_number": resp})
 
 
 
