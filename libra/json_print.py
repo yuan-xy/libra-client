@@ -36,11 +36,14 @@ def json_dumps(obj, sort_keys=True):
         to_dump = obj
     return json.dumps(to_dump, cls=LibraEncoder, sort_keys=sort_keys, indent=4)
 
-def json_print(obj, sort_keys=True, color=False):
+def json_print(obj, sort_keys=True, color=False, bgcolor=None):
     jsonstr = json_dumps(obj, sort_keys)
     # from pygments.styles import get_all_styles
     # styles = list(get_all_styles())
     if color:
-        term = formatters.Terminal256Formatter(style='fruity')
-        jsonstr = highlight(jsonstr, lexers.JsonLexer(), term)
+        if bgcolor is not None:
+            jsonstr = bgcolor + jsonstr + '\033[0m'
+        else:
+            term = formatters.Terminal256Formatter(style='fruity')
+            jsonstr = highlight(jsonstr, lexers.JsonLexer(), term)
     print(jsonstr)

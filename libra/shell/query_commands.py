@@ -89,7 +89,7 @@ class QueryCommandGetTxnByAccountSeq(Command):
         fetch_events = parse_bool(params[3])
         transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
         print(f"Committed transaction: {transaction}") #transaction pretty print
-        if transaction.HasField("signed_transaction"):
+        if transaction.HasField("events"):
             print("Events: ")
             for event in transaction.events.events:
                 #TODO: event pretty print

@@ -11,6 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 import libra
 from libra.version import version
 from libra import Client, WalletLibrary
+from libra.client import NETWORKS
 from libra.cli.command import *
 from libra.cli.account_cmds import AccountCmd
 from libra.cli.transaction_cmds import TransactionCmd
@@ -18,6 +19,7 @@ from libra.cli.wallet_cmds import WalletCmd
 from libra.cli.ledger_cmds import LedgerCmd
 from libra.cli.color import set_force_color
 
+TESTNET = NETWORKS['testnet']['host']
 
 def get_commands(include_dev: bool):
     commands = [AccountCmd(), TransactionCmd(), WalletCmd(), LedgerCmd()]
@@ -29,22 +31,25 @@ def run_cmd(args):
         set_force_color(True)
     if args.color == 'never':
         set_force_color(False)
-    client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
-    client.verbose = args.verbose
-    (commands, alias_to_cmd) = get_commands(client.faucet_account is not None)
+    (commands, alias_to_cmd) = get_commands(args.host != TESTNET)
     if args.help or len(args.command) == 0:
         print_help(commands)
         return
-    params = args.command
-    cmd = alias_to_cmd.get(params[0])
-    if cmd is not None:
-        cmd.execute(client, params)
+    cmd = alias_to_cmd.get(args.command[0])
+    if cmd is None:
+        report_error(f"command `{args.command[0]}` does not exsits.")
+        print_help(commands)
+        return
+    client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
+    client.verbose = args.verbose
+    #TODO: some cmd doesn't need client to be initialized.
+    cmd.execute(client, args.command)
 
 
 def get_parser():
     parser = argparse.ArgumentParser(prog='libra', add_help=False)
     parser.add_argument('-h', "--help", action='store_true', default=False)
-    parser.add_argument('-a', "--host", default="ac.testnet.libra.org")
+    parser.add_argument('-a', "--host", default=TESTNET)
     parser.add_argument('-p', "--port", default=8000)
     parser.add_argument('-s', "--validator_set_file")
     parser.add_argument('-m', "--faucet_account_file")
@@ -84,7 +89,10 @@ def print_help(commands):
 
 def main():
     parser = get_parser()
-    libra_args = parser.parse_args(sys.argv[1:])
+    argv = sys.argv[1:]
+    if not sys.stdin.isatty():
+        argv.extend(sys.stdin.read().strip().split())
+    libra_args = parser.parse_args(argv)
     try:
         run_cmd(libra_args)
     except Exception as err:

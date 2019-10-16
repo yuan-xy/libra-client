@@ -47,7 +47,7 @@ def exec_input(input, capsys, shell_args=None):
 def test_account_hint(capsys):
     output = exec_input("account", capsys, "")
     assert 'USAGE:' in output
-    assert 'account <arg>' in output
+    assert 'account <params>' in output
 
 def test_account_create(capsys):
     output = exec_input("a create", capsys)
@@ -77,7 +77,7 @@ def test_account_create(capsys):
 def test_query_hint(capsys):
     output = exec_input("query", capsys, "")
     assert 'USAGE:' in output
-    assert 'query <arg>' in output
+    assert 'query <params>' in output
 
 def test_query_balance(capsys):
     output = exec_input("query b 0", capsys)

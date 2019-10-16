@@ -35,10 +35,10 @@ class Command(metaclass = abc.ABCMeta):
         idx = commands_map.get(params[0])
         if idx is not None:
             if not params_valid(commands[idx].get_params_help(), params[1:]):
-                print_color("\n\tParams number mismatch: ", bcolors.WARNING, end='')
-                print_color(f"{' '.join(params)}", bcolors.OKGREEN)
-                print_color("\n\t                  with: ", bcolors.WARNING, end='')
-                commands[idx].print_params_help_no_desc()
+                amap = {}
+                amap["Params you  give"] = ' '.join(params)
+                amap["Params should be"] = params[0] + " " + commands[idx].get_params_help()
+                report_error(amap)
                 self.print_subcommand_help(parent_command_name, commands)
                 return
             try:
@@ -46,12 +46,13 @@ class Command(metaclass = abc.ABCMeta):
             except Exception as err:
                 report_error(commands[idx].get_description(), err, client.verbose)
         else:
+            report_error({"Params you  give": ' '.join(params)})
             self.print_subcommand_help(parent_command_name, commands)
 
     def print_subcommand_help(self, parent_command, commands):
         print("USAGE: ")
-        print_color(f"\t{parent_command} <arg>\n", bcolors.OKGREEN)
-        print("Use one of the following args for this command:\n")
+        print_color(f"\t{parent_command} <params>\n", bcolors.OKGREEN)
+        print("Use one of the following params for this command:\n")
         if "get_notice" in dir(self):
             print_color("\t" + self.get_notice(), bcolors.WARNING)
             print("")
@@ -97,8 +98,11 @@ def get_commands_alias(commands):
     return (commands, alias_to_cmd)
 
 
-def report_error(msg, err, verbose):
-    json_print({"ERROR": f"{msg}: {err}"})
+def report_error(msg, err=None, verbose=False):
+    if err is not None:
+        msg = f"{msg}: {err}"
+    json_print({"ERROR": msg}, color=support_color(), bgcolor='\u001b[43;1m')
+    #http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#background-colors
     if verbose:
         traceback.print_exc()
 
