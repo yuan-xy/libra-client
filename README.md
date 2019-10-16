@@ -15,11 +15,9 @@ Require python 3.6 or above installed.
 $ python3 -m pip install libra-client
 ```
 
-## Usage
+## Usage of 'libra_shell'
 
-### Start Libra Shell and Connect to the Testnet
-
-To connect to a validator node running on the Libra testnet, run the client as shown below.
+To start 'libra_shell' and connect to a validator node running on the Libra testnet, just input the 'libra_shell' command on termial as shown below.
 
 ```bash
 $ libra_shell
@@ -31,15 +29,90 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 
 
-[This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
+[This document will guide you through executing your first transaction on the Libra Blockchain](/first_transaction.md). We will walk you through creating accounts for two users.
 
 
-### Usage of Libra Command
+## Usage of 'libra' command
 
+The command 'libra' contains four subcommands 'account', 'transaction', 'wallet', 'ledger'. All subcommands have their own parameters. For example, using 'ledger' command to query the ledger start time and latest transaction time of testnet:
+
+```bash
+$ libra ledger time
+```
+You will get the json output like this:
+
+```json
+{
+    "start_time": "2019-10-03T05:19:59",
+    "latest_time": "2019-10-16T17:04:17"
+}
+```
+
+To query the balance of some account by address,
+```bash
+$ libra account balance 000000000000000000000000000000000000000000000000000000000a550c18
+```
+
+You will get the balance of that address:
+
+```json
+{
+    "balance": 24075309756646968
+}
+```
+
+To query the total balance of a wallet, 
+
+```bash
+$ libra wallet balance <mnemonic file of the wallet>
+```
+
+You will get the total balance and balance of every accounts in that wallet:
+
+```json
+{
+    "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f": 123,
+    "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde": 0,
+    "total_balance": 123
+}
+```
+
+
+If you input `libra` without any parameters as following,
 
 ```bash
 $ libra
 ```
+You will get the help message:
+
+```
+USAGE: 
+	libra [options] command [command parameters ...]
+
+Optional arguments:
+
+ -a | --host HOST  Host address/name to connect to. [default:testnet]
+ -p | --port PORT  Admission Control port to connect to. [default: 8000]
+ -s | --validator_set_file
+	    File location from which to load config of trusted validators.
+ -v | --verbose Verbose output
+ -V | --version Show program's version number and exit
+ -h | --help Show this help message and exit
+
+Use the following commands:
+
+account | a 
+	Account query by address
+transaction | t 
+	Transaction query
+wallet | w 
+	show account information of a wallet derived from mnemonic file
+ledger | lg 
+	show ledger info of Libra blockchain
+```
+
+More instructions can be found here [libra command help](https://raw.githubusercontent.com/yuan-xy/libra-client/master/docs/cli_help.html).
+
 
 ## Client side Libra API for python programmer
 
