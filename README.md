@@ -1,8 +1,11 @@
 # LibraClient  [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
-LibraClient is an unofficial client for [Libra blockchain](http://libra.org) written in python language. The Client allows you interact whith Libra Network easily. For Python programmers, you can also call the client side api to interact with Libra Network.
+LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It contains three tools that provide three ways to access Libra:
 
+1. `libra_shell`, an interactive shell program. It is compatible with official Libra client. For beginners, it lets you get started directly to try your first transaction with libra without requiring time-consuming downloads and compiles the huge entire Libra project source code.
+2. `libra`, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
+3. `python api`, a collection of apis for client access to libra. For Python programmers, you can call this client side api to interact with Libra Network with more control than by using `libra` command.
 
 ## Installation
 
@@ -14,9 +17,7 @@ $ python3 -m pip install libra-client
 
 ## Usage
 
-For programmers, please see [Client side Libra API for python programmer](https://github.com/yuan-xy/libra-client#client-side-libra-api-for-python-programmer).
-
-### Start Libra Client and Connect to the Testnet
+### Start Libra Shell and Connect to the Testnet
 
 To connect to a validator node running on the Libra testnet, run the client as shown below.
 
@@ -32,6 +33,13 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 [This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
 
+
+### Usage of Libra Command
+
+
+```bash
+$ libra
+```
 
 ## Client side Libra API for python programmer
 
