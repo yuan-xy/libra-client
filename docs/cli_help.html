@@ -1,0 +1,99 @@
+<html><body>
+The command 'libra' contains four subcommands 'account', 'transaction', 'wallet', 'ledger'.
+When you enter 'libra' without any other parameters and subcommands, the help information below is displayed.<br/><br/>
+%libra 
+<hr/><pre>
+USAGE: 
+<span style="color: #40ea40">	libra</span><span style="color: #4040ea"> [options]</span><span style="color: #40ea40"> command</span><span style="color: #4040ea"> [command parameters ...]</span>
+
+Optional arguments:
+
+<span style="color: #4040ea"> -a | --host</span> HOST  Host address/name to connect to.<span style="color: #ea9540"> [default:testnet]</span>
+<span style="color: #4040ea"> -p | --port</span> PORT  Admission Control port to connect to.<span style="color: #ea9540"> [default: 8000]</span>
+<span style="color: #4040ea"> -s | --validator_set_file</span>
+	    File location from which to load config of trusted validators.
+<span style="color: #4040ea"> -v | --verbose</span> Verbose output
+<span style="color: #4040ea"> -V | --version</span> Show program's version number and exit
+<span style="color: #4040ea"> -h | --help</span> Show this help message and exit
+
+Use the following commands:
+
+<span style="color: #40ea40">account | a</span><span style="color: #4040ea"> </span>
+	Account query by address
+<span style="color: #40ea40">transaction | t</span><span style="color: #4040ea"> </span>
+	Transaction query
+<span style="color: #40ea40">wallet | w</span><span style="color: #4040ea"> </span>
+	show account information of a wallet derived from mnemonic file
+<span style="color: #40ea40">ledger | lg</span><span style="color: #4040ea"> </span>
+	show ledger info of Libra blockchain
+
+</pre></hr>
+%libra account
+<hr/><pre>
+USAGE: 
+<span style="color: #40ea40">	account &lt;arg&gt;
+</span>
+Use one of the following args for this command:
+
+<span style="color: #40ea40">config | c</span><span style="color: #4040ea"> </span>
+	Show the config of Libra
+<span style="color: #40ea40">balance | b</span><span style="color: #4040ea"> &lt;account_address&gt;</span>
+	Get the current balance of an account by address
+<span style="color: #40ea40">sequence | s</span><span style="color: #4040ea"> &lt;account_address&gt;</span>
+	Get the current sequence number for an account by address
+<span style="color: #40ea40">state | as</span><span style="color: #4040ea"> &lt;account_address&gt;</span>
+	Get the latest state for an account by address
+<span style="color: #40ea40">mint | mintb | m | mb</span><span style="color: #4040ea"> &lt;receiver_account_address&gt; &lt;number_of_micro_libra&gt;</span>
+	Mint micro_libra to the address. Suffix 'b' is for blocking
+<span style="color: #40ea40">txn_acc_seq | ts</span><span style="color: #4040ea"> &lt;account_address&gt; &lt;sequence_number&gt; &lt;fetch_events=true|false&gt;</span>
+	Get the committed transaction by account and sequence number.  Optionally also fetch events emitted by this transaction.
+
+</pre></hr>
+%libra transaction
+<hr/><pre>
+USAGE: 
+<span style="color: #40ea40">	transaction &lt;arg&gt;
+</span>
+Use one of the following args for this command:
+
+<span style="color: #40ea40">show | s</span><span style="color: #4040ea"> &lt;version number&gt;</span>
+	Get the transaction by version
+<span style="color: #40ea40">range | r</span><span style="color: #4040ea"> &lt;start_version&gt; &lt;limit&gt; [fetch_events=true|false]</span>
+	Get up to &lt;limit&gt; number transactions from &lt;start_version&gt;
+<span style="color: #40ea40">latest_version | lv</span><span style="color: #4040ea"> </span>
+	Get the latest version of transaction on the blockchain
+<span style="color: #40ea40">latest | l</span><span style="color: #4040ea"> </span>
+	Get the latest transaction
+
+</pre></hr>
+%libra wallet
+<hr/><pre>
+USAGE: 
+<span style="color: #40ea40">	wallet &lt;arg&gt;
+</span>
+Use one of the following args for this command:
+
+<span style="color: #40ea40">show | s</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+	Show the mnemonic words, seed and addresses of a wallet
+<span style="color: #40ea40">account | a</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+	Show the keypair and address of accounts in a wallet
+<span style="color: #40ea40">balance | b</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+	Get the balance of all accounts in a wallet
+<span style="color: #40ea40">create | c</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+	create a new wallet and save the mnemonic file to &lt;mnemonic_file_path&gt;
+
+</pre></hr>
+%libra ledger
+<hr/><pre>
+USAGE: 
+<span style="color: #40ea40">	ledger &lt;arg&gt;
+</span>
+Use one of the following args for this command:
+
+<span style="color: #40ea40">info | i</span><span style="color: #4040ea"> </span>
+	Get the latest ledger info of Libra blockchain
+<span style="color: #40ea40">time | t</span><span style="color: #4040ea"> </span>
+	Get the start and latest ledger time of Libra blockchain
+
+</pre></hr>
+</body></html>

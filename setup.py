@@ -13,6 +13,7 @@ install_requires=[
         'grpcio',
         'more-itertools',
         'PyNaCl',
+        'pygments',
         'requests',
         "toml",
         'mnemonic'
