@@ -34,7 +34,7 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 ## Usage of 'libra' command
 
-The command 'libra' contains four subcommands 'account', 'transaction', 'wallet' and 'ledger'. All subcommands have their own parameters. 
+The command 'libra' contains four subcommands 'account', 'transaction', 'wallet' and 'ledger'. All subcommands have their own parameters.
 
 ### Leger Time Example
 For example, using 'ledger' command to query the ledger start time and latest transaction time of testnet:
@@ -68,7 +68,7 @@ You will get the balance of that address:
 
 ### Wallet Example
 
-To query the total balance of a wallet, 
+To query the total balance of a wallet,
 
 ```bash
 $ libra wallet balance <some mnemonic file of the wallet>
@@ -94,7 +94,7 @@ $ libra
 You will get the help message:
 
 ```
-USAGE: 
+USAGE:
 	libra [options] command [command parameters ...]
 
 Optional arguments:
@@ -109,13 +109,13 @@ Optional arguments:
 
 Use the following commands:
 
-account | a 
+account | a
 	Account query by address
-transaction | t 
+transaction | t
 	Transaction query
-wallet | w 
+wallet | w
 	show account information of a wallet derived from mnemonic file
-ledger | lg 
+ledger | lg
 	show ledger info of Libra blockchain
 ```
 
@@ -216,8 +216,8 @@ You can query an account's raw blob by using `get_account_blob` function on `Cli
 client = Client("testnet")
 blob, version = client.get_account_blob(address)
 ```
-#### Get Account State Map data of an Address
-If the Account has been created, you can call `get_account_state` function which return a map of path to data; other wise, AccountError will be thrown.
+#### Get Account State of an Address
+If the Account has been created, you can call `get_account_state` function which return a `AccountState` object with 'ordered_map' field; other wise, AccountError will be thrown.
 
 ```py
 client = Client("testnet")

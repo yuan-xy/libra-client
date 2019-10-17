@@ -75,7 +75,7 @@ class AccountCmdGetLatestAccountState(Command):
 
     def execute(self, client, params):
         state = client.get_account_state(params[1])
-        print(state)
+        json_print_in_cmd(state)
 
 
 class AccountCmdMint(Command):

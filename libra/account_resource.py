@@ -23,12 +23,26 @@ class AccountState(Struct):
         ('ordered_map', {})
     ]
 
+    def get_resource(self):
+        resource = self.ordered_map[AccountConfig.account_resource_path()]
+        if resource:
+            return AccountResource.deserialize(resource)
+        else:
+            return None
+
+    def to_json_serializable(self):
+        amap = super().to_json_serializable()
+        ar = self.get_resource()
+        if ar:
+            amap["Decoded_resource"] = ar.to_json_serializable()
+        return amap
+
+
     def __str__(self):
         concat = StringIO()
         concat.write(super().__str__())
-        resource = self.ordered_map[AccountConfig.account_resource_path()]
-        if resource:
-            ar = AccountResource.deserialize(resource)
+        ar = self.get_resource()
+        if ar:
             concat.write("\nDecoded:\n")
             concat.write(ar.__str__())
         return concat.getvalue()

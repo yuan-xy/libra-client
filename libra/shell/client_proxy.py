@@ -165,7 +165,7 @@ class ClientProxy:
         dependencies = []
         for path in access_paths:
             if not Address.equal_address(path['address'], libra.AccountConfig.core_code_address()):
-                amap = self.grpc_client.get_account_state(path['address'])
+                amap = self.grpc_client.get_account_state(path['address']).ordered_map
                 code = amap[bytes(path['path'])]
                 if code:
                     dependencies.append(code)

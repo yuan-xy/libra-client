@@ -106,12 +106,11 @@ class Client:
         if len(blob.__str__()) == 0:
             #TODO: bad smell
             raise AccountError("Account state blob is empty.")
-        return AccountState.deserialize(blob.blob).ordered_map
+        return AccountState.deserialize(blob.blob)
 
     def get_account_resource(self, address):
-        amap = self.get_account_state(address)
-        resource = amap[AccountConfig.account_resource_path()]
-        return AccountResource.deserialize(resource)
+        state = self.get_account_state(address)
+        return state.get_resource()
 
     def get_sequence_number(self, address):
         try:
