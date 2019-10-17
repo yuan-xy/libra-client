@@ -130,6 +130,6 @@ def blocking_cmd(cmd: str) -> bool:
 def debug_format_cmd(cmd: str) -> bool:
     return cmd.endswith('?')
 
-def json_print_in_cmd(obj, sort_keys=True):
+def json_print_in_cmd(obj, sort_keys=False):
     json_print(obj, sort_keys=sort_keys, color=support_color())
 

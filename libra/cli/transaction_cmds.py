@@ -29,8 +29,7 @@ class TransactionCmdGetByVer(Command):
 
     def execute(self, client, params):
         tx = client.get_transaction(int(params[1]))
-        print(f"Transaction is: {tx}")
-        #json_print_in_cmd(tx)
+        json_print_in_cmd(tx)
 
 
 class TransactionCmdByRange(Command):
@@ -45,7 +44,7 @@ class TransactionCmdByRange(Command):
 
     def execute(self, client, params):
         sn = client.get_transactions(int(params[1]), int(params[2]))
-        print(sn)
+        json_print_in_cmd([x.to_json_serializable() for x in sn])
 
 
 class TransactionCmdGetLatestVer(Command):
@@ -70,4 +69,4 @@ class TransactionCmdGetLatest(Command):
     def execute(self, client, params):
         ver = client.get_latest_transaction_version()
         tx = client.get_transaction(ver)
-        print(f"Transaction is: {tx}")
+        json_print_in_cmd(tx)

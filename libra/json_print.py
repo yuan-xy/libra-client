@@ -1,6 +1,6 @@
 import json
 from pygments import highlight, lexers, formatters
-
+from canoser.base import Base
 
 class LibraEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -8,7 +8,8 @@ class LibraEncoder(json.JSONEncoder):
             return obj.hex()
         return json.JSONEncoder.default(self, obj)
 
-def json_dumps(obj, sort_keys=True):
+
+def json_dumps(obj, sort_keys=False):
     if hasattr(obj, "json_print_fields"):
         maps = {}
         names = obj.json_print_fields()
@@ -32,11 +33,13 @@ def json_dumps(obj, sort_keys=True):
         for fd, value in fds:
             maps[fd.name] = value
         to_dump = maps
+    elif isinstance(obj, Base):
+        to_dump = obj.to_json_serializable()
     else:
         to_dump = obj
     return json.dumps(to_dump, cls=LibraEncoder, sort_keys=sort_keys, indent=4)
 
-def json_print(obj, sort_keys=True, color=False, bgcolor=None):
+def json_print(obj, sort_keys=False, color=False, bgcolor=None):
     jsonstr = json_dumps(obj, sort_keys)
     # from pygments.styles import get_all_styles
     # styles = list(get_all_styles())
