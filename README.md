@@ -14,6 +14,11 @@ Require python 3.6 or above installed.
 ```sh
 $ python3 -m pip install libra-client
 ```
+If you had a problem during installation, following command should works anyway.
+```sh
+$ python3 -m pip install  --index-url https://pypi.org/project/ --user libra-client
+```
+
 
 ## Usage of 'libra_shell'
 

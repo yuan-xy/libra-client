@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from datetime import datetime
 import argparse
-import sys
-import os
+import sys, os, signal
+
 if os.name == 'posix':
     import readline
 
@@ -42,7 +42,10 @@ def run_shell(args):
         prompt = "libra% "
         if support_color():
             prompt = f'\033[91m{prompt}\033[0m'
-        line = input(prompt)
+        try:
+            line = input(prompt)
+        except EOFError:
+            sys.exit(0)
         params = parse_cmd(line)
         if len(params) == 0:
             continue
@@ -82,7 +85,14 @@ def get_parser():
     parser.add_argument('-V', '--version', action='version', version=f'libra-client {version}')
     return parser
 
+
+def handler(signum, frame):
+    sys.exit(0)
+
 def main():
+    signal.signal(signal.SIGTERM, handler)
+    signal.signal(signal.SIGINT, handler)
+    #signal.signal(signal.SIGTSTP, handler)
     if os.name == 'posix':
         readline.set_history_length(1000)
     parser = get_parser()
@@ -91,7 +101,6 @@ def main():
         run_shell(libra_args)
     except Exception as err:
         report_error("some error occured", err, libra_args.verbose)
-
 
 
 if __name__ == '__main__':

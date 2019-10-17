@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 from datetime import datetime
 import argparse
-import sys
-import os
+import sys, os, signal
 import pdb
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
@@ -85,9 +84,13 @@ def print_help(commands):
     print("")
 
 
+def handler(signum, frame):
+    sys.exit(0)
 
 
 def main():
+    signal.signal(signal.SIGTERM, handler)
+    signal.signal(signal.SIGINT, handler)
     parser = get_parser()
     argv = sys.argv[1:]
     if not sys.stdin.isatty():
