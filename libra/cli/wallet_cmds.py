@@ -1,5 +1,6 @@
 from libra.cli.command import *
 from libra.wallet_library import WalletLibrary
+from libra.json_print import to_json_serializable
 
 
 class WalletCmd(Command):
@@ -14,7 +15,8 @@ class WalletCmd(Command):
             WalletCmdShow(),
             WalletCmdAccount(),
             WalletCmdBalance(),
-            WalletCmdCreate()
+            WalletCmdCreate(),
+            WalletCmdCreateNewAccount()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:])
 
@@ -36,7 +38,7 @@ class WalletCmdShow(Command):
 
 class WalletCmdAccount(Command):
     def get_aliases(self):
-        return ["account", "a"]
+        return ["accounts", "a"]
 
     def get_params_help(self):
         return "<mnemonic_file_path>"
@@ -75,7 +77,7 @@ class WalletCmdBalance(Command):
 
 class WalletCmdCreate(Command):
     def get_aliases(self):
-        return ["create", "c"]
+        return ["create_wallet", "cw"]
 
     def get_params_help(self):
         return "<mnemonic_file_path>"
@@ -85,6 +87,27 @@ class WalletCmdCreate(Command):
 
     def execute(self, client, params):
         wallet = WalletLibrary.new()
-        json_print_in_cmd(wallet)
         wallet.write_recovery(params[1])
-        print(f"Wallet mnemonic file saved to '{params[1]}'.")
+        jobj = to_json_serializable(wallet)
+        jobj["file_save_to"] = params[1]
+        json_print_in_cmd(jobj)
+
+
+class WalletCmdCreateNewAccount(Command):
+    def get_aliases(self):
+        return ["create_account", "ca"]
+
+    def get_params_help(self):
+        return "<creator_id> <mnemonic_file_path>"
+
+    def get_description(self):
+        return "Create new account by exsiting account and sync to the wallet's mnemonic file."
+
+    def execute(self, client, params):
+        wfile = params[2]
+        wallet = WalletLibrary.recover(wfile)
+        sender_account = wallet.get_account_by_address_or_refid(params[1])
+        fresh_address = wallet.new_account().address
+        resp = client.create_account(sender_account, fresh_address)
+        wallet.write_recovery(wfile)
+        json_print_in_cmd({"new_account_address": fresh_address})

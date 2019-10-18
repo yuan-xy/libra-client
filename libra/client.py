@@ -266,6 +266,11 @@ class Client:
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)
 
+    def create_account(self, sender_account, fresh_address):
+        script = Script.gen_create_account_script(fresh_address)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(sender_account, payload)
+
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address)

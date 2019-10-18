@@ -33,6 +33,17 @@ class Script(Struct):
             ]
         return Script(code, args)
 
+    @classmethod
+    def gen_create_account_script(cls, fresh_address):
+        fresh_address = Address.normalize_to_int_list(fresh_address)
+        code = bytecodes["create_account"]
+        args = [
+                TransactionArgument('Address', fresh_address),
+                TransactionArgument('U64', 0)
+            ]
+        return Script(code, args)
+
+
     @staticmethod
     def get_script_bytecode(script_name):
         return bytecodes[script_name]

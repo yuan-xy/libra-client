@@ -15,8 +15,9 @@ class AccountCmd(Command):
             AccountCmdGetBalance(),
             AccountCmdGetSeqNum(),
             AccountCmdGetLatestAccountState(),
+            AccountCmdGetTxnByAccountSeq(),
             AccountCmdMint(),
-            AccountCmdGetTxnByAccountSeq()
+            AccountCmdRotateAuthenticationKey()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:])
 
@@ -78,6 +79,25 @@ class AccountCmdGetLatestAccountState(Command):
         json_print_in_cmd(state)
 
 
+class AccountCmdGetTxnByAccountSeq(Command):
+    def get_aliases(self):
+        return ["txn_acc_seq", "ts"]
+
+    def get_params_help(self):
+        return "<account_address> <sequence_number> <fetch_events=true|false>"
+
+    def get_description(self):
+        return ("Get the committed transaction by account and sequence number.  "
+         "Optionally also fetch events emitted by this transaction.")
+
+    def execute(self, client, params):
+        fetch_events = parse_bool(params[3])
+        seq = int(params[2])
+        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
+        json_print_in_cmd(transaction)
+
+
+
 class AccountCmdMint(Command):
     def get_aliases(self):
         return ["mint", "mintb", "m", "mb"]
@@ -95,19 +115,16 @@ class AccountCmdMint(Command):
 
 
 
-class AccountCmdGetTxnByAccountSeq(Command):
+class AccountCmdRotateAuthenticationKey(Command):
     def get_aliases(self):
-        return ["txn_acc_seq", "ts"]
+        return ["rotate_auth_key", "rak"]
 
     def get_params_help(self):
-        return "<account_address> <sequence_number> <fetch_events=true|false>"
+        return "<account_address> <public_key>"
 
     def get_description(self):
-        return ("Get the committed transaction by account and sequence number.  "
-         "Optionally also fetch events emitted by this transaction.")
+        return "Rotate the authentication key of account."
 
     def execute(self, client, params):
-        fetch_events = parse_bool(params[3])
-        seq = int(params[2])
-        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
-        print(f"Committed transaction: {transaction}")
+        json_print_in_cmd("TODO:")
+

@@ -9,7 +9,7 @@ class LibraEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def json_dumps(obj, sort_keys=False):
+def to_json_serializable(obj):
     if hasattr(obj, "json_print_fields"):
         maps = {}
         names = obj.json_print_fields()
@@ -26,17 +26,21 @@ def json_dumps(obj, sort_keys=False):
                 else:
                     value = getattr(x, components[1])
             maps[name] = value
-            to_dump = maps
+        return maps
     elif hasattr(obj, "ListFields"):
         maps = {}
         fds = obj.ListFields()
         for fd, value in fds:
             maps[fd.name] = value
-        to_dump = maps
+        return maps
     elif isinstance(obj, Base):
-        to_dump = obj.to_json_serializable()
+        return obj.to_json_serializable()
     else:
-        to_dump = obj
+        return obj
+
+
+def json_dumps(obj, sort_keys=False):
+    to_dump = to_json_serializable(obj)
     return json.dumps(to_dump, cls=LibraEncoder, sort_keys=sort_keys, indent=4)
 
 def json_print(obj, sort_keys=False, color=False, bgcolor=None):
