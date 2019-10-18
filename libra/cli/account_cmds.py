@@ -1,6 +1,7 @@
 from libra.cli.command import *
 from libra.transaction import SignedTransaction
 from libra.account_config import AccountConfig
+from libra.wallet_library import WalletLibrary
 
 class AccountCmd(Command):
     def get_aliases(self):
@@ -120,11 +121,18 @@ class AccountCmdRotateAuthenticationKey(Command):
         return ["rotate_auth_key", "rak"]
 
     def get_params_help(self):
-        return "<account_address> <public_key>"
+        return "<sender_account_id_in_wallet>|<address> <public_key> <mnemonic_file_path>"
 
     def get_description(self):
-        return "Rotate the authentication key of account."
+        return "Rotate the authentication key of account in wallet."
 
     def execute(self, client, params):
-        json_print_in_cmd("TODO:")
+        wallet = WalletLibrary.recover(params[3])
+        account = wallet.get_account_by_address_or_refid(params[1])
+        client.rotate_authentication_key(account, params[2])
+        account_resource = client.get_account_resource(account.address)
+        key = account_resource.to_json_serializable()["authentication_key"]
+        json_print_in_cmd({
+            "address": account.address_hex,
+            "authentication_key": key})
 

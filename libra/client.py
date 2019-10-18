@@ -271,6 +271,11 @@ class Client:
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload)
 
+    def rotate_authentication_key(self, sender_account, public_key):
+        script = Script.gen_rotate_auth_key_script(public_key)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(sender_account, payload)
+
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address)

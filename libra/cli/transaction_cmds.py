@@ -24,7 +24,7 @@ class TransactionCmdP2PTransfer(Command):
         return ["transfer", "transferb", "t", "tb"]
 
     def get_params_help(self):
-        return "<sender_account_address>|<sender_account_id_in_wallet> <receiver_account_address> <number_of_micro_libra> <mnemonic_file_path>"
+        return "<sender_account_id_in_wallet>|<address> <receiver_account_address> <number_of_micro_libra> <mnemonic_file_path>"
 
     def get_description(self):
         return "Transfer coins (in micro libra) from one to another. <sender_account_address> should exsits in <mnemonic_file_path>. Suffix 'b' is for blocking"

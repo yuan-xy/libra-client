@@ -1,11 +1,9 @@
-from canoser import Struct, Uint8, bytes_to_int_list
+from canoser import Struct, Uint8, bytes_to_int_list, hex_to_int_list
 from nacl.signing import VerifyKey
 from libra.hasher import gen_hasher, HashValue
 from libra.transaction.raw_transaction import RawTransaction
+from libra.transaction.transaction_argument import ED25519_PUBLIC_KEY_LENGTH, ED25519_SIGNATURE_LENGTH
 
-
-ED25519_PUBLIC_KEY_LENGTH = 32
-ED25519_SIGNATURE_LENGTH = 64
 
 class SignedTransaction(Struct):
     _fields = [

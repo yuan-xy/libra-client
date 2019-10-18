@@ -1,5 +1,22 @@
-from canoser import RustEnum, Uint64, Uint8, bytes_to_int_list
+from canoser import RustEnum, Uint64, Uint8, bytes_to_int_list, hex_to_int_list
 from libra.account_address import Address, parse_address
+
+ED25519_PUBLIC_KEY_LENGTH = 32
+ED25519_SIGNATURE_LENGTH = 64
+
+def normalize_public_key(public_key):
+    if isinstance(public_key, list):
+        if len(public_key) != ED25519_PUBLIC_KEY_LENGTH:
+            raise ValueError(f"{public_key} is not a valid public_key.")
+        return public_key
+    if isinstance(public_key, bytes):
+        if len(public_key) != ED25519_PUBLIC_KEY_LENGTH:
+            raise ValueError(f"{public_key} is not a valid public_key.")
+        return bytes_to_int_list(public_key)
+    if isinstance(public_key, str):
+        if len(public_key) != ED25519_PUBLIC_KEY_LENGTH*2:
+            raise ValueError(f"{public_key} is not a valid public_key.")
+        return hex_to_int_list(public_key)
 
 
 class TransactionArgument(RustEnum):

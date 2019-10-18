@@ -1,5 +1,5 @@
 from canoser import Struct, Uint8, bytes_to_int_list, hex_to_int_list
-from libra.transaction.transaction_argument import TransactionArgument
+from libra.transaction.transaction_argument import TransactionArgument, normalize_public_key
 from libra.bytecode import bytecodes
 from libra.account_address import Address
 
@@ -43,6 +43,14 @@ class Script(Struct):
             ]
         return Script(code, args)
 
+    @classmethod
+    def gen_rotate_auth_key_script(cls, public_key):
+        key = normalize_public_key(public_key)
+        code = bytecodes["rotate_authentication_key"]
+        args = [
+                TransactionArgument('ByteArray', key)
+            ]
+        return Script(code, args)
 
     @staticmethod
     def get_script_bytecode(script_name):
