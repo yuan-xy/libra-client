@@ -130,9 +130,12 @@ class AccountCmdRotateAuthenticationKey(Command):
         wallet = WalletLibrary.recover(params[3])
         account = wallet.get_account_by_address_or_refid(params[1])
         client.rotate_authentication_key(account, params[2])
-        account_resource = client.get_account_resource(account.address)
-        key = account_resource.to_json_serializable()["authentication_key"]
+        index, _account = wallet.find_account_by_publickey_hex(params[2])
+        wallet.rotate_keys[params[1]] = index
+        wallet.write_recovery(params[3])
+        # account_resource = client.get_account_resource(account.address)
+        # key = account_resource.to_json_serializable()["authentication_key"]
         json_print_in_cmd({
             "address": account.address_hex,
-            "authentication_key": key})
+            "authentication_key": params[2]})
 

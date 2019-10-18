@@ -49,6 +49,30 @@ def test_get_account_by_address_or_refid():
         wallet.get_account_by_address_or_refid("0"*63)
 
 
+def test_rotate_file():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    assert wallet.child_count == 2
+    wallet.rotate_keys[1] = 0
+    tmp = NamedTemporaryFile('w+t')
+    wallet.write_recovery(tmp.name)
+    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    assert wallet2.child_count == 2
+    wallet2.accounts[0] == wallet.accounts[0]
+    wallet2.accounts[1].address == wallet.accounts[1].address
+    wallet2.accounts[1].public_key == wallet.accounts[0].public_key
+
+def test_rotate_file2():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    assert wallet.child_count == 2
+    wallet.rotate_keys["1"] = "0"
+    tmp = NamedTemporaryFile('w+t')
+    wallet.write_recovery(tmp.name)
+    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    assert wallet2.child_count == 2
+    wallet2.accounts[0] == wallet.accounts[0]
+    wallet2.accounts[1].address == wallet.accounts[1].address
+    wallet2.accounts[1].public_key == wallet.accounts[0].public_key
+
 
 
 

@@ -48,11 +48,14 @@ class WalletCmdAccount(Command):
 
     def execute(self, client, params):
         wallet = WalletLibrary.recover(params[1])
-        print("[")
-        for account in wallet.accounts:
-            json_print_in_cmd(account)
-            print(",", end='')
-        print("\b]")
+        arr = []
+        for index, account in enumerate(wallet.accounts):
+            amap = to_json_serializable(account)
+            amap["index"] = index
+            arr.append(amap)
+        json_print_in_cmd(arr)
+
+
 
 
 class WalletCmdBalance(Command):
