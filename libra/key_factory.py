@@ -32,7 +32,7 @@ class KeyFactory:
 
 
     #See https://github.com/casebeer/python-hkdf/blob/master/hkdf.py
-    def hkdf_expand(self, pseudo_random_key, info=b"", length=32):
+    def _hkdf_expand(self, pseudo_random_key, info=b"", length=32):
         shazer = sha3_256_mod()
         hash_len = shazer().digest_size
         length = int(length)
@@ -51,7 +51,7 @@ class KeyFactory:
     def private_child(self, child_index):
         INFO_PREFIX = b"LIBRA WALLET: derived key$"
         info = INFO_PREFIX + child_index.to_bytes(8, "little")
-        hkdf_expand = self.hkdf_expand(self.master, info, 32)
+        hkdf_expand = self._hkdf_expand(self.master, info, 32)
         return hkdf_expand
 
 

@@ -1,3 +1,4 @@
+from canoser import Uint64
 from libra.cli.command import *
 
 class QueryCommand(Command):
@@ -115,7 +116,7 @@ class QueryCommandGetTxnByRange(Command):
         print(">> Getting committed transaction by range")
         fetch_events = parse_bool(params[3])
         transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
-        cur_version = int(params[1])
+        cur_version = Uint64.int_safe(params[1])
         for index, signed_tx in enumerate(transactions):
             #TODO: events print
             print(f"Transaction at version {cur_version+index}: {signed_tx}")

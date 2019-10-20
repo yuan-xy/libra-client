@@ -1,3 +1,4 @@
+from canoser import Uint64
 import libra
 from libra import Client, WalletLibrary
 from libra.account import AccountStatus
@@ -73,7 +74,7 @@ class ClientProxy:
         self.wallet.write_recovery(filename)
 
     def mint_coins(self, address_or_refid, libra, is_blocking):
-        micro_libra = int(libra) * 1_000_000
+        micro_libra = Uint64.int_safe(libra) * 1_000_000
         address = self.parse_address_or_refid(address_or_refid)
         self.grpc_client.mint_coins(address, micro_libra, is_blocking)
 
@@ -81,7 +82,7 @@ class ClientProxy:
         if len(address_or_refid) == 64:
             return address_or_refid
         else:
-            idx = int(address_or_refid)
+            idx = Uint64.int_safe(address_or_refid)
             if idx >=0 and idx < self.wallet.child_count:
                 return self.accounts[idx].address.hex()
             else:
@@ -108,20 +109,20 @@ class ClientProxy:
 
     def get_committed_txn_by_acc_seq(self, address_or_refid, seq, fetch_events):
         address = self.parse_address_or_refid(address_or_refid)
-        seq = int(seq)
+        seq = Uint64.int_safe(seq)
         transaction, _usecs = self.grpc_client.get_account_transaction_proto(address, seq, fetch_events)
         return transaction
 
     def get_committed_txn_by_range(self, start, limit, fetch_events):
-        start = int(start)
-        limit = int(limit)
+        start = Uint64.int_safe(start)
+        limit = Uint64.int_safe(limit)
         transactions = self.grpc_client.get_transactions(start, limit)
         return transactions
 
     def get_events_by_account_and_type(self, address_or_refid, sent_received, start_seq, ascending, limit):
         address = self.parse_address_or_refid(address_or_refid)
-        start_seq = int(start_seq)
-        limit = int(limit)
+        start_seq = Uint64.int_safe(start_seq)
+        limit = Uint64.int_safe(limit)
         if sent_received == "sent":
             return self.grpc_client.get_events_sent(address, start_seq, ascending, limit)
         elif sent_received == "received":
@@ -139,7 +140,7 @@ class ClientProxy:
     def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking):
         account = self.address_or_refid_to_account(sender)
         recevier = self.parse_address_or_refid(recevier)
-        micro_libra = int(coin) * 1_000_000
+        micro_libra = Uint64.int_safe(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
         return account.sequence_number
 

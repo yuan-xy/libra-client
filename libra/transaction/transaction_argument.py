@@ -38,7 +38,7 @@ class TransactionArgument(RustEnum):
             return TransactionArgument('ByteArray', bytes_to_int_list(barr))
         else:
             try:
-                i = int(s)
+                i = Uint64.int_safe(s)
                 return TransactionArgument('U64', i)
             except Exception:
                 raise

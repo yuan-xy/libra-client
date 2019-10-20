@@ -230,7 +230,7 @@ class Client:
             raise IOError(
                 "Failed to send request to faucet service: {}".format(self.faucet_host)
             )
-        sequence_number = int(resp.text)
+        sequence_number = Uint64.int_safe(resp.text)
         if is_blocking:
             self.wait_for_transaction(AccountConfig.association_address(), sequence_number-1)
         return sequence_number

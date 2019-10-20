@@ -1,3 +1,4 @@
+from canoser import Uint64
 from libra.cli.command import *
 from libra.transaction import SignedTransaction
 from libra.account_config import AccountConfig
@@ -93,7 +94,7 @@ class AccountCmdGetTxnByAccountSeq(Command):
 
     def execute(self, client, params):
         fetch_events = parse_bool(params[3])
-        seq = int(params[2])
+        seq = Uint64.int_safe(params[2])
         transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
         json_print_in_cmd(transaction)
 
@@ -111,7 +112,7 @@ class AccountCmdMint(Command):
 
     def execute(self, client, params):
         is_blocking = blocking_cmd(params[0])
-        resp = client.mint_coins(params[1], int(params[2]), is_blocking)
+        resp = client.mint_coins(params[1],Uint64.int_safe(params[2]), is_blocking)
         json_print_in_cmd({"sequence_number": resp})
 
 
@@ -131,7 +132,7 @@ class AccountCmdRotateAuthenticationKey(Command):
         account = wallet.get_account_by_address_or_refid(params[1])
         client.rotate_authentication_key(account, params[2])
         index, _account = wallet.find_account_by_publickey_hex(params[2])
-        wallet.rotate_keys[params[1]] = index
+        wallet.rotate_key(params[1], index)
         wallet.write_recovery(params[3])
         #TODO: Exec Transaction throw major_status: 2, after rotate key.
         # account_resource = client.get_account_resource(account.address)

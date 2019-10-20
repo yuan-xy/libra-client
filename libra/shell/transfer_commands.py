@@ -1,3 +1,4 @@
+from canoser import Uint64
 from libra.cli.command import *
 
 
@@ -16,11 +17,11 @@ class TransferCommand(Command):
 
     def execute(self, client, params):
         if len(params) == 5:
-            gas_unit_price_in_micro_libras = int(params[4])
+            gas_unit_price_in_micro_libras = Uint64.int_safe(params[4])
         else:
             gas_unit_price_in_micro_libras = 0
         if len(params) == 6:
-            max_gas_amount_in_micro_libras = int(params[5])
+            max_gas_amount_in_micro_libras = Uint64.int_safe(params[5])
         else:
             max_gas_amount_in_micro_libras = 140_000
         print(">> Transferring")

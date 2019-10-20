@@ -52,7 +52,7 @@ def test_get_account_by_address_or_refid():
 def test_rotate_file():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
-    wallet.rotate_keys[1] = 0
+    wallet.rotate_key(1, 0)
     tmp = NamedTemporaryFile('w+t')
     wallet.write_recovery(tmp.name)
     wallet2 = libra.WalletLibrary.recover(tmp.name)
@@ -64,7 +64,7 @@ def test_rotate_file():
 def test_rotate_file2():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
-    wallet.rotate_keys["1"] = "0"
+    wallet.rotate_key("1", "0")
     tmp = NamedTemporaryFile('w+t')
     wallet.write_recovery(tmp.name)
     wallet2 = libra.WalletLibrary.recover(tmp.name)

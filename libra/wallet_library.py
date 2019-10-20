@@ -1,9 +1,10 @@
+from canoser import Uint16
 from mnemonic import Mnemonic
 import libra
 from libra.key_factory import KeyFactory
 from libra.account_address import HEX_ADDRESS_LENGTH
 
-MAX_CHILD_COUNT = 65535
+MAX_CHILD_COUNT = Uint16.max_value
 
 class WalletLibrary:
 
@@ -18,9 +19,7 @@ class WalletLibrary:
         self.accounts = []
         if child_count > 0:
             self._recover_accounts()
-        for k, v in self.rotate_keys.items():
-            ik = int(k)
-            iv = int(v)
+        for ik, iv in self.rotate_keys.items():
             privkey = self.accounts[iv].private_key
             address = self.accounts[ik].address
             self.accounts[ik] = libra.Account(privkey, address=address)
@@ -40,6 +39,12 @@ class WalletLibrary:
             if account.public_key.hex() == pubkey:
                 return (index, account)
         return (None, None)
+
+    def rotate_key(self, to_rotate_id, master_id):
+        to_rotate_id = Uint16.int_safe(str(to_rotate_id))
+        master_id = Uint16.int_safe(str(master_id))
+        self.rotate_keys[to_rotate_id] = master_id
+
 
     def _recover_accounts(self):
         for idx in range(self.child_count):
@@ -78,7 +83,7 @@ class WalletLibrary:
                 rotate_keys = cls.recover_rotate_pairs(filename)
             except FileNotFoundError:
                 rotate_keys={}
-            return cls.new_from_mnemonic(arr[0], int(arr[1]), rotate_keys)
+            return cls.new_from_mnemonic(arr[0], Uint16.int_safe(arr[1]), rotate_keys)
 
     @classmethod
     def recover_rotate_pairs(cls, filename):
@@ -92,7 +97,7 @@ class WalletLibrary:
                 arr2 = pair.split(",")
                 if len(arr2) != 2:
                     raise ValueError("rotate file format error.")
-                rotate_keys[arr2[0]] = arr2[1]
+                rotate_keys[Uint16.int_safe(arr2[0])] = Uint16.int_safe(arr2[1])
             return rotate_keys
 
     def write_recovery(self, filename):
@@ -121,7 +126,7 @@ class WalletLibrary:
                 raise ValueError(f"account:{address_or_refid} not in wallet.")
             return account
         else:
-            idx = int(address_or_refid) #TODO: ALL int() should check str len
+            idx = Uint16.int_safe(address_or_refid)
             if idx >=0 and idx < self.child_count:
                 return self.accounts[idx]
             else:
