@@ -44,7 +44,7 @@ class Command(metaclass = abc.ABCMeta):
             try:
                 commands[idx].execute(client, params)
             except Exception as err:
-                report_error(commands[idx].get_description(), err, client.verbose)
+                report_error(commands[idx].get_description().split('.')[0], err, client.verbose)
         else:
             report_error({"Params you  give": ' '.join(params)})
             self.print_subcommand_help(parent_command_name, commands)

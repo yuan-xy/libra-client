@@ -133,6 +133,7 @@ class AccountCmdRotateAuthenticationKey(Command):
         index, _account = wallet.find_account_by_publickey_hex(params[2])
         wallet.rotate_keys[params[1]] = index
         wallet.write_recovery(params[3])
+        #TODO: Exec Transaction throw major_status: 2, after rotate key.
         # account_resource = client.get_account_resource(account.address)
         # key = account_resource.to_json_serializable()["authentication_key"]
         json_print_in_cmd({
