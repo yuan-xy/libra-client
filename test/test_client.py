@@ -18,7 +18,7 @@ def test_get_transaction():
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
     assert stx.raw_txn.payload.Script == True
-    assert stx.raw_txn.payload.value.code == RawTransaction.get_script_bytecode("mint")
+    assert stx.raw_txn.payload.value.code == Script.get_script_bytecode("mint")
     assert stx.raw_txn.payload.value.args[0].index == 1
     assert stx.raw_txn.payload.value.args[0].Address == True
     assert stx.raw_txn.payload.value.args[1].index == 0
@@ -31,10 +31,30 @@ def test_get_transaction():
     assert len(stx.public_key) == 32
     assert len(stx.signature) == 64
     stx.check_signature
+    stx.__str__()
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(1, 5, True)
+    transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
+
+def test_get_tx_from_zero():
+    c = libra.Client("testnet")
+    transactions, events_for_versions = c.get_transactions_proto(0, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
+    transactions, events_for_versions = c.get_transactions_proto(0, 1, True)
+    assert len(transactions) == 1
+    assert len(events_for_versions.events_for_version) == 1
+    assert len(events_for_versions.events_for_version[0].events) == 0
+
+def test_get_tx_latest():
+    c = libra.Client("testnet")
+    ver = c.get_latest_transaction_version()
+    transactions, events_for_versions = c.get_transactions_proto(ver-2, 2, True)
+    assert len(transactions) == 2
+    assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_zero():
     c = libra.Client("testnet")
@@ -83,7 +103,7 @@ def test_account_not_exsits():
     address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
     c = libra.Client("testnet")
     with pytest.raises(libra.client.AccountError):
-        balance = c.get_balance(address)
+        balance = c.get_account_state(address)
 
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
@@ -110,7 +130,8 @@ def test_transfer_coin():
     except libra.client.AccountError:
         balance1 = 0
     ret = c.transfer_coin(a0, a1.address, 1234, unit_price=0, is_blocking=True)
-    assert ret.ac_status.code == libra.proto.admission_control_pb2.AdmissionControlStatusCode.Accepted
+    assert bytes(ret.raw_txn.sender) == a0.address
+    assert ret.raw_txn.sequence_number == 0
     assert c.get_balance(a0.address) == balance0 - 1234
     assert c.get_balance(a1.address) == balance1 + 1234
 
@@ -119,6 +140,8 @@ def test_client_init():
     assert c.host == "localhost"
     assert c.port == 8080
     assert hasattr(c, "faucet_host") == False
+    assert c.verbose == True
+    assert c.faucet_account is not None
     assert len(c.validator_verifier.validators) > 0
     address, key = c.validator_verifier.validators.popitem()
     assert len(address) == libra.account_address.ADDRESS_LENGTH
@@ -127,6 +150,8 @@ def test_client_init():
     assert c2.host == "ac.testnet.libra.org"
     assert c2.port == 8000
     assert c2.faucet_host == "faucet.testnet.libra.org"
+    assert c2.verbose == True
+    assert c2.faucet_account is None
     assert len(c2.validator_verifier.validators) > 0
     with pytest.raises(libra.LibraNetError):
         libra.Client("xnet")

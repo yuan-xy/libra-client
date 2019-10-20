@@ -23,13 +23,28 @@ class AccountState(Struct):
         ('ordered_map', {})
     ]
 
+    def get_resource(self):
+        resource = self.ordered_map[AccountConfig.account_resource_path()]
+        if resource:
+            return AccountResource.deserialize(resource)
+        else:
+            return None
+
+    def to_json_serializable(self):
+        amap = super().to_json_serializable()
+        ar = self.get_resource()
+        if ar:
+            amap["Decoded_resource"] = ar.to_json_serializable()
+        return amap
+
+
     def __str__(self):
         concat = StringIO()
         concat.write(super().__str__())
-        resource = self.ordered_map[AccountConfig.ACCOUNT_RESOURCE_PATH]
-        ar = AccountResource.deserialize(resource)
-        concat.write("\nDecoded:\n")
-        concat.write(ar.__str__())
+        ar = self.get_resource()
+        if ar:
+            concat.write("\nDecoded:\n")
+            concat.write(ar.__str__())
         return concat.getvalue()
 
 
@@ -43,3 +58,20 @@ class AccountResource(Struct):
         ('sent_events', EventHandle),
         ('sequence_number', Uint64)
     ]
+
+    @classmethod
+    def get_account_resource_or_default(cls, blob):
+        if blob:
+            omap = AccountState.deserialize(blob.blob).ordered_map
+            resource = omap[AccountConfig.account_resource_path()]
+            return cls.deserialize(resource)
+        else:
+            return cls()
+
+    def get_event_handle_by_query_path(self, query_path):
+        if AccountConfig.account_received_event_path() == query_path:
+            return self.received_events
+        elif AccountConfig.account_sent_event_path() == query_path:
+            return self.sent_events
+        else:
+            libra.proof.bail("Unrecognized query path: {}", query_path);

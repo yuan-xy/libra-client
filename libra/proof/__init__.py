@@ -1,7 +1,6 @@
-from libra.proof.merkle_tree import (get_accumulator_root_hash,
+from libra.proof.merkle_tree import (get_event_root_hash,
     MerkleTreeInternalNode, SparseMerkleLeafNode)
 from libra.proof.definition import AccumulatorProof, SparseMerkleProof, MAX_ACCUMULATOR_PROOF_DEPTH
-from libra.event import ContractEvent
 from libra.hasher import *
 from libra.transaction import SignedTransaction, TransactionInfo
 from libra.account_resource import AccountStateBlob
@@ -11,11 +10,14 @@ import collections
 import more_itertools
 import pdb
 
+
+def bail(hint, *args):
+    errstr = hint.format(*args)
+    raise AssertionError(errstr)
+
 def ensure(exp, hint, *args):
     if not exp:
-        errstr = hint.format(*args)
-        raise AssertionError(errstr)
-
+        bail(hint, *args)
 
 # Verifies that a given `transaction_info` exists in the ledger using provided proof.
 def verify_transaction_info(
@@ -24,6 +26,8 @@ def verify_transaction_info(
         transaction_info,
         ledger_info_to_transaction_info_proof):
     assert transaction_version <= ledger_info.version
+    if not isinstance(transaction_info, TransactionInfo):
+        transaction_info = TransactionInfo.from_proto(transaction_info)
     verify_accumulator_element(
         TransactionAccumulatorHasher,
         ledger_info.transaction_accumulator_hash,
@@ -76,14 +80,14 @@ def verify_sparse_merkle_element(
             # `siblings` should prove the route from the leaf node to the root.
             ensure(
                 element_key == proof_key,
-                "Keys do not match. Key in proof: {:x}. Expected key: {:x}.",
+                "Keys do not match. Key in proof: {}. Expected key: {}.",
                 proof_key,
                 element_key
             )
             hashv = AccountStateBlob.from_proto(element_blob).hash()
             ensure(
                 hashv == proof_value_hash,
-                "Value hashes do not match. Value hash in proof: {:x}. Expected value hash: {:x}",
+                "Value hashes do not match. Value hash in proof: {}. Expected value hash: {}",
                 proof_value_hash,
                 hashv
             )
@@ -126,37 +130,10 @@ def verify_sparse_merkle_element(
             current_hash = MerkleTreeInternalNode(current_hash, sibling_hash, hasher).hash()
     ensure(
         current_hash == bytes(expected_root_hash),
-        "Root hashes do not match. Actual root hash: {:x}. Expected root hash: {:x}.",
+        "Root hashes do not match. Actual root hash: {}. Expected root hash: {}.",
         current_hash,
         bytes(expected_root_hash)
     )
-
-
-
-
-# Verifies that the state of an account at version `state_version` is correct using the provided
-# proof.  If `account_state_blob` is present, we expect the account to exist, otherwise we
-# expect the account to not exist.
-def verify_account_state(
-        ledger_info,
-        state_version,
-        account_address_hash,
-        account_state_blob,
-        account_state_proof
-        ):
-    transaction_info = TransactionInfo.from_proto(account_state_proof.transaction_info)
-    verify_sparse_merkle_element(
-        transaction_info.state_root_hash,
-        account_address_hash,
-        account_state_blob,
-        account_state_proof.transaction_info_to_account_proof
-    )
-    verify_transaction_info(
-        ledger_info,
-        state_version,
-        transaction_info,
-        account_state_proof.ledger_info_to_transaction_info_proof)
-
 
 
 def verify_transaction_list(txn_list_with_proof, ledger_info):
@@ -174,9 +151,11 @@ def verify_transaction_list(txn_list_with_proof, ledger_info):
     #Get the hashes of all nodes at the accumulator leaf level.
     hashes = [TransactionInfo.from_proto(x).hash() for x in infos]
     hashes = collections.deque(hashes)
-    first = txn_list_with_proof.proof_of_first_transaction.non_default_siblings
+    firstp = AccumulatorProof.from_proto(txn_list_with_proof.proof_of_first_transaction)
+    first = firstp.siblings
     if txn_list_with_proof.HasField("proof_of_last_transaction"):
-        last = txn_list_with_proof.proof_of_last_transaction.non_default_siblings
+        lastp = AccumulatorProof.from_proto(txn_list_with_proof.proof_of_last_transaction)
+        last = lastp.siblings
     else:
         last = first
     first_idx = txn_list_with_proof.first_transaction_version.value
@@ -229,8 +208,7 @@ def verify_event_root_hash(event_lists, infos):
         raise VerifyError(f"transactions and events mismatch:{len_info}, {len_event}.")
     zipped = zip(event_lists, infos)
     for events, info in zipped:
-        event_hashes = [ContractEvent.from_proto(x).hash() for x in events.events]
-        eroot_hash = get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
-        if eroot_hash != info.event_root_hash:
+        eroot_hash = get_event_root_hash(events.events)
+        if bytes(eroot_hash) != info.event_root_hash:
             raise VerifyError(f"event_root_hash mismatch.")
 

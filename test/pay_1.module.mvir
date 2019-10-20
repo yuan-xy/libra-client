@@ -1,0 +1,9 @@
+module Pay {
+    import 0x0.LibraAccount;
+
+    public pay1(payee: address) {
+      LibraAccount.pay_from_sender(move(payee), 1);
+      return;
+    }
+}
+

@@ -8,3 +8,6 @@ __pycache__/
 *.pyc
 *.swp
 *.sublime-workspace
+client.mnemonic
+ignore/
+test/*.mv

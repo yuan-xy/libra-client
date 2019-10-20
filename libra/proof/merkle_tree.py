@@ -1,4 +1,5 @@
 from libra.hasher import *
+from libra.event import ContractEvent
 import more_itertools
 
 
@@ -31,6 +32,10 @@ def get_accumulator_root_hash(hasher, element_hashes):
         next_level = [compute_tree_hash(x) for x in more_itertools.chunked(current_level, 2)]
         current_level = next_level
     return current_level[0]
+
+def get_event_root_hash(events):
+    event_hashes = [ContractEvent.from_proto(x).hash() for x in events]
+    return get_accumulator_root_hash(EventAccumulatorHasher(), event_hashes)
 
 
 class SparseMerkleLeafNode:

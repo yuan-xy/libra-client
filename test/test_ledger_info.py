@@ -26,6 +26,10 @@ def test_ledger_info():
     assert len(info.consensus_block_id) == 32
     assert info.timestamp_usecs > 1570_000_000_000_000
     secs = info.timestamp_usecs / 1000_000
-    assert abs(datetime.now().timestamp() - secs) < 5
+    localtime = datetime.now().timestamp()
+    diff = localtime - secs
+    if diff != 0:
+        print(f"localtime {localtime}, ledger_info time{secs}, diff:{diff}")
+    assert abs(diff) < 5
     #assert abs(datetime.utcnow().timestamp() - secs) < 5
 

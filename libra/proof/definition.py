@@ -33,7 +33,7 @@ class AccumulatorProof:
         # sibling on this position is default.
         siblings = []
         index = 0
-        for bit in binstr:
+        for bit in binstr.lstrip('0'):
             if bit == '1':
                 siblings.append(proto_proof.non_default_siblings[index])
                 index += 1

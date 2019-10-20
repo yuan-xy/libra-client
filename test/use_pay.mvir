@@ -1,0 +1,5 @@
+import 0x7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f.Pay;
+main (payee: address) {
+  Pay.pay1(move(payee));
+  return;
+}

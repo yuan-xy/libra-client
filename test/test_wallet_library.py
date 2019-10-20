@@ -1,7 +1,7 @@
 import libra
 from tempfile import NamedTemporaryFile
 from libra.key_factory import has_sha3
-
+import pytest
 import pdb
 
 
@@ -28,12 +28,52 @@ def test_wallet():
                 arr1 = data1.split(";")
                 assert arr0[0] == arr1[0]
                 assert int(arr0[1]) == int(arr1[1])
-    tmp.close
+    tmp.close()
 
 def test_new_wallet():
     wallet = libra.WalletLibrary.new()
     assert wallet.child_count == 0
     assert len(wallet.mnemonic.split()) == 18
+
+def test_get_account_by_address_or_refid():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    accounts = wallet.accounts
+    assert accounts[0] == wallet.get_account_by_address_or_refid("0")
+    assert accounts[1] == wallet.get_account_by_address_or_refid("1")
+    with pytest.raises(ValueError):
+        wallet.get_account_by_address_or_refid("2")
+    assert accounts[0] == wallet.get_account_by_address_or_refid("7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f")
+    with pytest.raises(ValueError):
+        wallet.get_account_by_address_or_refid("0"*64)
+    with pytest.raises(ValueError):
+        wallet.get_account_by_address_or_refid("0"*63)
+
+
+def test_rotate_file():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    assert wallet.child_count == 2
+    wallet.rotate_keys[1] = 0
+    tmp = NamedTemporaryFile('w+t')
+    wallet.write_recovery(tmp.name)
+    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    assert wallet2.child_count == 2
+    wallet2.accounts[0] == wallet.accounts[0]
+    wallet2.accounts[1].address == wallet.accounts[1].address
+    wallet2.accounts[1].public_key == wallet.accounts[0].public_key
+
+def test_rotate_file2():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    assert wallet.child_count == 2
+    wallet.rotate_keys["1"] = "0"
+    tmp = NamedTemporaryFile('w+t')
+    wallet.write_recovery(tmp.name)
+    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    assert wallet2.child_count == 2
+    wallet2.accounts[0] == wallet.accounts[0]
+    wallet2.accounts[1].address == wallet.accounts[1].address
+    wallet2.accounts[1].public_key == wallet.accounts[0].public_key
+
+
 
 
 

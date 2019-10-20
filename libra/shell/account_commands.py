@@ -1,4 +1,4 @@
-from command import *
+from libra.cli.command import *
 
 class AccountCommand(Command):
     def get_aliases(self):
@@ -15,7 +15,7 @@ class AccountCommand(Command):
             AccountCommandWriteRecovery(),
             AccountCommandMint()
         ]
-        subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:])
 
 
 class AccountCommandCreate(Command):
@@ -35,6 +35,7 @@ class AccountCommandCreate(Command):
             )
         )
 
+
 class AccountCommandListAccounts(Command):
     def get_aliases(self):
         return ["list", "la"]
@@ -44,6 +45,7 @@ class AccountCommandListAccounts(Command):
 
     def execute(self, client, params):
         client.print_all_accounts()
+
 
 class AccountCommandRecoverWallet(Command):
     def get_aliases(self):
@@ -56,17 +58,11 @@ class AccountCommandRecoverWallet(Command):
         return "Recover Libra wallet from the file path"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for recovering wallets")
-            return
         print(">> Recovering Wallet")
-        try:
-            accounts = client.recover_wallet_accounts(params[1])
-            print(f"Wallet recovered and the first {len(accounts)} child accounts were derived")
-            for index, data in enumerate(accounts):
-                print("#{} address {}".format(index, data.address.hex()))
-        except Exception as err:
-            report_error("Error recovering Libra wallet", err)
+        accounts = client.recover_wallet_accounts(params[1])
+        print(f"Wallet recovered and the first {len(accounts)} child accounts were derived")
+        for index, data in enumerate(accounts):
+            print("#{} address {}".format(index, data.address.hex()))
 
 
 class AccountCommandWriteRecovery(Command):
@@ -80,15 +76,9 @@ class AccountCommandWriteRecovery(Command):
         return "Save Libra wallet mnemonic recovery seed to disk"
 
     def execute(self, client, params):
-        if len(params) != 2:
-            print("Invalid number of arguments for writing recovery wallets")
-            return
         print(">> Saving Libra wallet mnemonic recovery seed to disk")
-        try:
-            client.write_recovery(params[1])
-            print("Saved mnemonic seed to disk")
-        except Exception as err:
-            report_error("Error writing mnemonic recovery seed to file", err)
+        client.write_recovery(params[1])
+        print("Saved mnemonic seed to disk")
 
 
 class AccountCommandMint(Command):
@@ -102,12 +92,6 @@ class AccountCommandMint(Command):
         return "Mint coins to the account. Suffix 'b' is for blocking"
 
     def execute(self, client, params):
-        if len(params) != 3:
-            print("Invalid number of arguments for mint")
-            return
-        if not hasattr(client.grpc_client, "faucet_host"):
-            print("Doesn't support mint on dev net.")
-            return
         print(">> Minting coins")
         is_blocking = blocking_cmd(params[0])
         client.mint_coins(params[1], params[2], is_blocking)
@@ -115,4 +99,3 @@ class AccountCommandMint(Command):
             print("Finished minting!")
         else:
             print("Mint request submitted")
-        #report_error("Error minting coins", e),

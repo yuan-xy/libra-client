@@ -1,8 +1,11 @@
 # LibraClient  [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
-LibraClient is an unofficial client for [Libra blockchain](http://libra.org) written in python language. The Client allows you interact whith Libra Network easily. For Python programmers, you can also call the client side api to interact with Libra Network.
+LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It provides three ways to access Libra:
 
+1. `libra_shell`, an interactive shell program. It is compatible with official Libra client. For beginners, it lets you get started directly to try your first transaction with libra without requiring time-consuming downloads and compiles the huge entire Libra project source code.
+2. `libra`, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
+3. `python api`, a collection of apis for client access to libra. For Python programmers, you can call this client side api to interact with Libra Network with more control than by using `libra` command.
 
 ## Installation
 
@@ -11,14 +14,15 @@ Require python 3.6 or above installed.
 ```sh
 $ python3 -m pip install libra-client
 ```
+If you had a problem during installation, following command should works anyway.
+```sh
+$ python3 -m pip install  --index-url https://pypi.org/project/ --user libra-client
+```
 
-## Usage
 
-For programmers, please see [Client side Libra API for python programmer](https://github.com/yuan-xy/libra-client#client-side-libra-api-for-python-programmer).
+## Usage of 'libra_shell'
 
-### Start Libra Client and Connect to the Testnet
-
-To connect to a validator node running on the Libra testnet, run the client as shown below.
+To start 'libra_shell' and connect to a validator node running on the Libra testnet, just input the 'libra_shell' command on termial as shown below.
 
 ```bash
 $ libra_shell
@@ -30,7 +34,122 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 
 
-[This document will guide you through executing your first transaction on the Libra Blockchain.](/first_transaction.md). We will walk you through creating accounts for two users (let's call them Alice and Bob).
+[This document will guide you through executing your first transaction on the Libra Blockchain](https://github.com/yuan-xy/libra-client/blob/master/first_transaction.md). We will walk you through creating accounts for two users.
+
+
+## Usage of 'libra' command
+
+The command 'libra' contains four subcommands 'account', 'transaction', 'wallet' and 'ledger'. All subcommands have their own parameters.
+
+### Leger Time Example
+For example, using 'ledger' command to query the ledger start time and latest transaction time of testnet:
+
+```bash
+$ libra ledger time
+```
+You will get the json output like this:
+
+```json
+{
+    "start_time": "2019-10-03T05:19:59",
+    "latest_time": "2019-10-16T17:04:17"
+}
+```
+
+### Account Balance Example
+
+To query the balance of some account by address,
+```bash
+$ libra account balance 000000000000000000000000000000000000000000000000000000000a550c18
+```
+
+You will get the balance of that address:
+
+```json
+{
+    "balance": 24075309756646968
+}
+```
+
+### Wallet Example
+
+To query the total balance of a wallet,
+
+```bash
+$ libra wallet balance <some mnemonic file of the wallet>
+```
+
+You will get the total balance and balance of every accounts in that wallet:
+
+```json
+{
+    "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f": 123,
+    "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde": 0,
+    "total_balance": 123
+}
+```
+
+### Help message of `libra`
+
+If you input `libra` without any parameters as following,
+
+```bash
+$ libra
+```
+You will get the help message:
+
+```
+USAGE:
+	libra [options] command [command parameters ...]
+
+Optional arguments:
+
+ -a | --host HOST  Host address/name to connect to. [default:testnet]
+ -p | --port PORT  Admission Control port to connect to. [default: 8000]
+ -s | --validator_set_file
+	    File location from which to load config of trusted validators.
+ -v | --verbose Verbose output
+ -V | --version Show program's version number and exit
+ -h | --help Show this help message and exit
+
+Use the following commands:
+
+account | a
+	Account query by address
+transaction | t
+	Transaction query
+wallet | w
+	show account information of a wallet derived from mnemonic file
+ledger | lg
+	show ledger info of Libra blockchain
+```
+
+### Help message of subcommand
+If you input the libra subcommand without any parameter, you will get the help message of that subcommand. For example:
+
+```bash
+$ libra wallet
+```
+You will get the help message:
+
+```
+USAGE:
+        wallet <arg>
+
+Use one of the following args for this command:
+
+show | s <mnemonic_file_path>
+        Show the mnemonic words, seed and addresses of a wallet
+account | a <mnemonic_file_path>
+        Show the keypair and address of accounts in a wallet
+balance | b <mnemonic_file_path>
+        Get the balance of all accounts in a wallet
+create | c <mnemonic_file_path>
+        create a new wallet and save the mnemonic file to <mnemonic_file_path>
+```
+
+
+More instructions can be found here [libra command help](https://raw.githubusercontent.com/yuan-xy/libra-client/master/docs/cli_help.html).
 
 
 ## Client side Libra API for python programmer
@@ -102,8 +221,8 @@ You can query an account's raw blob by using `get_account_blob` function on `Cli
 client = Client("testnet")
 blob, version = client.get_account_blob(address)
 ```
-#### Get Account State Map data of an Address
-If the Account has been created, you can call `get_account_state` function which return a map of path to data; other wise, AccountError will be thrown.
+#### Get Account State of an Address
+If the Account has been created, you can call `get_account_state` function which return a `AccountState` object with 'ordered_map' field; other wise, AccountError will be thrown.
 
 ```py
 client = Client("testnet")
@@ -189,4 +308,29 @@ c.get_transactions(start_version, limit)
 ```
 
 ### Query Events
-TODO.
+To get the latest 2 events send by an address:
+
+```py
+c = libra.Client("testnet")
+events = c.get_latest_events_sent(address, 2)
+```
+
+To get the latest 2 events received by an address:
+
+```py
+c = libra.Client("testnet")
+events = c.get_latest_events_received(address, 2)
+```
+
+Query events sent from an address, start from start_sequence_number(count begin with 0), get limit number of events, direction is ascending/descending:
+
+```py
+get_events_sent(self, address, start_sequence_number, ascending=True, limit=1)
+```
+
+Query events received from an address, start from start_sequence_number(count begin with 0), get limit number of events, direction is ascending/descending:
+
+```py
+get_events_received(self, address, start_sequence_number, ascending=True, limit=1)
+```
+
