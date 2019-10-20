@@ -18,7 +18,7 @@ install_requires=[
         'mnemonic'
     ]
 
-if not 'sha3-256' in hashlib.algorithms_available:
+if not 'sha3_256' in hashlib.algorithms_available:
     #only exec under sdist, not bdist_wheel
     #if add pysha3 always, it will be failed under windows without c++ compiler installed.
     install_requires.append("pysha3")
