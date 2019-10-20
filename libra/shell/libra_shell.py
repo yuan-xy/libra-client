@@ -32,7 +32,7 @@ def run_shell(args):
     try:
         grpc_client.get_latest_transaction_version()
     except Exception as err:
-        print(f"Not able to connect to validator at {args.host}:{args.port}")
+        report_error(f"Not able to connect to validator at {args.host}:{args.port}", err, args.verbose)
         return
     client = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"

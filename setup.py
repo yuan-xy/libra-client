@@ -1,6 +1,5 @@
 import setuptools
 import hashlib
-from libra.version import version
 
 with open("README.md", "r") as fh:
     content = fh.read()
@@ -20,11 +19,13 @@ install_requires=[
     ]
 
 if not 'sha3-256' in hashlib.algorithms_available:
+    #only exec under sdist, not bdist_wheel
+    #if add pysha3 always, it will be failed under windows without c++ compiler installed.
     install_requires.append("pysha3")
 
 setuptools.setup(
     name="libra-client",
-    version=version,
+    version="0.5.5",
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
     description="A CLI inteface Libra client and Python API for Libra blockchain.",
