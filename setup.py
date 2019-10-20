@@ -25,7 +25,7 @@ if not 'sha3-256' in hashlib.algorithms_available:
 
 setuptools.setup(
     name="libra-client",
-    version="0.5.5",
+    version="0.5.6",
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
     description="A CLI inteface Libra client and Python API for Libra blockchain.",
