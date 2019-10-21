@@ -12,6 +12,7 @@ cache:
 python:
     - "3.6"
     - "3.7"
+    - "3.8"
 
 install:
     # Optimisation: build requirements as wheels, which get cached by Travis
