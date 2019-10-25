@@ -1,10 +1,21 @@
 import setuptools
 import hashlib
+import re
 
 with open("README.md", "r") as fh:
     content = fh.read()
     arr = content.split("\n")
     long_description = "\n".join(arr[3:])
+
+
+with open("libra/version.py", "r") as fp:
+    try:
+        version = re.findall(
+            r"^version = \"([0-9\.]+)\"", fp.read(), re.M
+        )[0]
+    except IndexError:
+        raise RuntimeError("Unable to determine version.")
+
 
 install_requires=[
         'canoser>=0.5.2',
@@ -25,7 +36,7 @@ if not 'sha3_256' in hashlib.algorithms_available:
 
 setuptools.setup(
     name="libra-client",
-    version="0.5.7",
+    version=version,
     author="yuan xinyu",
     author_email="yuanxinyu.hangzhou@gmail.com",
     description="A CLI inteface Libra client and Python API for Libra blockchain.",
