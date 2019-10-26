@@ -23,7 +23,7 @@ def test_get_transaction():
     assert stx.raw_txn.payload.value.args[0].Address == True
     assert stx.raw_txn.payload.value.args[1].index == 0
     assert stx.raw_txn.payload.value.args[1].U64 == True
-    assert stx.raw_txn.payload.value.args[1].value == 100000000
+    assert stx.raw_txn.payload.value.args[1].value == 250000000
     assert stx.raw_txn.max_gas_amount == 140000
     assert stx.raw_txn.gas_unit_price == 0
     assert stx.raw_txn.expiration_time > 1_568_000_000

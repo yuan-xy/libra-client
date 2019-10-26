@@ -7,7 +7,7 @@ from libra.account import Account
 from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import RawTransaction, SignedTransaction, Script, TransactionPayload
+from libra.transaction import Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
@@ -128,7 +128,8 @@ class Client:
 
     def update_to_latest_ledger(self, request):
         resp = self.stub.UpdateToLatestLedger(request)
-        verify(self.validator_verifier, request, resp)
+        #verify(self.validator_verifier, request, resp)
+        #TODO:need update to latest proof, bitmap is removed.
         return resp
 
     def get_latest_ledger_info(self):
@@ -160,7 +161,7 @@ class Client:
 
     def get_transactions(self, start_version, limit=1):
         transactions, _ = self.get_transactions_proto(start_version, limit, False)
-        return [SignedTransaction.deserialize(x.signed_txn) for x in transactions]
+        return [Transaction.deserialize(x.transaction).value for x in transactions]
 
     def get_transaction(self, start_version):
         return self.get_transactions(start_version)[0]
