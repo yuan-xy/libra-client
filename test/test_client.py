@@ -14,6 +14,7 @@ def test_events():
 def test_get_transaction():
     c = libra.Client("testnet")
     stx = c.get_transaction(1)
+    assert stx.success == True
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
@@ -32,6 +33,13 @@ def test_get_transaction():
     assert len(stx.signature) == 64
     stx.check_signature
     stx.__str__()
+
+def test_get_transaction_without_events():
+    c = libra.Client("testnet")
+    transactions = c.get_transactions(1, 1, False)
+    assert len(transactions) == 1
+    assert hasattr(transactions[0], 'success') == False
+
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")

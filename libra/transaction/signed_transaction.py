@@ -13,6 +13,18 @@ class SignedTransaction(Struct):
 #        ('transaction_length', Uint64)
     ]
 
+    def check_events(self, event_list):
+        if len(event_list.events) > 0:
+            self.success = True
+        else:
+            self.success = False
+
+    def to_json_serializable(self):
+        amap = super().to_json_serializable()
+        if hasattr(self, 'success'):
+            amap["success"] = self.success
+        return amap
+
     @classmethod
     def gen_from_raw_txn(cls, raw_tx, sender_account):
         tx_hash = raw_tx.hash()
