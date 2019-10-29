@@ -1,6 +1,6 @@
 from libra.cli.command import *
 from libra.wallet_library import WalletLibrary
-from libra.transaction import SignedTransaction
+from libra.transaction import SignedTransaction, Transaction
 from datetime import datetime
 
 
@@ -42,7 +42,8 @@ class LedgerCmdTime(Command):
         request, resp = client._get_txs(1)
         info = resp.ledger_info_with_sigs.ledger_info
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        stx = SignedTransaction.deserialize(txnp.transactions[0].signed_txn)
+        tx = Transaction.deserialize(txnp.transactions[0].transaction)
+        stx = tx.value
         start_time = datetime.fromtimestamp(stx.raw_txn.expiration_time)
         latest_time = datetime.fromtimestamp(info.timestamp_usecs / 1000_000)
         json_print_in_cmd({

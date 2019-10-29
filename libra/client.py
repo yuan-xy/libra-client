@@ -7,7 +7,7 @@ from libra.account import Account
 from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import RawTransaction, SignedTransaction, Script, TransactionPayload
+from libra.transaction import Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
@@ -128,7 +128,8 @@ class Client:
 
     def update_to_latest_ledger(self, request):
         resp = self.stub.UpdateToLatestLedger(request)
-        verify(self.validator_verifier, request, resp)
+        #verify(self.validator_verifier, request, resp)
+        #TODO:need update to latest proof, bitmap is removed.
         return resp
 
     def get_latest_ledger_info(self):
@@ -158,12 +159,16 @@ class Client:
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         return (txnp.transactions, txnp.events_for_versions)
 
-    def get_transactions(self, start_version, limit=1):
-        transactions, _ = self.get_transactions_proto(start_version, limit, False)
-        return [SignedTransaction.deserialize(x.signed_txn) for x in transactions]
+    def get_transactions(self, start_version, limit=1, fetch_events=True):
+        transactions, events = self.get_transactions_proto(start_version, limit, fetch_events)
+        txs = [Transaction.deserialize(x.transaction).value for x in transactions]
+        if fetch_events:
+            for tx, event_list in zip(txs, events.events_for_version):
+                tx.check_events(event_list)
+        return txs
 
-    def get_transaction(self, start_version):
-        return self.get_transactions(start_version)[0]
+    def get_transaction(self, start_version, fetch_events=True):
+        return self.get_transactions(start_version, 1, fetch_events)[0]
 
     def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
         address = Address.normalize_to_bytes(address)

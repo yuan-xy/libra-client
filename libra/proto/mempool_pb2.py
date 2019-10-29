@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mempool',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rmempool.proto\x12\x07mempool\x1a\x11transaction.proto\x1a\x14mempool_status.proto\"\xa2\x01\n#AddTransactionWithValidationRequest\x12,\n\nsigned_txn\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\x12\x14\n\x0cmax_gas_cost\x18\x02 \x01(\x04\x12\x1e\n\x16latest_sequence_number\x18\x03 \x01(\x04\x12\x17\n\x0f\x61\x63\x63ount_balance\x18\x04 \x01(\x04\"u\n$AddTransactionWithValidationResponse\x12\x17\n\x0f\x63urrent_version\x18\x01 \x01(\x04\x12\x34\n\x06status\x18\x02 \x01(\x0b\x32$.mempool.MempoolAddTransactionStatus\"^\n\x0fGetBlockRequest\x12\x16\n\x0emax_block_size\x18\x01 \x01(\x04\x12\x33\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x1d.mempool.TransactionExclusion\"A\n\x10GetBlockResponse\x12-\n\x05\x62lock\x18\x01 \x01(\x0b\x32\x1e.types.SignedTransactionsBlock\"?\n\x14TransactionExclusion\x12\x0e\n\x06sender\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\"o\n\x19\x43ommitTransactionsRequest\x12\x33\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x1d.mempool.CommittedTransaction\x12\x1d\n\x15\x62lock_timestamp_usecs\x18\x02 \x01(\x04\"\x1c\n\x1a\x43ommitTransactionsResponse\"T\n\x14\x43ommittedTransaction\x12\x0e\n\x06sender\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\x12\x13\n\x0bis_rejected\x18\x03 \x01(\x08\"\x14\n\x12HealthCheckRequest\")\n\x13HealthCheckResponse\x12\x12\n\nis_healthy\x18\x01 \x01(\x08\x32\xf8\x02\n\x07Mempool\x12}\n\x1c\x41\x64\x64TransactionWithValidation\x12,.mempool.AddTransactionWithValidationRequest\x1a-.mempool.AddTransactionWithValidationResponse\"\x00\x12\x41\n\x08GetBlock\x12\x18.mempool.GetBlockRequest\x1a\x19.mempool.GetBlockResponse\"\x00\x12_\n\x12\x43ommitTransactions\x12\".mempool.CommitTransactionsRequest\x1a#.mempool.CommitTransactionsResponse\"\x00\x12J\n\x0bHealthCheck\x12\x1b.mempool.HealthCheckRequest\x1a\x1c.mempool.HealthCheckResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\rmempool.proto\x12\x07mempool\x1a\x11transaction.proto\x1a\x14mempool_status.proto\"\xa2\x01\n#AddTransactionWithValidationRequest\x12,\n\nsigned_txn\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\x12\x14\n\x0cmax_gas_cost\x18\x02 \x01(\x04\x12\x1e\n\x16latest_sequence_number\x18\x03 \x01(\x04\x12\x17\n\x0f\x61\x63\x63ount_balance\x18\x04 \x01(\x04\"|\n$AddTransactionWithValidationResponse\x12\x17\n\x0f\x63urrent_version\x18\x01 \x01(\x04\x12;\n\x06status\x18\x02 \x01(\x0b\x32+.mempool_status.MempoolAddTransactionStatus\"^\n\x0fGetBlockRequest\x12\x16\n\x0emax_block_size\x18\x01 \x01(\x04\x12\x33\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x1d.mempool.TransactionExclusion\"A\n\x10GetBlockResponse\x12-\n\x05\x62lock\x18\x01 \x01(\x0b\x32\x1e.types.SignedTransactionsBlock\"?\n\x14TransactionExclusion\x12\x0e\n\x06sender\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\"o\n\x19\x43ommitTransactionsRequest\x12\x33\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x1d.mempool.CommittedTransaction\x12\x1d\n\x15\x62lock_timestamp_usecs\x18\x02 \x01(\x04\"\x1c\n\x1a\x43ommitTransactionsResponse\"T\n\x14\x43ommittedTransaction\x12\x0e\n\x06sender\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\x12\x13\n\x0bis_rejected\x18\x03 \x01(\x08\"\x14\n\x12HealthCheckRequest\")\n\x13HealthCheckResponse\x12\x12\n\nis_healthy\x18\x01 \x01(\x08\x32\xf8\x02\n\x07Mempool\x12}\n\x1c\x41\x64\x64TransactionWithValidation\x12,.mempool.AddTransactionWithValidationRequest\x1a-.mempool.AddTransactionWithValidationResponse\"\x00\x12\x41\n\x08GetBlock\x12\x18.mempool.GetBlockRequest\x1a\x19.mempool.GetBlockResponse\"\x00\x12_\n\x12\x43ommitTransactions\x12\".mempool.CommitTransactionsRequest\x1a#.mempool.CommitTransactionsResponse\"\x00\x12J\n\x0bHealthCheck\x12\x1b.mempool.HealthCheckRequest\x1a\x1c.mempool.HealthCheckResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[transaction__pb2.DESCRIPTOR,mempool__status__pb2.DESCRIPTOR,])
 
@@ -115,7 +115,7 @@ _ADDTRANSACTIONWITHVALIDATIONRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=232,
-  serialized_end=349,
+  serialized_end=356,
 )
 
 
@@ -152,8 +152,8 @@ _GETBLOCKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=351,
-  serialized_end=445,
+  serialized_start=358,
+  serialized_end=452,
 )
 
 
@@ -183,8 +183,8 @@ _GETBLOCKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=447,
-  serialized_end=512,
+  serialized_start=454,
+  serialized_end=519,
 )
 
 
@@ -221,8 +221,8 @@ _TRANSACTIONEXCLUSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=514,
-  serialized_end=577,
+  serialized_start=521,
+  serialized_end=584,
 )
 
 
@@ -259,8 +259,8 @@ _COMMITTRANSACTIONSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=579,
-  serialized_end=690,
+  serialized_start=586,
+  serialized_end=697,
 )
 
 
@@ -283,8 +283,8 @@ _COMMITTRANSACTIONSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=692,
-  serialized_end=720,
+  serialized_start=699,
+  serialized_end=727,
 )
 
 
@@ -328,8 +328,8 @@ _COMMITTEDTRANSACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=722,
-  serialized_end=806,
+  serialized_start=729,
+  serialized_end=813,
 )
 
 
@@ -352,8 +352,8 @@ _HEALTHCHECKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=808,
-  serialized_end=828,
+  serialized_start=815,
+  serialized_end=835,
 )
 
 
@@ -383,8 +383,8 @@ _HEALTHCHECKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=830,
-  serialized_end=871,
+  serialized_start=837,
+  serialized_end=878,
 )
 
 _ADDTRANSACTIONWITHVALIDATIONREQUEST.fields_by_name['signed_txn'].message_type = transaction__pb2._SIGNEDTRANSACTION
@@ -482,8 +482,8 @@ _MEMPOOL = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=874,
-  serialized_end=1250,
+  serialized_start=881,
+  serialized_end=1257,
   methods=[
   _descriptor.MethodDescriptor(
     name='AddTransactionWithValidation',

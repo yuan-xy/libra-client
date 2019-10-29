@@ -137,6 +137,7 @@ def verify_sparse_merkle_element(
 
 
 def verify_transaction_list(txn_list_with_proof, ledger_info):
+    #TODO:change repeated SignedTransaction transactions = 1; to repeated Transaction transactions = 1;
     #TODO: all transactions should be same epoch
     transactions = txn_list_with_proof.transactions
     infos = txn_list_with_proof.infos
