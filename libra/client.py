@@ -130,6 +130,7 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request)
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
+        self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
         return resp
 
     def get_latest_ledger_info(self):
