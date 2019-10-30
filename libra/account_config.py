@@ -1,6 +1,6 @@
-from canoser import hex_to_int_list
+from canoser import hex_to_int_list, Struct, Uint64
 from libra.language_storage import StructTag
-from libra.account_address import HEX_ADDRESS_LENGTH
+from libra.account_address import HEX_ADDRESS_LENGTH, Address
 
 class AccountConfig:
     # LibraCoin
@@ -62,3 +62,11 @@ class AccountConfig:
             "account_sent_event_path" : AccountConfig.account_sent_event_path(),
             "account_received_event_path" : AccountConfig.account_received_event_path()
         }
+
+
+class AccountEvent(Struct):
+    _fields = [
+        ('amount', Uint64),
+        ('account', Address)
+    ]
+

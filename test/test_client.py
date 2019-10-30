@@ -4,12 +4,6 @@ from libra.transaction import *
 import pytest
 import pdb
 
-def test_events():
-    address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
-    events = c.get_latest_events_sent(address, 2)
-    #pdb.set_trace()
-    assert len(events) == 2
 
 def test_get_transaction():
     c = libra.Client("testnet")
