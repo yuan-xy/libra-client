@@ -23,6 +23,8 @@ class SignedTransaction(Struct):
         amap = super().to_json_serializable()
         if hasattr(self, 'success'):
             amap["success"] = self.success
+        if hasattr(self, 'version'):
+            amap["version"] = self.version
         return amap
 
     @classmethod

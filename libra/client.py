@@ -158,6 +158,8 @@ class Client:
         return self.get_latest_ledger_info().version
 
     def _get_txs(self, start_version, limit=1, fetch_events=False):
+        if limit <= 0 or limit >= Uint64.max_value:
+            raise ValueError(f"limit:{limit} is invalid.")
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_transactions_request.start_version = start_version
@@ -168,6 +170,7 @@ class Client:
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        assert txnp.first_transaction_version.value == start_version
         return (txnp.transactions, txnp.events_for_versions)
 
     def get_transactions(self, start_version, limit=1, fetch_events=True):
@@ -199,6 +202,8 @@ class Client:
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
+        if limit <= 0 or limit >= Uint64.max_value:
+            raise ValueError(f"limit:{limit} is invalid.")
         address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()

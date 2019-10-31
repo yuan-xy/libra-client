@@ -25,7 +25,7 @@ def test_get_transaction():
     assert stx.raw_txn.expiration_time < 11_568_000_000
     assert len(stx.public_key) == 32
     assert len(stx.signature) == 64
-    stx.check_signature
+    stx.check_signature()
     stx.__str__()
 
 def test_get_transaction_without_events():
@@ -60,8 +60,9 @@ def test_get_tx_latest():
 
 def test_get_tx_zero():
     c = libra.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(1, 0, True)
-    assert len(transactions) == 0
+    with pytest.raises(ValueError):
+        c.get_transactions_proto(1, 0, True)
+
 
 def test_get_tx_invalid():
     c = libra.Client("testnet")
