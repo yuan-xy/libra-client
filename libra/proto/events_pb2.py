@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='types',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0c\x65vents.proto\x12\x05types\x1a\x11\x61\x63\x63\x65ss_path.proto\x1a\x0bproof.proto\"A\n\x05\x45vent\x12\x0b\n\x03key\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\x12\x12\n\nevent_data\x18\x03 \x01(\x0c\"\x81\x01\n\x0e\x45ventWithProof\x12\x1b\n\x13transaction_version\x18\x01 \x01(\x04\x12\x13\n\x0b\x65vent_index\x18\x02 \x01(\x04\x12\x1b\n\x05\x65vent\x18\x03 \x01(\x0b\x32\x0c.types.Event\x12 \n\x05proof\x18\x04 \x01(\x0b\x32\x11.types.EventProof\"*\n\nEventsList\x12\x1c\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x0c.types.Event\"B\n\x11\x45ventsForVersions\x12-\n\x12\x65vents_for_version\x18\x01 \x03(\x0b\x32\x11.types.EventsListb\x06proto3')
+  serialized_pb=_b('\n\x0c\x65vents.proto\x12\x05types\x1a\x11\x61\x63\x63\x65ss_path.proto\x1a\x0bproof.proto\"S\n\x05\x45vent\x12\x0b\n\x03key\x18\x01 \x01(\x0c\x12\x17\n\x0fsequence_number\x18\x02 \x01(\x04\x12\x12\n\nevent_data\x18\x03 \x01(\x0c\x12\x10\n\x08type_tag\x18\x04 \x01(\x0c\"\x81\x01\n\x0e\x45ventWithProof\x12\x1b\n\x13transaction_version\x18\x01 \x01(\x04\x12\x13\n\x0b\x65vent_index\x18\x02 \x01(\x04\x12\x1b\n\x05\x65vent\x18\x03 \x01(\x0b\x32\x0c.types.Event\x12 \n\x05proof\x18\x04 \x01(\x0b\x32\x11.types.EventProof\"*\n\nEventsList\x12\x1c\n\x06\x65vents\x18\x01 \x03(\x0b\x32\x0c.types.Event\"B\n\x11\x45ventsForVersions\x12-\n\x12\x65vents_for_version\x18\x01 \x03(\x0b\x32\x11.types.EventsListb\x06proto3')
   ,
   dependencies=[access__path__pb2.DESCRIPTOR,proof__pb2.DESCRIPTOR,])
 
@@ -57,6 +57,13 @@ _EVENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='type_tag', full_name='types.Event.type_tag', index=3,
+      number=4, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -70,7 +77,7 @@ _EVENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=55,
-  serialized_end=120,
+  serialized_end=138,
 )
 
 
@@ -121,8 +128,8 @@ _EVENTWITHPROOF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=123,
-  serialized_end=252,
+  serialized_start=141,
+  serialized_end=270,
 )
 
 
@@ -152,8 +159,8 @@ _EVENTSLIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=254,
-  serialized_end=296,
+  serialized_start=272,
+  serialized_end=314,
 )
 
 
@@ -183,8 +190,8 @@ _EVENTSFORVERSIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=298,
-  serialized_end=364,
+  serialized_start=316,
+  serialized_end=382,
 )
 
 _EVENTWITHPROOF.fields_by_name['event'].message_type = _EVENT
