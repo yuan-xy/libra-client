@@ -2,6 +2,7 @@ from grpc import insecure_channel
 import requests
 import time
 from canoser import Uint64
+import os
 
 from libra.account import Account
 from libra.account_address import Address
@@ -48,6 +49,13 @@ class Client:
             raise LibraNetError(f"Unknown network: {network}")
         self.host = NETWORKS[network]['host']
         self.port = NETWORKS[network]['port']
+        try:
+            tests = os.environ['TESTNET_LOCAL'].split(";")
+            self.host = tests[0]
+            self.port = int(tests[1])
+            validator_set_file = tests[2]
+        except KeyError:
+            pass
         self.do_init(validator_set_file, faucet_file)
 
     def do_init(self, validator_set_file=None, faucet_file=None):
