@@ -1,5 +1,6 @@
 from canoser import *
 from libra.hasher import gen_hasher
+from libra.language_storage import TypeTag
 
 
 EVENT_KEY_LENGTH = 32
@@ -19,6 +20,7 @@ class ContractEvent(Struct):
     _fields = [
         ('key', EventKey),
         ('sequence_number', Uint64),
+        ('type_tag', TypeTag),
         ('event_data', [Uint8])
     ]
 
@@ -27,6 +29,7 @@ class ContractEvent(Struct):
         ret = cls()
         ret.key = bytes_to_int_list(proto.key)
         ret.sequence_number = proto.sequence_number
+        ret.type_tag = TypeTag.deserialize(proto.type_tag)
         ret.event_data = bytes_to_int_list(proto.event_data)
         return ret
 
