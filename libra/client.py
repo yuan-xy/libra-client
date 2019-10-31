@@ -62,6 +62,7 @@ class Client:
         self.init_validators(validator_set_file)
         self.init_grpc()
         self.init_faucet_account(faucet_file)
+        self.client_known_version = 0
         self.verbose = True
 
     def init_grpc(self):
@@ -135,6 +136,7 @@ class Client:
             return 0
 
     def update_to_latest_ledger(self, request):
+        request.client_known_version = self.client_known_version
         resp = self.stub.UpdateToLatestLedger(request)
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
