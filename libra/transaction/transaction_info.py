@@ -5,7 +5,7 @@ from libra.access_path import AccessPath
 
 class TransactionInfo(Struct):
     _fields = [
-        ('signed_transaction_hash', HashValue),
+        ('transaction_hash', HashValue),
         ('state_root_hash', HashValue),
         ('event_root_hash', HashValue),
         ('gas_used', Uint64),
@@ -20,7 +20,7 @@ class TransactionInfo(Struct):
     @classmethod
     def from_proto(cls, proto):
         ret = cls()
-        ret.signed_transaction_hash = bytes_to_int_list(proto.signed_transaction_hash)
+        ret.transaction_hash = bytes_to_int_list(proto.transaction_hash)
         ret.state_root_hash = bytes_to_int_list(proto.state_root_hash)
         ret.event_root_hash = bytes_to_int_list(proto.event_root_hash)
         ret.gas_used = proto.gas_used

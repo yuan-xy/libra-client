@@ -6,7 +6,7 @@ ADDRESS_LENGTH = 32
 HEX_ADDRESS_LENGTH = ADDRESS_LENGTH * 2
 
 class Address(DelegateT):
-    delegate_type = [Uint8, ADDRESS_LENGTH]
+    delegate_type = [Uint8, ADDRESS_LENGTH, False]
 
     @classmethod
     def hash(cls, address):

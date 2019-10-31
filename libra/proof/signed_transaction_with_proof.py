@@ -13,7 +13,7 @@ class SignedTransactionWithProof:
             sender,
             sequence_number
         ):
-        stx = SignedTransaction.deserialize(signed_transaction_with_proof.signed_transaction.signed_txn)
+        stx = SignedTransaction.deserialize(signed_transaction_with_proof.signed_transaction.txn_bytes)
         #TODO: avoid duplicated deserialize.
         ensure(
             signed_transaction_with_proof.version == version,
@@ -47,23 +47,23 @@ class SignedTransactionWithProof:
 
 
 
-# Verifies that a `SignedTransaction` with hash value of `signed_transaction_hash`
+# Verifies that a `SignedTransaction` with hash value of `transaction_hash`
 # is the version `transaction_version` transaction in the ledger using the provided proof.
 # If event_root_hash is provided, it's also verified against the proof.
 def verify_signed_transaction(
         ledger_info,
-        signed_transaction_hash,
+        transaction_hash,
         event_root_hash,
         transaction_version,
         signed_transaction_proof
     ):
     transaction_info = TransactionInfo.from_proto(signed_transaction_proof.transaction_info)
     ensure(
-        signed_transaction_hash == bytes(transaction_info.signed_transaction_hash),
+        transaction_hash == bytes(transaction_info.transaction_hash),
         "The hash of signed transaction does not match the transaction info in proof. \
          Transaction hash: {}. Transaction hash provided by proof: {}.",
-        signed_transaction_hash,
-        bytes(transaction_info.signed_transaction_hash)
+        transaction_hash,
+        bytes(transaction_info.transaction_hash)
     )
     if event_root_hash is not None:
         ensure(

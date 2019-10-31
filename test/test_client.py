@@ -18,7 +18,7 @@ def test_get_transaction():
     assert stx.raw_txn.payload.value.args[0].Address == True
     assert stx.raw_txn.payload.value.args[1].index == 0
     assert stx.raw_txn.payload.value.args[1].U64 == True
-    assert stx.raw_txn.payload.value.args[1].value == 250000000
+    assert stx.raw_txn.payload.value.args[1].value == 1000000000000
     assert stx.raw_txn.max_gas_amount == 140000
     assert stx.raw_txn.gas_unit_price == 0
     assert stx.raw_txn.expiration_time > 1_568_000_000
@@ -114,7 +114,8 @@ def test_get_account_transaction_proto():
     len(str(usecs)) == 16
     assert usecs//1000_000 > 1570_000_000
     assert txn.events.events[0].sequence_number == 1
-    assert len(txn.signed_transaction.signed_txn) > 0
+    assert len(txn.transaction.transaction) > 0
+    #TODO: transaction.transaction to transaction.txn_bytes will be better.
     assert txn.version > 0
     assert txn.proof.HasField("ledger_info_to_transaction_info_proof")
     assert txn.proof.HasField("transaction_info")

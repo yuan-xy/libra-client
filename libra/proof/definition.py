@@ -24,24 +24,7 @@ class AccumulatorProof:
 
     @classmethod
     def from_proto(cls, proto_proof):
-        bitmap = proto_proof.bitmap
-        binstr = format(bitmap, 'b')
-        num_non_default_siblings = binstr.count('1')
-        assert num_non_default_siblings == len(proto_proof.non_default_siblings)
-        # Iterate from the leftmost 1-bit to LSB in the bitmap. If a bit is set, the corresponding
-        # sibling is non-default and we take the sibling from proto_siblings.  Otherwise the
-        # sibling on this position is default.
-        siblings = []
-        index = 0
-        for bit in binstr.lstrip('0'):
-            if bit == '1':
-                siblings.append(proto_proof.non_default_siblings[index])
-                index += 1
-            elif bit == '0':
-                siblings.append(bytes(ACCUMULATOR_PLACEHOLDER_HASH))
-            else:
-                assert False
-        return cls(siblings)
+        return cls(proto_proof.siblings)
 
 
 # A proof that can be used to authenticate an element in a Sparse Merkle Tree given trusted root

@@ -41,7 +41,7 @@ class SignedTransaction(Struct):
 
     @classmethod
     def from_proto(cls, proto):
-        return cls.deserialize(proto.signed_txn)
+        return cls.deserialize(proto.txn_bytes)
 
     def check_signature(self):
         message = self.raw_txn.hash()

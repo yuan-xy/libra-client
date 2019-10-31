@@ -182,7 +182,7 @@ class Client:
         resp = self.update_to_latest_ledger(request)
         usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
-        return (transaction.signed_transaction_with_proof, usecs)
+        return (transaction.transaction_with_proof, usecs)
 
     # Returns events specified by `access_path` with sequence number in range designated by
     # `start_seq_num`, `ascending` and `limit`. If ascending is true this query will return up to
@@ -290,7 +290,7 @@ class Client:
             payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
-        request.signed_txn.signed_txn = signed_txn.serialize()
+        request.transaction.txn_bytes = signed_txn.serialize()
         self.submit_transaction(request, raw_tx, is_blocking)
         return signed_txn
 

@@ -17,7 +17,8 @@ class AccountConfig:
 
     @classmethod
     def account_resource_path(cls):
-        return bytes.fromhex("01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97")
+        #return AccessPath.resource_access_vec(AccountConfig.account_struct_tag(), [])
+        return b'\x01\xa2\x08\xdf\x13O\xef\xed\x84B\xb1\xf0\x1f\xabY\x07\x18\x98\xf5\xa1\xafQd\xe1,YM\xe5Zp\x04\xa9\x1c'
 
     @classmethod
     def account_sent_event_path(cls):

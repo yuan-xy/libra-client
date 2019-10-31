@@ -198,7 +198,7 @@ def check_txn_list_sig_with_infos(txn_list_with_proof):
     zipped = zip(txn_list_with_proof.transactions, txn_list_with_proof.infos)
     for tx, info in zipped:
         stx = SignedTransaction.from_proto(tx)
-        if stx.hash() != info.signed_transaction_hash:
+        if stx.hash() != info.transaction_hash:
             raise VerifyError(f"transaction hash mismatch:{stx}.")
 
 #Verify event root hashes match what is carried on the transaction infos.
