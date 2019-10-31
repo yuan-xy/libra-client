@@ -71,6 +71,6 @@ def test_amount_illegal():
         c.transfer_coin(a0, a1.address, -1)
     with pytest.raises(Exception):
         c.transfer_coin(a0, a1.address, 0.1)
-    c.transfer_coin(a0, a1.address, balance0+1, is_blocking=False)
+    c.transfer_coin(a0, a1.address, balance0+99999999, is_blocking=False)
     assert False == c.wait_for_transaction(a0.address, sequence_number) #no events emitted
 
