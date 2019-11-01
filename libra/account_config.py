@@ -1,6 +1,6 @@
-from canoser import hex_to_int_list
+from canoser import hex_to_int_list, Struct, Uint64
 from libra.language_storage import StructTag
-from libra.account_address import HEX_ADDRESS_LENGTH
+from libra.account_address import HEX_ADDRESS_LENGTH, Address
 
 class AccountConfig:
     # LibraCoin
@@ -17,7 +17,8 @@ class AccountConfig:
 
     @classmethod
     def account_resource_path(cls):
-        return bytes.fromhex("01217da6c6b3e19f1825cfb2676daecce3bf3de03cf26647c78df00b371b25cc97")
+        #return AccessPath.resource_access_vec(AccountConfig.account_struct_tag(), [])
+        return b'\x01\xa2\x08\xdf\x13O\xef\xed\x84B\xb1\xf0\x1f\xabY\x07\x18\x98\xf5\xa1\xafQd\xe1,YM\xe5Zp\x04\xa9\x1c'
 
     @classmethod
     def account_sent_event_path(cls):
@@ -32,8 +33,16 @@ class AccountConfig:
         return "0".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
+    def core_code_address_ints(cls):
+        return Address.normalize_to_int_list(cls.core_code_address())
+
+    @classmethod
     def association_address(cls):
         return "a550c18".rjust(HEX_ADDRESS_LENGTH, '0')
+
+    @classmethod
+    def association_address_ints(cls):
+        return Address.normalize_to_int_list(cls.association_address())
 
     @classmethod
     def transaction_fee_address(cls):
@@ -62,3 +71,11 @@ class AccountConfig:
             "account_sent_event_path" : AccountConfig.account_sent_event_path(),
             "account_received_event_path" : AccountConfig.account_received_event_path()
         }
+
+
+class AccountEvent(Struct):
+    _fields = [
+        ('amount', Uint64),
+        ('account', Address)
+    ]
+

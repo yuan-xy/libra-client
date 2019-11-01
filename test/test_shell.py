@@ -110,6 +110,10 @@ def test_transfer_coin(capsys):
     output = exec_input("t 0 1 123", capsys)
     assert 'Transaction submitted to validator' in output
 
+def test_transfer_error(capsys):
+    output = exec_input("t 0 1", capsys)
+    assert 'transfer | transferb | t | tb' in output
+
 def test_execute_script_on_testnet(capsys):
     c = libra.Client("testnet")
     wallet = libra.WalletLibrary.recover('test/test.wallet')

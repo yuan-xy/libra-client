@@ -23,6 +23,8 @@ class SignedTransaction(Struct):
         amap = super().to_json_serializable()
         if hasattr(self, 'success'):
             amap["success"] = self.success
+        if hasattr(self, 'version'):
+            amap["version"] = self.version
         return amap
 
     @classmethod
@@ -41,7 +43,7 @@ class SignedTransaction(Struct):
 
     @classmethod
     def from_proto(cls, proto):
-        return cls.deserialize(proto.signed_txn)
+        return cls.deserialize(proto.txn_bytes)
 
     def check_signature(self):
         message = self.raw_txn.hash()

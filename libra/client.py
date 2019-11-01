@@ -2,6 +2,7 @@ from grpc import insecure_channel
 import requests
 import time
 from canoser import Uint64
+import os
 
 from libra.account import Account
 from libra.account_address import Address
@@ -48,12 +49,20 @@ class Client:
             raise LibraNetError(f"Unknown network: {network}")
         self.host = NETWORKS[network]['host']
         self.port = NETWORKS[network]['port']
+        try:
+            tests = os.environ['TESTNET_LOCAL'].split(";")
+            self.host = tests[0]
+            self.port = int(tests[1])
+            validator_set_file = tests[2]
+        except KeyError:
+            pass
         self.do_init(validator_set_file, faucet_file)
 
     def do_init(self, validator_set_file=None, faucet_file=None):
         self.init_validators(validator_set_file)
         self.init_grpc()
         self.init_faucet_account(faucet_file)
+        self.client_known_version = 0
         self.verbose = True
 
     def init_grpc(self):
@@ -127,9 +136,11 @@ class Client:
             return 0
 
     def update_to_latest_ledger(self, request):
+        request.client_known_version = self.client_known_version
         resp = self.stub.UpdateToLatestLedger(request)
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
+        self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
         return resp
 
     def get_latest_ledger_info(self):
@@ -147,6 +158,8 @@ class Client:
         return self.get_latest_ledger_info().version
 
     def _get_txs(self, start_version, limit=1, fetch_events=False):
+        if limit <= 0 or limit >= Uint64.max_value:
+            raise ValueError(f"limit:{limit} is invalid.")
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_transactions_request.start_version = start_version
@@ -157,6 +170,7 @@ class Client:
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        assert txnp.first_transaction_version.value == start_version
         return (txnp.transactions, txnp.events_for_versions)
 
     def get_transactions(self, start_version, limit=1, fetch_events=True):
@@ -181,13 +195,15 @@ class Client:
         resp = self.update_to_latest_ledger(request)
         usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
-        return (transaction.signed_transaction_with_proof, usecs)
+        return (transaction.transaction_with_proof, usecs)
 
     # Returns events specified by `access_path` with sequence number in range designated by
     # `start_seq_num`, `ascending` and `limit`. If ascending is true this query will return up to
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
+        if limit <= 0 or limit >= Uint64.max_value:
+            raise ValueError(f"limit:{limit} is invalid.")
         address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
@@ -289,7 +305,7 @@ class Client:
             payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         request = SubmitTransactionRequest()
-        request.signed_txn.signed_txn = signed_txn.serialize()
+        request.transaction.txn_bytes = signed_txn.serialize()
         self.submit_transaction(request, raw_tx, is_blocking)
         return signed_txn
 

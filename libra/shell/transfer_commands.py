@@ -16,6 +16,9 @@ class TransferCommand(Command):
         return "Transfer coins (in libra) from account to another."
 
     def execute(self, client, params):
+        if len(params) < 4 or len(params) > 6:
+            self.print_params_help()
+            return
         if len(params) == 5:
             gas_unit_price_in_micro_libras = Uint64.int_safe(params[4])
         else:

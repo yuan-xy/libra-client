@@ -34,11 +34,11 @@ class Account:
             faucet_account_file = cls.faucet_file_path()
         with open(faucet_account_file, 'rb') as f:
             data = f.read()
-            assert len(data) == 80
-            assert b' \x00\x00\x00\x00\x00\x00\x00' == data[0:8]
-            assert b' \x00\x00\x00\x00\x00\x00\x00' == data[40:48]
-            private_key = data[8:40]
-            public_key = data[48:]
+            assert len(data) == 72
+            assert b' \x00\x00\x00' == data[0:4]
+            assert b' \x00\x00\x00' == data[36:40]
+            private_key = data[4:36]
+            public_key = data[40:]
             return cls.faucet_account(private_key)
 
     @classmethod

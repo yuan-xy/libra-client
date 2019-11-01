@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='types',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x16transaction_info.proto\x12\x05types\"\x8c\x01\n\x0fTransactionInfo\x12\x1f\n\x17signed_transaction_hash\x18\x01 \x01(\x0c\x12\x17\n\x0fstate_root_hash\x18\x02 \x01(\x0c\x12\x17\n\x0f\x65vent_root_hash\x18\x03 \x01(\x0c\x12\x10\n\x08gas_used\x18\x04 \x01(\x04\x12\x14\n\x0cmajor_status\x18\x05 \x01(\x04\x62\x06proto3')
+  serialized_pb=_b('\n\x16transaction_info.proto\x12\x05types\"\x85\x01\n\x0fTransactionInfo\x12\x18\n\x10transaction_hash\x18\x01 \x01(\x0c\x12\x17\n\x0fstate_root_hash\x18\x02 \x01(\x0c\x12\x17\n\x0f\x65vent_root_hash\x18\x03 \x01(\x0c\x12\x10\n\x08gas_used\x18\x04 \x01(\x04\x12\x14\n\x0cmajor_status\x18\x05 \x01(\x04\x62\x06proto3')
 )
 
 
@@ -34,7 +34,7 @@ _TRANSACTIONINFO = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='signed_transaction_hash', full_name='types.TransactionInfo.signed_transaction_hash', index=0,
+      name='transaction_hash', full_name='types.TransactionInfo.transaction_hash', index=0,
       number=1, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -81,7 +81,7 @@ _TRANSACTIONINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=34,
-  serialized_end=174,
+  serialized_end=167,
 )
 
 DESCRIPTOR.message_types_by_name['TransactionInfo'] = _TRANSACTIONINFO

@@ -6,7 +6,8 @@ import pdb
 
 
 def test_validator_set_path():
-    assert ValidatorSet.validator_set_path() == [1, 155, 221, 107, 26, 67, 22, 150, 190, 138, 237, 24, 137, 186, 88, 108, 176, 160, 177, 240, 38, 243, 116, 194, 183, 136, 134, 125, 14, 39, 110, 27, 70]
+    validator_set_path = [1, 199, 67, 201, 192, 92, 228, 217, 21, 182, 247, 123, 112, 78, 146, 191, 135, 208, 102, 202, 138, 27, 160, 213, 102, 254, 217, 189, 145, 54, 181, 212, 21]
+    assert ValidatorSet.validator_set_path() == validator_set_path
 
 
 def test_validator():

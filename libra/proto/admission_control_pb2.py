@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='admission_control',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x17\x61\x64mission_control.proto\x12\x11\x61\x64mission_control\x1a\x14get_with_proof.proto\x1a\x14mempool_status.proto\x1a\x11transaction.proto\x1a\x0fvm_errors.proto\"\xc8\x01\n\x13\x41\x64missionControlMsg\x12Q\n\x1asubmit_transaction_request\x18\x01 \x01(\x0b\x32+.admission_control.SubmitTransactionRequestH\x00\x12S\n\x1bsubmit_transaction_response\x18\x02 \x01(\x0b\x32,.admission_control.SubmitTransactionResponseH\x00\x42\t\n\x07message\"H\n\x18SubmitTransactionRequest\x12,\n\nsigned_txn\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\"f\n\x16\x41\x64missionControlStatus\x12;\n\x04\x63ode\x18\x01 \x01(\x0e\x32-.admission_control.AdmissionControlStatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xe8\x01\n\x19SubmitTransactionResponse\x12$\n\tvm_status\x18\x01 \x01(\x0b\x32\x0f.types.VMStatusH\x00\x12>\n\tac_status\x18\x02 \x01(\x0b\x32).admission_control.AdmissionControlStatusH\x00\x12\x45\n\x0emempool_status\x18\x03 \x01(\x0b\x32+.mempool_status.MempoolAddTransactionStatusH\x00\x12\x14\n\x0cvalidator_id\x18\x04 \x01(\x0c\x42\x08\n\x06status*I\n\x1a\x41\x64missionControlStatusCode\x12\x0c\n\x08\x41\x63\x63\x65pted\x10\x00\x12\x0f\n\x0b\x42lacklisted\x10\x01\x12\x0c\n\x08Rejected\x10\x02\x32\xe7\x01\n\x10\x41\x64missionControl\x12p\n\x11SubmitTransaction\x12+.admission_control.SubmitTransactionRequest\x1a,.admission_control.SubmitTransactionResponse\"\x00\x12\x61\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x17\x61\x64mission_control.proto\x12\x11\x61\x64mission_control\x1a\x14get_with_proof.proto\x1a\x14mempool_status.proto\x1a\x11transaction.proto\x1a\x0fvm_errors.proto\"\xc8\x01\n\x13\x41\x64missionControlMsg\x12Q\n\x1asubmit_transaction_request\x18\x01 \x01(\x0b\x32+.admission_control.SubmitTransactionRequestH\x00\x12S\n\x1bsubmit_transaction_response\x18\x02 \x01(\x0b\x32,.admission_control.SubmitTransactionResponseH\x00\x42\t\n\x07message\"I\n\x18SubmitTransactionRequest\x12-\n\x0btransaction\x18\x01 \x01(\x0b\x32\x18.types.SignedTransaction\"f\n\x16\x41\x64missionControlStatus\x12;\n\x04\x63ode\x18\x01 \x01(\x0e\x32-.admission_control.AdmissionControlStatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t\"\xe8\x01\n\x19SubmitTransactionResponse\x12$\n\tvm_status\x18\x01 \x01(\x0b\x32\x0f.types.VMStatusH\x00\x12>\n\tac_status\x18\x02 \x01(\x0b\x32).admission_control.AdmissionControlStatusH\x00\x12\x45\n\x0emempool_status\x18\x03 \x01(\x0b\x32+.mempool_status.MempoolAddTransactionStatusH\x00\x12\x14\n\x0cvalidator_id\x18\x04 \x01(\x0c\x42\x08\n\x06status*I\n\x1a\x41\x64missionControlStatusCode\x12\x0c\n\x08\x41\x63\x63\x65pted\x10\x00\x12\x0f\n\x0b\x42lacklisted\x10\x01\x12\x0c\n\x08Rejected\x10\x02\x32\xe7\x01\n\x10\x41\x64missionControl\x12p\n\x11SubmitTransaction\x12+.admission_control.SubmitTransactionRequest\x1a,.admission_control.SubmitTransactionResponse\"\x00\x12\x61\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[get__with__proof__pb2.DESCRIPTOR,mempool__status__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,vm__errors__pb2.DESCRIPTOR,])
 
@@ -50,8 +50,8 @@ _ADMISSIONCONTROLSTATUSCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=742,
-  serialized_end=815,
+  serialized_start=743,
+  serialized_end=816,
 )
 _sym_db.RegisterEnumDescriptor(_ADMISSIONCONTROLSTATUSCODE)
 
@@ -111,7 +111,7 @@ _SUBMITTRANSACTIONREQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='signed_txn', full_name='admission_control.SubmitTransactionRequest.signed_txn', index=0,
+      name='transaction', full_name='admission_control.SubmitTransactionRequest.transaction', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -130,7 +130,7 @@ _SUBMITTRANSACTIONREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=329,
-  serialized_end=401,
+  serialized_end=402,
 )
 
 
@@ -167,8 +167,8 @@ _ADMISSIONCONTROLSTATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=403,
-  serialized_end=505,
+  serialized_start=404,
+  serialized_end=506,
 )
 
 
@@ -222,8 +222,8 @@ _SUBMITTRANSACTIONRESPONSE = _descriptor.Descriptor(
       name='status', full_name='admission_control.SubmitTransactionResponse.status',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=508,
-  serialized_end=740,
+  serialized_start=509,
+  serialized_end=741,
 )
 
 _ADMISSIONCONTROLMSG.fields_by_name['submit_transaction_request'].message_type = _SUBMITTRANSACTIONREQUEST
@@ -234,7 +234,7 @@ _ADMISSIONCONTROLMSG.fields_by_name['submit_transaction_request'].containing_one
 _ADMISSIONCONTROLMSG.oneofs_by_name['message'].fields.append(
   _ADMISSIONCONTROLMSG.fields_by_name['submit_transaction_response'])
 _ADMISSIONCONTROLMSG.fields_by_name['submit_transaction_response'].containing_oneof = _ADMISSIONCONTROLMSG.oneofs_by_name['message']
-_SUBMITTRANSACTIONREQUEST.fields_by_name['signed_txn'].message_type = transaction__pb2._SIGNEDTRANSACTION
+_SUBMITTRANSACTIONREQUEST.fields_by_name['transaction'].message_type = transaction__pb2._SIGNEDTRANSACTION
 _ADMISSIONCONTROLSTATUS.fields_by_name['code'].enum_type = _ADMISSIONCONTROLSTATUSCODE
 _SUBMITTRANSACTIONRESPONSE.fields_by_name['vm_status'].message_type = vm__errors__pb2._VMSTATUS
 _SUBMITTRANSACTIONRESPONSE.fields_by_name['ac_status'].message_type = _ADMISSIONCONTROLSTATUS
@@ -291,8 +291,8 @@ _ADMISSIONCONTROL = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=818,
-  serialized_end=1049,
+  serialized_start=819,
+  serialized_end=1050,
   methods=[
   _descriptor.MethodDescriptor(
     name='SubmitTransaction',

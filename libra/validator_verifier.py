@@ -19,8 +19,11 @@ class ValidatorPublicKeys(Struct):
 class ValidatorSet(DelegateT):
     delegate_type = [ValidatorPublicKeys]
 
-    VALIDATOR_SET_MODULE_NAME = "ValidatorSet"
-    VALIDATOR_SET_STRUCT_NAME = "T"
+    LIBRA_SYSTEM_MODULE_NAME = "LibraSystem"
+    VALIDATOR_SET_STRUCT_NAME = "ValidatorSet"
+
+
+    VALIDATOR_SET_MODULE_NAME = LIBRA_SYSTEM_MODULE_NAME
 
     @classmethod
     def validator_set_tag(cls) -> StructTag:

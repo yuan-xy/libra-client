@@ -4,7 +4,6 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
-from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -15,8 +14,6 @@ _sym_db = _symbol_database.Default()
 
 
 import ledger_info_pb2 as ledger__info__pb2
-import transaction_pb2 as transaction__pb2
-import validator_set_pb2 as validator__set__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -24,40 +21,10 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='consensus',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x11ledger_info.proto\x1a\x11transaction.proto\x1a\x13validator_set.proto\"\xf8\x01\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x06 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"4\n\x0cRequestBlock\x12\x10\n\x08\x62lock_id\x18\x01 \x01(\x0c\x12\x12\n\nnum_blocks\x18\x02 \x01(\x04\"a\n\x0cRespondBlock\x12/\n\x06status\x18\x01 \x01(\x0e\x32\x1f.consensus.BlockRetrievalStatus\x12 \n\x06\x62locks\x18\x02 \x03(\x0b\x32\x10.consensus.Block*N\n\x14\x42lockRetrievalStatus\x12\r\n\tSUCCEEDED\x10\x00\x12\x10\n\x0cID_NOT_FOUND\x10\x01\x12\x15\n\x11NOT_ENOUGH_BLOCKS\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x11ledger_info.proto\"\xb0\x02\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x05 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x12\x36\n\x0bledger_info\x18\x06 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignaturesH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRespondBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\x62\x06proto3')
   ,
-  dependencies=[ledger__info__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,validator__set__pb2.DESCRIPTOR,])
+  dependencies=[ledger__info__pb2.DESCRIPTOR,])
 
-_BLOCKRETRIEVALSTATUS = _descriptor.EnumDescriptor(
-  name='BlockRetrievalStatus',
-  full_name='consensus.BlockRetrievalStatus',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='SUCCEEDED', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ID_NOT_FOUND', index=1, number=1,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='NOT_ENOUGH_BLOCKS', index=2, number=2,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=628,
-  serialized_end=706,
-)
-_sym_db.RegisterEnumDescriptor(_BLOCKRETRIEVALSTATUS)
-
-BlockRetrievalStatus = enum_type_wrapper.EnumTypeWrapper(_BLOCKRETRIEVALSTATUS)
-SUCCEEDED = 0
-ID_NOT_FOUND = 1
-NOT_ENOUGH_BLOCKS = 2
 
 
 
@@ -98,6 +65,13 @@ _CONSENSUSMSG = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='sync_info', full_name='consensus.ConsensusMsg.sync_info', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ledger_info', full_name='consensus.ConsensusMsg.ledger_info', index=5,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -118,8 +92,8 @@ _CONSENSUSMSG = _descriptor.Descriptor(
       name='message', full_name='consensus.ConsensusMsg.message',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=90,
-  serialized_end=338,
+  serialized_start=50,
+  serialized_end=354,
 )
 
 
@@ -149,8 +123,8 @@ _PROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=340,
-  serialized_end=365,
+  serialized_start=356,
+  serialized_end=381,
 )
 
 
@@ -180,8 +154,8 @@ _SYNCINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=367,
-  serialized_end=392,
+  serialized_start=383,
+  serialized_end=408,
 )
 
 
@@ -211,8 +185,8 @@ _BLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=394,
-  serialized_end=416,
+  serialized_start=410,
+  serialized_end=432,
 )
 
 
@@ -242,8 +216,8 @@ _VOTEMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=418,
-  serialized_end=442,
+  serialized_start=434,
+  serialized_end=458,
 )
 
 
@@ -273,8 +247,8 @@ _VOTEPROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=444,
-  serialized_end=473,
+  serialized_start=460,
+  serialized_end=489,
 )
 
 
@@ -286,16 +260,9 @@ _REQUESTBLOCK = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='block_id', full_name='consensus.RequestBlock.block_id', index=0,
+      name='bytes', full_name='consensus.RequestBlock.bytes', index=0,
       number=1, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='num_blocks', full_name='consensus.RequestBlock.num_blocks', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -311,8 +278,8 @@ _REQUESTBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=475,
-  serialized_end=527,
+  serialized_start=491,
+  serialized_end=520,
 )
 
 
@@ -324,16 +291,9 @@ _RESPONDBLOCK = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='status', full_name='consensus.RespondBlock.status', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='blocks', full_name='consensus.RespondBlock.blocks', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='bytes', full_name='consensus.RespondBlock.bytes', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -349,8 +309,8 @@ _RESPONDBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=529,
-  serialized_end=626,
+  serialized_start=522,
+  serialized_end=551,
 )
 
 _CONSENSUSMSG.fields_by_name['proposal'].message_type = _PROPOSAL
@@ -358,6 +318,7 @@ _CONSENSUSMSG.fields_by_name['vote_msg'].message_type = _VOTEMSG
 _CONSENSUSMSG.fields_by_name['request_block'].message_type = _REQUESTBLOCK
 _CONSENSUSMSG.fields_by_name['respond_block'].message_type = _RESPONDBLOCK
 _CONSENSUSMSG.fields_by_name['sync_info'].message_type = _SYNCINFO
+_CONSENSUSMSG.fields_by_name['ledger_info'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
 _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
   _CONSENSUSMSG.fields_by_name['proposal'])
 _CONSENSUSMSG.fields_by_name['proposal'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
@@ -373,8 +334,9 @@ _CONSENSUSMSG.fields_by_name['respond_block'].containing_oneof = _CONSENSUSMSG.o
 _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
   _CONSENSUSMSG.fields_by_name['sync_info'])
 _CONSENSUSMSG.fields_by_name['sync_info'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
-_RESPONDBLOCK.fields_by_name['status'].enum_type = _BLOCKRETRIEVALSTATUS
-_RESPONDBLOCK.fields_by_name['blocks'].message_type = _BLOCK
+_CONSENSUSMSG.oneofs_by_name['message'].fields.append(
+  _CONSENSUSMSG.fields_by_name['ledger_info'])
+_CONSENSUSMSG.fields_by_name['ledger_info'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
 DESCRIPTOR.message_types_by_name['ConsensusMsg'] = _CONSENSUSMSG
 DESCRIPTOR.message_types_by_name['Proposal'] = _PROPOSAL
 DESCRIPTOR.message_types_by_name['SyncInfo'] = _SYNCINFO
@@ -383,7 +345,6 @@ DESCRIPTOR.message_types_by_name['VoteMsg'] = _VOTEMSG
 DESCRIPTOR.message_types_by_name['VoteProposal'] = _VOTEPROPOSAL
 DESCRIPTOR.message_types_by_name['RequestBlock'] = _REQUESTBLOCK
 DESCRIPTOR.message_types_by_name['RespondBlock'] = _RESPONDBLOCK
-DESCRIPTOR.enum_types_by_name['BlockRetrievalStatus'] = _BLOCKRETRIEVALSTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ConsensusMsg = _reflection.GeneratedProtocolMessageType('ConsensusMsg', (_message.Message,), {
