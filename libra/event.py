@@ -19,7 +19,7 @@ class EventHandle(Struct):
 class ContractEvent(Struct):
     _fields = [
         ('key', EventKey),
-        ('sequence_number', Uint64),
+        ('event_seq_num', Uint64), # change sequence_number to event_seq_num
         ('type_tag', TypeTag),
         ('event_data', [Uint8])
     ]
@@ -28,7 +28,7 @@ class ContractEvent(Struct):
     def from_proto(cls, event_proto):
         ret = cls()
         ret.key = bytes_to_int_list(event_proto.key)
-        ret.sequence_number = event_proto.sequence_number
+        ret.event_seq_num = event_proto.sequence_number
         ret.type_tag = TypeTag.deserialize(event_proto.type_tag)
         ret.event_data = bytes_to_int_list(event_proto.event_data)
         try:

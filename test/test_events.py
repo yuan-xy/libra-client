@@ -24,7 +24,7 @@ def test_event_sent():
     assert len(contracts[0].event_data) == 40
     assert len(contracts[0].event_data) == 40
     assert contracts[0].key == contracts[1].key
-    assert contracts[0].sequence_number-1 == contracts[1].sequence_number
+    assert contracts[0].event_seq_num-1 == contracts[1].event_seq_num
     assert len(contracts[0].event_data) == 40
     aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
@@ -35,7 +35,7 @@ def test_event_sent():
     assert contract2s[0].event_data_decode.amount == aes[0].amount
     res = c.get_account_resource(address)
     assert res.sent_events.key == contracts[0].key
-    assert res.sent_events.count == contracts[0].sequence_number+1
+    assert res.sent_events.count == contracts[0].event_seq_num+1
     assert res.sequence_number >= res.sent_events.count
 
 def test_event_received():
@@ -58,4 +58,4 @@ def test_event_received():
     assert len(aes[0].account) == 32
     res = c.get_account_resource(address)
     assert res.received_events.key == contracts[0].key
-    assert res.received_events.count == contracts[0].sequence_number+1
+    assert res.received_events.count == contracts[0].event_seq_num+1
