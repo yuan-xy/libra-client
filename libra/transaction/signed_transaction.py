@@ -13,16 +13,13 @@ class SignedTransaction(Struct):
 #        ('transaction_length', Uint64)
     ]
 
-    def check_events(self, event_list):
-        if len(event_list.events) > 0:
-            self.success = True
-        else:
-            self.success = False
 
     def to_json_serializable(self):
         amap = super().to_json_serializable()
-        if hasattr(self, 'success'):
-            amap["success"] = self.success
+        if hasattr(self, 'transaction_info'):
+            amap["transaction_info"] = self.transaction_info.to_json_serializable()
+        if hasattr(self, 'events'):
+            amap["events"] = [x.to_json_serializable() for x in self.events]
         if hasattr(self, 'version'):
             amap["version"] = self.version
         return amap

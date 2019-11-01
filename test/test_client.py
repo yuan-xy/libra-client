@@ -8,7 +8,6 @@ import pdb
 def test_get_transaction():
     c = libra.Client("testnet")
     stx = c.get_transaction(1)
-    assert stx.success == True
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
@@ -27,6 +26,14 @@ def test_get_transaction():
     assert len(stx.signature) == 64
     stx.check_signature()
     stx.__str__()
+    info = stx.transaction_info
+    assert info.major_status == 4001
+    assert info.gas_used == 0
+    assert len(stx.events) == 2
+    assert stx.events[0].type_tag.Struct == True
+    assert stx.events[0].type_tag.value.is_pay_tag() == True
+    assert stx.events[1].type_tag.Struct == True
+    assert stx.events[1].type_tag.value.is_pay_tag() == True
 
 def test_get_transaction_without_events():
     c = libra.Client("testnet")

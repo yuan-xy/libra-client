@@ -8,10 +8,12 @@ from libra.account import Account
 from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload
+from libra.transaction import (
+    Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
+from libra.event import ContractEvent
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -174,11 +176,16 @@ class Client:
         return (txnp.transactions, txnp.events_for_versions)
 
     def get_transactions(self, start_version, limit=1, fetch_events=True):
-        transactions, events = self.get_transactions_proto(start_version, limit, fetch_events)
-        txs = [Transaction.deserialize(x.transaction).value for x in transactions]
+        _req, resp = self._get_txs(start_version, limit, fetch_events)
+        txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        assert txnp.first_transaction_version.value == start_version
+        txs = [Transaction.deserialize(x.transaction).value for x in txnp.transactions]
+        infos = [TransactionInfo.from_proto(x) for x in txnp.proof.transaction_infos]
+        for tx, info in zip(txs, infos):
+            tx.transaction_info = info
         if fetch_events:
-            for tx, event_list in zip(txs, events.events_for_version):
-                tx.check_events(event_list)
+            for tx, event_list in zip(txs, txnp.events_for_versions.events_for_version):
+                tx.events = [ContractEvent.from_proto(x) for x in event_list.events]
         return txs
 
     def get_transaction(self, start_version, fetch_events=True):
