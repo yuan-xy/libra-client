@@ -2,7 +2,7 @@ from canoser import Struct, RustEnum, Uint64, Uint8
 from libra.account_address import Address
 from libra.identifier import Identifier
 from libra.hasher import gen_hasher
-
+import libra
 
 class StructTag(Struct):
     _fields = [
@@ -16,6 +16,11 @@ class StructTag(Struct):
         shazer = gen_hasher(b"VM_ACCESS_PATH")
         shazer.update(self.serialize())
         return shazer.digest()
+
+    def is_pay_tag(self):
+        return self.address == libra.AccountConfig.core_code_address_ints() and\
+                self.module == libra.AccountConfig.ACCOUNT_MODULE_NAME and\
+                (self.name == "SentPaymentEvent" or self.name == "ReceivedPaymentEvent")
 
 
 class TypeTag(RustEnum):

@@ -33,8 +33,16 @@ class AccountConfig:
         return "0".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
+    def core_code_address_ints(cls):
+        return Address.normalize_to_int_list(cls.core_code_address())
+
+    @classmethod
     def association_address(cls):
         return "a550c18".rjust(HEX_ADDRESS_LENGTH, '0')
+
+    @classmethod
+    def association_address_ints(cls):
+        return Address.normalize_to_int_list(cls.association_address())
 
     @classmethod
     def transaction_fee_address(cls):

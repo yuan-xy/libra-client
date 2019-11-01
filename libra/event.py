@@ -31,10 +31,8 @@ class ContractEvent(Struct):
         ret.event_seq_num = event_proto.sequence_number
         ret.type_tag = TypeTag.deserialize(event_proto.type_tag)
         ret.event_data = bytes_to_int_list(event_proto.event_data)
-        try:
+        if ret.type_tag.Struct and ret.type_tag.value.is_pay_tag():
             ret.event_data_decode = AccountEvent.deserialize(event_proto.event_data)
-        except Execption:
-            pass
         return ret
 
     @classmethod
