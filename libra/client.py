@@ -175,7 +175,7 @@ class Client:
         assert txnp.first_transaction_version.value == start_version
         return (txnp.transactions, txnp.events_for_versions)
 
-    def get_transactions(self, start_version, limit=1, fetch_events=True):
+    def get_transactions(self, start_version, limit=1, fetch_events=False):
         _req, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         assert txnp.first_transaction_version.value == start_version
@@ -188,7 +188,7 @@ class Client:
                 tx.events = [ContractEvent.from_proto(x) for x in event_list.events]
         return txs
 
-    def get_transaction(self, start_version, fetch_events=True):
+    def get_transaction(self, start_version, fetch_events=False):
         return self.get_transactions(start_version, 1, fetch_events)[0]
 
     def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
