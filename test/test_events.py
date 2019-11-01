@@ -31,9 +31,12 @@ def test_event_sent():
     assert len(aes[0].account) == 32
     assert aes[1].amount >0
     assert len(aes[1].account) == 32
+    contract2s = [ContractEvent.from_proto_event_with_proof(x) for x in events]
+    assert contract2s[0].event_data_decode.amount == aes[0].amount
     res = c.get_account_resource(address)
     assert res.sent_events.key == contracts[0].key
     assert res.sent_events.count == contracts[0].sequence_number+1
+    assert res.sequence_number >= res.sent_events.count
 
 def test_event_received():
     address = libra.AccountConfig.association_address()
