@@ -63,4 +63,4 @@ $ pytest test
 Because the test code assume there are at least 2 transaction in the blockchain, so your first test will fail on a fresh started libra-swarm. But you can run `pytest test` twice, and the second round will pass.
 
 
-Also, you can run `libra` and `libra_shell` commands over your local testnet withour extra parameters.
+Also, you can run `libra` and `libra_shell` commands over your local libra-swarm without extra parameters.

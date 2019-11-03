@@ -34,7 +34,7 @@ Once the client connects to a node on the testnet, you will see the following ou
 
 
 
-[This document will guide you through executing your first transaction on the Libra Blockchain](https://github.com/yuan-xy/libra-client/blob/master/first_transaction.md). We will walk you through creating accounts for two users.
+[This document will guide you through executing your first transaction on the Libra Blockchain](https://github.com/yuan-xy/libra-client/blob/master/docs/first_transaction.md). We will walk you through creating accounts for two users.
 
 
 ## Usage of 'libra' command
