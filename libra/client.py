@@ -91,6 +91,14 @@ class Client:
 
     @classmethod
     def new(cls, host, port, validator_set_file, faucet_file=None):
+        if port == 0:
+            try:
+                tests = os.environ['TESTNET_LOCAL'].split(";")
+                host = tests[0]
+                port = int(tests[1])
+                validator_set_file = tests[2]
+            except KeyError:
+                port = 8000
         ret = cls.__new__(cls)
         ret.host = host
         if isinstance(port, str):

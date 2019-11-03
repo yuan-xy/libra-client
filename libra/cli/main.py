@@ -49,7 +49,7 @@ def get_parser():
     parser = argparse.ArgumentParser(prog='libra', add_help=False)
     parser.add_argument('-h', "--help", action='store_true', default=False)
     parser.add_argument('-a', "--host", default=TESTNET)
-    parser.add_argument('-p', "--port", default=8000)
+    parser.add_argument('-p', "--port", default=0)
     parser.add_argument('-s', "--validator_set_file")
     parser.add_argument('-m', "--faucet_account_file")
     parser.add_argument('-v', "--verbose", action='store_true', default=False)
