@@ -11,6 +11,7 @@ try:
 except KeyError:
     TESTNET_LOCAL = False
 
+
 def test_shell():
     parser = get_parser()
     args = parser.parse_args("")
@@ -157,17 +158,3 @@ def exec_input_with_client(input, client, alias_to_cmd):
     params = parse_cmd(input)
     cmd = alias_to_cmd.get(params[0])
     cmd.execute(client, params)
-
-def test_with_local_libra_node(capsys):
-    if not TESTNET_LOCAL:
-        return
-    client, alias_to_cmd = prepare_shell(None)
-    balance = client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
-    exec_input_with_client("a r test/test.wallet", client, alias_to_cmd)
-    exec_input_with_client("a mb 0 123", client, alias_to_cmd)
-    exec_input_with_client("dev c 0 ../libra-client/test/pay_1.module.mvir module", client, alias_to_cmd)
-    exec_input_with_client("dev p 0 ../libra-client/test/pay_1.module.mv", client, alias_to_cmd)
-    exec_input_with_client("dev c 0 ../libra-client/test/use_pay.mvir script", client, alias_to_cmd)
-    exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde", client, alias_to_cmd)
-    assert balance+1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
-

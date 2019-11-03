@@ -302,15 +302,15 @@ class Client:
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)
 
-    def create_account(self, sender_account, fresh_address):
+    def create_account(self, sender_account, fresh_address, is_blocking=True):
         script = Script.gen_create_account_script(fresh_address)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload)
+        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
 
-    def rotate_authentication_key(self, sender_account, public_key):
+    def rotate_authentication_key(self, sender_account, public_key, is_blocking=True):
         script = Script.gen_rotate_auth_key_script(public_key)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload)
+        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
 
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
