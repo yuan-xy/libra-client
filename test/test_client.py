@@ -7,7 +7,7 @@ import pdb
 
 def test_get_transaction():
     c = libra.Client("testnet")
-    stx = c.get_transaction(1)
+    stx = c.get_transaction(1, True)
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2

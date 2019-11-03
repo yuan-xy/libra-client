@@ -8,6 +8,7 @@ def test_faucet_account(capsys):
     assert faucet_account.address_hex == AccountConfig.association_address()
     assert faucet_account.sequence_number == 0
     assert faucet_account.status == AccountStatus.Local
+    assert Account.gen_address_from_pk(faucet_account.public_key) != faucet_account.address
     json_print(faucet_account)
     assert capsys.readouterr().out == """{
     "address": "000000000000000000000000000000000000000000000000000000000a550c18",

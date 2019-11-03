@@ -12,14 +12,18 @@ class Account:
     def __init__(self, private_key, address=None, sequence_number=0):
         self._signing_key = SigningKey(private_key)
         self._verify_key = self._signing_key.verify_key
-        shazer = new_sha3_256()
-        shazer.update(self._verify_key.encode())
         if address is None:
-            self.address = shazer.digest()
+            self.address = Account.gen_address_from_pk(self._verify_key.encode())
         else:
             self.address = Address.normalize_to_bytes(address)
         self.sequence_number = sequence_number
         self.status = AccountStatus.Local
+
+    @classmethod
+    def gen_address_from_pk(cls, public_key):
+        shazer = new_sha3_256()
+        shazer.update(public_key)
+        return shazer.digest()
 
     def json_print_fields(self):
         return ["address", "private_key", "public_key"]
