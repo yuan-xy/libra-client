@@ -2,18 +2,24 @@ from libra.shell.libra_shell import *
 from tempfile import NamedTemporaryFile
 import libra
 import pytest
+import os
 import pdb
 
+try:
+    os.environ['TESTNET_LOCAL']
+    TESTNET_LOCAL = True
+except KeyError:
+    TESTNET_LOCAL = False
 
 def test_shell():
     parser = get_parser()
     args = parser.parse_args("")
     assert args.host == "ac.testnet.libra.org"
-    assert args.port == 8000
+    assert args.port == 0
     assert args.sync == False
     assert args.validator_set_file == None
     grpc_client = libra.Client.new(args.host, args.port, args.validator_set_file)
-    assert hasattr(grpc_client, "faucet_host")
+    assert TESTNET_LOCAL or hasattr(grpc_client, "faucet_host")
 
 
 def test_recover_account_on_init(capsys):
@@ -125,15 +131,17 @@ def test_execute_script_on_testnet(capsys):
     addr1 = wallet.accounts[1].address_hex
     output = exec_input(f"dev e 0 transaction_scripts/peer_to_peer_transfer.mv {addr1} 1", capsys)
     assert 'Compiling program' in output
-    #assert 'Successfully finished execution' in output
-    #TODO: succeed in local env but failed in travis CI.
-    #Compiling program\n[ERROR] Failed to execute: code: InvalidUpdate
-    #message: "Failed to update gas price to 0
+    assert "code: InvalidUpdate" in output
+    assert "Failed to update gas price to 0" in output
+
 
 def test_publish_module_to_testnet(capsys):
     output = exec_input(f"dev p 0 transaction_scripts/peer_to_peer_transfer.mv", capsys)
     assert "ERROR" in output
-    assert 'Publish move module on-chain: major_status: 12' in output
+    if TESTNET_LOCAL:
+        assert 'Publish move module on-chain: major_status: 3001' in output
+    else:
+        assert 'Publish move module on-chain: major_status: 12' in output
 
 def test_faucet_key_no_host(capsys):
     with pytest.raises(ValueError):
@@ -151,20 +159,15 @@ def exec_input_with_client(input, client, alias_to_cmd):
     cmd.execute(client, params)
 
 def test_with_local_libra_node(capsys):
-    #first, run 'cargo run -p libra-swarm'
-    #the follow args is copy from the stdout of libra-swarm
-    sfile = "/tmp/7cbb347846ada0c108777e063f9629b1/0/consensus_peers.config.toml"
-    mfile = "/tmp/ba1eabe239fb3a75602e8f29678be95d/temp_faucet_keys"
-    args = f'-a localhost -p 51013 -s {sfile} -m {mfile}'
-    from pathlib import Path
-    if not (Path(sfile).exists() and Path(mfile).exists()):
+    if not TESTNET_LOCAL:
         return
-    client, alias_to_cmd = prepare_shell(args)
+    client, alias_to_cmd = prepare_shell(None)
+    balance = client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
     exec_input_with_client("a r test/test.wallet", client, alias_to_cmd)
     exec_input_with_client("a mb 0 123", client, alias_to_cmd)
     exec_input_with_client("dev c 0 ../libra-client/test/pay_1.module.mvir module", client, alias_to_cmd)
     exec_input_with_client("dev p 0 ../libra-client/test/pay_1.module.mv", client, alias_to_cmd)
     exec_input_with_client("dev c 0 ../libra-client/test/use_pay.mvir script", client, alias_to_cmd)
     exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde", client, alias_to_cmd)
-    assert 1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
+    assert balance+1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
 

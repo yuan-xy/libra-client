@@ -76,7 +76,7 @@ def print_help(client_info: str, commands):
 def get_parser():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
-    parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
+    parser.add_argument('-p', "--port", default=0, help='Admission Control port to connect to. [default: 8000]')
     parser.add_argument('-r', "--sync", action='store_true', default=False, help='If set, client will sync with validator during wallet recovery.')
     parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
     parser.add_argument('-n', "--mnemonic_file", help='File location from which to load mnemonic word for user account address/key generation.')
