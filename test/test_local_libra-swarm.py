@@ -1,6 +1,8 @@
 from libra.shell.libra_shell import *
 from test_shell import prepare_shell, exec_input_with_client
 from libra.account_address import Address
+from libra.transaction import Script, TransactionPayload
+
 import libra
 import pytest
 import os, hashlib, random
@@ -52,7 +54,6 @@ def test_create_account_and_rotate_key():
     with pytest.raises(libra.client.AccountError):
         c.get_account_state(address)
     c.create_account(a0, address)
-    #TODO: min gas required for txn: 600, gas submitted: 1
     account_resource = c.get_account_resource(address)
     assert account_resource.balance == 0
     assert account_resource.sequence_number == 0
@@ -69,6 +70,19 @@ def test_create_account_and_rotate_key():
     # before rotate, authentication_key == address
     # after rotate,  authentication_key == public_key
 
+def test_true_silent_cast_to_int_which_is_dangerous():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    wallet2 = libra.WalletLibrary.new()
+    account = wallet2.new_account()
+    script = Script.gen_create_account_script(account.address)
+    payload = TransactionPayload('Script', script)
+    c = libra.Client("testnet")
+    is_blocking=True
+    with pytest.raises(libra.client.TransactionError):
+        c.submit_payload(a0, payload, is_blocking)
+        #is_blocking is acctual parsed as max_gas, and True is cast to 1.
+        #so, error thrown: min gas required for txn: 600, gas submitted: 1
 
 
 

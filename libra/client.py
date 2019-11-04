@@ -168,7 +168,9 @@ class Client:
         return self.get_latest_ledger_info().version
 
     def _get_txs(self, start_version, limit=1, fetch_events=False):
-        if limit <= 0 or limit >= Uint64.max_value:
+        start_version = Uint64.int_safe(start_version)
+        limit = Uint64.int_safe(limit)
+        if limit == 0:
             raise ValueError(f"limit:{limit} is invalid.")
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
@@ -186,7 +188,7 @@ class Client:
     def get_transactions(self, start_version, limit=1, fetch_events=False):
         _req, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        assert txnp.first_transaction_version.value == start_version
+        assert txnp.first_transaction_version.value == int(start_version)
         txs = [Transaction.deserialize(x.transaction).value for x in txnp.transactions]
         infos = [TransactionInfo.from_proto(x) for x in txnp.proof.transaction_infos]
         for tx, info in zip(txs, infos):
@@ -217,7 +219,8 @@ class Client:
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
-        if limit <= 0 or limit >= Uint64.max_value:
+        limit = Uint64.int_safe(limit)
+        if limit == 0:
             raise ValueError(f"limit:{limit} is invalid.")
         address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()

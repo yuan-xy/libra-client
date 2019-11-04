@@ -80,3 +80,11 @@ def test_amount_illegal():
         #message: "Failed to update gas price to 0"
         pass
 
+def test_query():
+    c = libra.Client("testnet")
+    txs = c.get_transactions(1, "1")
+    txs = c.get_transactions("1", 1)
+    txs = c.get_transactions(1, "1", False)
+    with pytest.raises(TypeError):
+        c.get_transactions(1, True)
+

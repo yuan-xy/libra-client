@@ -73,7 +73,7 @@ def test_get_tx_zero():
 
 def test_get_tx_invalid():
     c = libra.Client("testnet")
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         c.get_transactions_proto(1, -1, True)
 
 def test_get_latest_transaction_version():
