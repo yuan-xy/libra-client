@@ -182,13 +182,15 @@ class Client:
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        assert txnp.first_transaction_version.value == start_version
+        if txnp.first_transaction_version.value != int(start_version):
+            raise AssertionError(f"first_transaction_version:{txnp.first_transaction_version.value} != start_version:{start_version}")
         return (txnp.transactions, txnp.events_for_versions)
 
     def get_transactions(self, start_version, limit=1, fetch_events=False):
         _req, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        assert txnp.first_transaction_version.value == int(start_version)
+        if txnp.first_transaction_version.value != int(start_version):
+            raise AssertionError(f"first_transaction_version:{txnp.first_transaction_version.value} != start_version:{start_version}")
         txs = [Transaction.deserialize(x.transaction).value for x in txnp.transactions]
         infos = [TransactionInfo.from_proto(x) for x in txnp.proof.transaction_infos]
         for tx, info in zip(txs, infos):
