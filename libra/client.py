@@ -151,6 +151,7 @@ class Client:
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
         self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
+        self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp
 
     def get_latest_ledger_info(self):

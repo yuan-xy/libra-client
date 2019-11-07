@@ -39,9 +39,12 @@ def test_get_transaction():
 
 def test_get_transaction_without_events():
     c = libra.Client("testnet")
+    assert hasattr(c, "latest_time") == False
     transactions = c.get_transactions(1, 1, False)
     assert len(transactions) == 1
     assert hasattr(transactions[0], 'success') == False
+    assert hasattr(c, "latest_time") == True
+    assert c.latest_time > 1570_000_000_000_000
 
 
 def test_get_tx_with_events():
