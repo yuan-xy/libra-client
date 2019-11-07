@@ -122,20 +122,22 @@ def test_transfer_error(capsys):
     assert 'transfer | transferb | t | tb' in output
 
 def test_execute_script_on_testnet(capsys):
-    c = libra.Client("testnet")
+    client = libra.Client("testnet")
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
-    balance = c.get_balance(a0.address_hex)
+    balance = client.get_balance(a0.address_hex)
     if balance < 1:
-        c.mint_coins_with_faucet_service(a0.address_hex, 9999999, True)
+        client.mint_coins_with_faucet_service(a0.address_hex, 9999999, True)
     addr1 = wallet.accounts[1].address_hex
-    balance2 = c.get_balance(addr1)
+    balance2 = client.get_balance(addr1)
     output = exec_input(f"dev e 0 transaction_scripts/peer_to_peer_transfer.mv {addr1} 1", capsys)
     assert 'Compiling program' in output
     if TESTNET_LOCAL:
-        assert balance2+1 == c.get_balance(addr1)
-        assert balance-1 == c.get_balance(a0.address_hex)
+        seq = client.get_sequence_number(a0.address_hex)
+        client.wait_for_transaction(a0.address_hex, seq-1)
+        assert balance2+1 == client.get_balance(addr1)
+        assert balance-1 == client.get_balance(a0.address_hex)
     #assert "code: InvalidUpdate" in output
     #assert "Failed to update gas price to 0" in output
 

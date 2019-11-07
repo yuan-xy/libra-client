@@ -1,7 +1,15 @@
 import libra
 from libra.json_print import json_dumps
 import pytest
+import os
 import pdb
+
+try:
+    os.environ['TESTNET_LOCAL']
+    TESTNET_LOCAL = True
+except KeyError:
+    TESTNET_LOCAL = False
+
 
 
 def test_genesis():
@@ -16,15 +24,11 @@ def test_genesis():
     assert tx.raw_txn.max_gas_amount == 0
     assert tx.raw_txn.gas_unit_price == 0
     assert tx.raw_txn.expiration_time == 18446744073709551615
-    assert amap["public_key"] == "664f6e8f36eacb1770fa879d86c2c1d0fafea145e84fa7d671ab7a011a54d509"
-    assert amap["signature"] == "971ecf91553cf0374516f82adc26e34dfc1710dea1a10bf6fa7fff872498fc8014a4c7a33add7cf60a227d7fb18455579e015af2fb10dff5df7b8fef74a6c10a"
-    assert json_dumps(tx.transaction_info) == """{
-    "transaction_hash": "fb0ec2bac6fea6d98bb0eba35ea6718b6fd31c3bf4f8946243b9089fe9ded3fc",
-    "state_root_hash": "9ce3da57b265158b86a911dd5229a126d43722458bb3a34e19fd2bfc6369cedb",
-    "event_root_hash": "414343554d554c41544f525f504c414345484f4c4445525f4841534800000000",
-    "gas_used": 0,
-    "major_status": 4001
-}"""
+    if TESTNET_LOCAL:
+        assert_key_related_local(tx, amap)
+        return
+    else:
+        assert_key_related_testnet(tx, amap)
     wset = tx.raw_txn.payload.value
     assert type(wset) == libra.transaction.write_set.WriteSet
     assert len(wset.write_set) == 43
@@ -71,3 +75,24 @@ def test_genesis():
 }"""
 
 
+def assert_key_related_local(tx, amap):
+    assert amap["public_key"] == "5302e9093c3a35e9ae9bd2ddb84e29cec4a95094151523594687e7da37d08f95"
+    assert amap["signature"] == "de73110ca14f0538528c51f8e96b4dff782bbff01e2861efdcf5a2ea45fabcfa8984211c82db0f90f60c375123f9a677aabf874b3ca0b83a8dabce7ff796d70c"
+    assert json_dumps(tx.transaction_info) == """{
+    "transaction_hash": "96f91848ace9c48ed4333963f70eb13b48694eb9fba2b4df338b7dbfda9a359a",
+    "state_root_hash": "d68f23ae2675e7a4ffb92571b745da7558e94adce77ab18d06c4156fcc6fe07e",
+    "event_root_hash": "414343554d554c41544f525f504c414345484f4c4445525f4841534800000000",
+    "gas_used": 0,
+    "major_status": 4001
+}"""
+
+def assert_key_related_testnet(tx, amap):
+    assert amap["public_key"] == "664f6e8f36eacb1770fa879d86c2c1d0fafea145e84fa7d671ab7a011a54d509"
+    assert amap["signature"] == "971ecf91553cf0374516f82adc26e34dfc1710dea1a10bf6fa7fff872498fc8014a4c7a33add7cf60a227d7fb18455579e015af2fb10dff5df7b8fef74a6c10a"
+    assert json_dumps(tx.transaction_info) == """{
+    "transaction_hash": "fb0ec2bac6fea6d98bb0eba35ea6718b6fd31c3bf4f8946243b9089fe9ded3fc",
+    "state_root_hash": "9ce3da57b265158b86a911dd5229a126d43722458bb3a34e19fd2bfc6369cedb",
+    "event_root_hash": "414343554d554c41544f525f504c414345484f4c4445525f4841534800000000",
+    "gas_used": 0,
+    "major_status": 4001
+}"""
