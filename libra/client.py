@@ -190,6 +190,8 @@ class Client:
     def get_transactions(self, start_version, limit=1, fetch_events=False):
         _req, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        if len(txnp.transactions) == 0:
+            return []
         if txnp.first_transaction_version.value != int(start_version):
             raise AssertionError(f"first_transaction_version:{txnp.first_transaction_version.value} != start_version:{start_version}")
         txs = [Transaction.deserialize(x.transaction).value for x in txnp.transactions]
@@ -202,7 +204,11 @@ class Client:
         return txs
 
     def get_transaction(self, start_version, fetch_events=False):
-        return self.get_transactions(start_version, 1, fetch_events)[0]
+        txs = self.get_transactions(start_version, 1, fetch_events)
+        if txs == []:
+            return None
+        else:
+            return txs[0]
 
     def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
         address = Address.normalize_to_bytes(address)
