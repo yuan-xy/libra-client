@@ -149,13 +149,13 @@ class ClientProxy:
         code = get_code_by_filename(code_file)
         arguments = [TransactionArgument.parse_as_transaction_argument(x) for x in script_args]
         payload = TransactionPayload('Script', Script(code, arguments))
-        self.grpc_client.submit_payload(account, payload, is_blocking=True)
+        return self.grpc_client.submit_payload(account, payload, is_blocking=True)
 
     def publish_module(self, address_or_refid, module_file):
         account = self.address_or_refid_to_account(address_or_refid)
         code = get_code_by_filename(module_file)
         payload = TransactionPayload('Module', Module(code))
-        self.grpc_client.submit_payload(account, payload, is_blocking=True)
+        return self.grpc_client.submit_payload(account, payload, is_blocking=True)
 
     def handle_dependencies(self, file_path, is_module):
         args = f"cargo run -p compiler -- -l {file_path}"
