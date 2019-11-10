@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 import libra
 import pytest
 import os
-import pdb
+#import pdb
 
 try:
     os.environ['TESTNET_LOCAL']

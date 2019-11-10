@@ -2,7 +2,6 @@
 from datetime import datetime
 import argparse
 import sys, os, signal
-import pdb
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))

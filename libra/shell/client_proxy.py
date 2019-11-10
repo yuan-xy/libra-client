@@ -8,7 +8,6 @@ from libra.bytecode import get_code_by_filename
 import subprocess
 import json
 from tempfile import NamedTemporaryFile
-import pdb
 
 CLIENT_WALLET_MNEMONIC_FILE = "client.mnemonic"
 

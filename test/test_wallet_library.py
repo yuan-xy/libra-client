@@ -2,7 +2,7 @@ import libra
 from tempfile import NamedTemporaryFile
 from libra.key_factory import has_sha3
 import pytest
-import pdb
+#import pdb
 
 
 def test_wallet():

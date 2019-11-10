@@ -2,7 +2,7 @@ import libra
 from libra.transaction import *
 import os
 import pytest
-import pdb
+#import pdb
 
 
 def test_get_transaction():

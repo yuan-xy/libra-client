@@ -1,7 +1,7 @@
 from libra.transaction import *
 from libra.access_path import AccessPath
 from canoser import *
-import pdb
+#import pdb
 
 def test_access_path_canonical_serialization_example():
     account_address = [

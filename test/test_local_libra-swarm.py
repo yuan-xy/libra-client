@@ -6,7 +6,7 @@ from libra.account_address import gen_random_address
 import libra
 import pytest
 import os
-import pdb
+#import pdb
 
 try:
     os.environ['TESTNET_LOCAL']

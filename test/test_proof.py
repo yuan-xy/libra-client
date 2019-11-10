@@ -7,7 +7,7 @@ from libra.proof import *
 from libra.get_with_proof import gen_events_resp_idxs
 from canoser import Uint64
 import pytest
-import pdb
+#import pdb
 
 def test_zero_accumulator_proof():
     proof = proof_pb2.AccumulatorProof()

@@ -1,7 +1,7 @@
 from libra.account import *
 from libra.account_config import AccountConfig
 from libra.json_print import json_print
-import pdb
+#import pdb
 
 def test_faucet_account(capsys):
     faucet_account = Account.gen_faucet_account(None)

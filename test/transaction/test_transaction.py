@@ -5,7 +5,7 @@ from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
 import nacl
-import pdb
+#import pdb
 
 
 def test_raw_txn():

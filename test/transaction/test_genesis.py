@@ -2,7 +2,7 @@ import libra
 from libra.json_print import json_dumps
 import pytest
 import os
-import pdb
+#import pdb
 
 try:
     os.environ['TESTNET_LOCAL']

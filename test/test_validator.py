@@ -2,7 +2,7 @@ from libra.trusted_peers import ConsensusPeersConfig
 from libra.account_address import ADDRESS_LENGTH
 from libra.validator_verifier import ValidatorSet
 from nacl.signing import VerifyKey
-import pdb
+#import pdb
 
 
 def test_validator_set_path():

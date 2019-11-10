@@ -1,6 +1,6 @@
 from libra.bytecode import *
 import pytest
-import pdb
+#import pdb
 
 def check_bytecode(name):
     code = get_code_by_filename(f"transaction_scripts/{name}.mv")

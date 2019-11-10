@@ -1,7 +1,7 @@
 from libra.transaction import *
 from libra.account_config import AccountConfig
 import pytest
-import pdb
+#import pdb
 
 def test_parse_as_transaction_argument():
     address = bytes.fromhex("000000000000000000000000000000000000000000000000000000000a550c18")
