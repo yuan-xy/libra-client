@@ -278,9 +278,9 @@ class Client:
             raise IOError(
                 "Failed to send request to faucet service: {}".format(self.faucet_host)
             )
-        sequence_number = Uint64.int_safe(resp.text)
+        sequence_number = Uint64.int_safe(resp.text) - 1
         if is_blocking:
-            self.wait_for_transaction(AccountConfig.association_address(), sequence_number-1)
+            self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
