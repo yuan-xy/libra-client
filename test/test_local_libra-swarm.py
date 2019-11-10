@@ -2,11 +2,10 @@ from libra.shell.libra_shell import *
 from test_shell import prepare_shell, exec_input_with_client
 from libra.account_address import Address
 from libra.transaction import Script, TransactionPayload
-
+from libra.account_address import gen_random_address
 import libra
 import pytest
-import os, hashlib, random
-from datetime import datetime
+import os
 import pdb
 
 try:
@@ -29,11 +28,6 @@ def test_move_compile_and_exec(capsys):
     exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde", client, alias_to_cmd)
     assert balance+1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
 
-def gen_random_address():
-    hasher = hashlib.sha256()
-    ran = random.random() + datetime.now().timestamp()
-    hasher.update(ran.__str__().encode('utf-8'))
-    return hasher.digest().hex()[0:64]
 
 def test_no_blob_of_non_exsits_address():
     if not TESTNET_LOCAL:

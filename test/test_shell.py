@@ -1,4 +1,5 @@
 from libra.shell.libra_shell import *
+from libra.account_address import gen_random_address
 from tempfile import NamedTemporaryFile
 import libra
 import pytest
@@ -127,19 +128,18 @@ def test_execute_script_on_testnet(capsys):
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
     balance = client.get_balance(a0.address_hex)
-    if balance < 1:
-        client.mint_coins_with_faucet_service(a0.address_hex, 9999999, True)
-    addr1 = wallet.accounts[1].address_hex
-    balance2 = client.get_balance(addr1)
+    if balance <= 1:
+        client.mint_coins(a0.address_hex, 9999999, True)
+    addr1 = gen_random_address()
     output = exec_input(f"dev e 0 transaction_scripts/peer_to_peer_transfer.mv {addr1} 1", capsys)
     assert 'Compiling program' in output
     if TESTNET_LOCAL:
+        assert "code: InvalidUpdate" in output
+        assert "Failed to update gas price to 0" in output
+    else:
         seq = client.get_sequence_number(a0.address_hex)
         client.wait_for_transaction(a0.address_hex, seq-1)
-        assert balance2+1 == client.get_balance(addr1)
-        assert balance-1 == client.get_balance(a0.address_hex)
-    #assert "code: InvalidUpdate" in output
-    #assert "Failed to update gas price to 0" in output
+        assert 1 == client.get_balance(addr1)
 
 
 def test_publish_module_to_testnet(capsys):

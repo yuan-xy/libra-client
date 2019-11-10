@@ -1,6 +1,8 @@
 from canoser import DelegateT, Uint8, bytes_to_int_list
 from libra.hasher import gen_hasher
 
+import hashlib, random
+from datetime import datetime
 
 ADDRESS_LENGTH = 32
 HEX_ADDRESS_LENGTH = ADDRESS_LENGTH * 2
@@ -65,3 +67,10 @@ def strict_parse_address(s: str) -> bytes:
         else:
             raise ValueError(f"{orig_str} is not a valid address.")
     return strict_parse_address(s, s)
+
+
+def gen_random_address():
+    hasher = hashlib.sha256()
+    ran = random.random() + datetime.now().timestamp()
+    hasher.update(ran.__str__().encode('utf-8'))
+    return hasher.digest().hex()[0:64]
