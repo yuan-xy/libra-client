@@ -8,7 +8,7 @@ class QueryCommand(Command):
     def get_description(self):
         return "Query operations"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         commands = [
             QueryCommandGetBalance(),
             QueryCommandGetSeqNum(),
@@ -17,7 +17,7 @@ class QueryCommand(Command):
             QueryCommandGetTxnByRange(),
             QueryCommandGetEvent()
         ]
-        self.subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
 
 class QueryCommandGetBalance(Command):
@@ -30,7 +30,7 @@ class QueryCommandGetBalance(Command):
     def get_description(self):
         return "Get the current balance of an account"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         balance = client.get_balance(params[1])
         print(f"Balance is: {balance}")
 
@@ -46,7 +46,7 @@ class QueryCommandGetSeqNum(Command):
         return ("Get the current sequence number for an account, "
          "and reset current sequence number in CLI (optional, default is false)")
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Getting current sequence number")
         sn = client.get_sequence_number(params[1])
         #TODO: support reset_sequence_number
@@ -63,7 +63,7 @@ class QueryCommandGetLatestAccountState(Command):
     def get_description(self):
         return "Get the latest state for an account"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Getting latest account state")
         (acc, addr, version) = client.get_latest_account_state(params[1])
         print(
@@ -85,7 +85,7 @@ class QueryCommandGetTxnByAccountSeq(Command):
         return ("Get the committed transaction by account and sequence number.  "
          "Optionally also fetch events emitted by this transaction.")
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by account and sequence number")
         fetch_events = parse_bool(params[3])
         transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
@@ -112,7 +112,7 @@ class QueryCommandGetTxnByRange(Command):
         return ("Get the committed transactions by version range. "
          "Optionally also fetch events emitted by these transactions.")
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by range")
         fetch_events = parse_bool(params[3])
         transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
@@ -132,7 +132,7 @@ class QueryCommandGetEvent(Command):
     def get_description(self):
         return "Get events by account and event type (sent|received)."
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Getting events by account and event type.")
         ascending = parse_bool(params[4])
         events = client.get_events_by_account_and_type(

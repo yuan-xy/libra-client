@@ -11,13 +11,13 @@ class DevCommand(Command):
     def get_notice(self):
         return "Libra project should exsits in '../libra', as a parallel dir to libra-client project"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         commands = [
             DevCommandCompile(),
             DevCommandPublish(),
             DevCommandExecute()
         ]
-        self.subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
 
 class DevCommandCompile(Command):
@@ -30,7 +30,7 @@ class DevCommandCompile(Command):
     def get_description(self):
         return "Compile move program"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Compiling program");
         file_path = params[2]
         if params[3] == "module":
@@ -53,7 +53,7 @@ class DevCommandPublish(Command):
     def get_description(self):
         return "Publish move module on-chain"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Compiling program");
         client.publish_module(params[1], params[2])
         print("Successfully published module")
@@ -69,7 +69,7 @@ class DevCommandExecute(Command):
     def get_description(self):
         return "Execute custom move script"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         print(">> Compiling program")
         client.execute_script(params[1], params[2], params[3:])
         print("Successfully finished execution")

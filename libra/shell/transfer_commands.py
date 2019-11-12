@@ -15,7 +15,7 @@ class TransferCommand(Command):
     def get_description(self):
         return "Transfer coins (in libra) from account to another."
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         if len(params) < 4 or len(params) > 6:
             self.print_params_help()
             return

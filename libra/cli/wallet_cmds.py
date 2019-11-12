@@ -10,7 +10,7 @@ class WalletCmd(Command):
     def get_description(self):
         return "show account information of a wallet derived from mnemonic file"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         commands = [
             WalletCmdShow(),
             WalletCmdAccount(),
@@ -18,7 +18,7 @@ class WalletCmd(Command):
             WalletCmdCreate(),
             WalletCmdCreateNewAccount()
         ]
-        self.subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
 
 class WalletCmdShow(Command):
@@ -31,7 +31,7 @@ class WalletCmdShow(Command):
     def get_description(self):
         return "Show the mnemonic words, seed and addresses of a wallet"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wallet = WalletLibrary.recover(params[1])
         json_print_in_cmd(wallet)
 
@@ -46,7 +46,7 @@ class WalletCmdAccount(Command):
     def get_description(self):
         return "Show the keypair and address of accounts in a wallet"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wallet = WalletLibrary.recover(params[1])
         arr = []
         for index, account in enumerate(wallet.accounts):
@@ -68,7 +68,7 @@ class WalletCmdBalance(Command):
     def get_description(self):
         return "Get the balance of all accounts in a wallet"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wallet = WalletLibrary.recover(params[1])
         maps = {}
         for account in wallet.accounts:
@@ -88,7 +88,7 @@ class WalletCmdCreate(Command):
     def get_description(self):
         return "create a new wallet and save the mnemonic file to <mnemonic_file_path>"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wallet = WalletLibrary.new()
         wallet.write_recovery(params[1])
         jobj = to_json_serializable(wallet)
@@ -106,7 +106,7 @@ class WalletCmdCreateNewAccount(Command):
     def get_description(self):
         return "Create new account by exsiting account and sync to the wallet's mnemonic file."
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wfile = params[2]
         wallet = WalletLibrary.recover(wfile)
         sender_account = wallet.get_account_by_address_or_refid(params[1])
