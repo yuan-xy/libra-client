@@ -3,9 +3,13 @@
 
 LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It provides three ways to access Libra:
 
-1. `libra_shell`, an interactive shell program. It is compatible with official Libra client. For beginners, it lets you get started directly to try your first transaction with libra without requiring time-consuming downloads and compiles the huge entire Libra project source code.
-2. `libra`, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
-3. `python api`, a collection of apis for client access to libra. For Python programmers, you can call this client side api to interact with Libra Network with more control than by using `libra` command.
+1. **`libra_shell`**, an interactive shell program. It is compatible with official Libra client. For beginners, it lets you get started directly to try your first transaction with libra without requiring time-consuming downloads and compiles the huge entire Libra project source code.
+2. **`libra`**, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
+3. **`python api`**, a collection of apis for client access to libra. For Python programmers, you can call this client side api to interact with Libra Network with more control than by using `libra` command.
+
+In following docuement, all command prefix with `$` meants it is typed and run in standard linux shell; all command prefix with `libra%` meants it is typed and run in `libra_shell`. 
+
+For exmaple, **`$ libra`** meants run `libra` command in linux shell, which is different than **`libra%`**.
 
 ## Installation
 
