@@ -4,6 +4,9 @@ from libra.access_path import AccessPath
 
 
 class TransactionInfo(Struct):
+    """`TransactionInfo` is the object we store in the transaction accumulator.
+    It consists of the transaction as well as the execution result of this transaction.
+    """
     _fields = [
         ('transaction_hash', HashValue),
         ('state_root_hash', HashValue),

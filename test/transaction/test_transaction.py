@@ -9,6 +9,7 @@ import nacl
 
 
 def test_raw_txn():
+    assert RawTransaction.__doc__.startswith("RawTransaction is the portion of a transaction that a client signs")
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
