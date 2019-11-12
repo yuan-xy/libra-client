@@ -31,9 +31,9 @@ Use the following commands:
 %libra account
 <hr/><pre>
 USAGE: 
-<span style="color: #40ea40">	account &lt;arg&gt;
+<span style="color: #40ea40">	account &lt;params&gt;
 </span>
-Use one of the following args for this command:
+Use one of the following params for this command:
 
 <span style="color: #40ea40">config | c</span><span style="color: #4040ea"> </span>
 	Show the config of Libra
@@ -43,19 +43,23 @@ Use one of the following args for this command:
 	Get the current sequence number for an account by address
 <span style="color: #40ea40">state | as</span><span style="color: #4040ea"> &lt;account_address&gt;</span>
 	Get the latest state for an account by address
-<span style="color: #40ea40">mint | mintb | m | mb</span><span style="color: #4040ea"> &lt;receiver_account_address&gt; &lt;number_of_micro_libra&gt;</span>
-	Mint micro_libra to the address. Suffix 'b' is for blocking
 <span style="color: #40ea40">txn_acc_seq | ts</span><span style="color: #4040ea"> &lt;account_address&gt; &lt;sequence_number&gt; &lt;fetch_events=true|false&gt;</span>
 	Get the committed transaction by account and sequence number.  Optionally also fetch events emitted by this transaction.
+<span style="color: #40ea40">mint | mintb | m | mb</span><span style="color: #4040ea"> &lt;receiver_account_address&gt; &lt;number_of_micro_libra&gt;</span>
+	Mint micro_libra to the address. Suffix 'b' is for blocking
+<span style="color: #40ea40">rotate_auth_key | rak</span><span style="color: #4040ea"> &lt;sender_account_id_in_wallet&gt;|&lt;address&gt; &lt;public_key&gt; &lt;mnemonic_file_path&gt;</span>
+	Rotate the authentication key of account in wallet.
 
 </pre></hr>
 %libra transaction
 <hr/><pre>
 USAGE: 
-<span style="color: #40ea40">	transaction &lt;arg&gt;
+<span style="color: #40ea40">	transaction &lt;params&gt;
 </span>
-Use one of the following args for this command:
+Use one of the following params for this command:
 
+<span style="color: #40ea40">transfer | transferb | t | tb</span><span style="color: #4040ea"> &lt;sender_account_id_in_wallet&gt;|&lt;address&gt; &lt;receiver_account_address&gt; &lt;number_of_micro_libra&gt; &lt;mnemonic_file_path&gt;</span>
+	Transfer coins (in micro libra) from one to another. &lt;sender_account_address&gt; should exsits in &lt;mnemonic_file_path&gt;. Suffix 'b' is for blocking
 <span style="color: #40ea40">show | s</span><span style="color: #4040ea"> &lt;version number&gt;</span>
 	Get the transaction by version
 <span style="color: #40ea40">range | r</span><span style="color: #4040ea"> &lt;start_version&gt; &lt;limit&gt; [fetch_events=true|false]</span>
@@ -69,26 +73,28 @@ Use one of the following args for this command:
 %libra wallet
 <hr/><pre>
 USAGE: 
-<span style="color: #40ea40">	wallet &lt;arg&gt;
+<span style="color: #40ea40">	wallet &lt;params&gt;
 </span>
-Use one of the following args for this command:
+Use one of the following params for this command:
 
 <span style="color: #40ea40">show | s</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
 	Show the mnemonic words, seed and addresses of a wallet
-<span style="color: #40ea40">account | a</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+<span style="color: #40ea40">accounts | a</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
 	Show the keypair and address of accounts in a wallet
 <span style="color: #40ea40">balance | b</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
 	Get the balance of all accounts in a wallet
-<span style="color: #40ea40">create | c</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
+<span style="color: #40ea40">create_wallet | cw</span><span style="color: #4040ea"> &lt;mnemonic_file_path&gt;</span>
 	create a new wallet and save the mnemonic file to &lt;mnemonic_file_path&gt;
+<span style="color: #40ea40">create_account | ca</span><span style="color: #4040ea"> &lt;creator_id&gt; &lt;mnemonic_file_path&gt;</span>
+	Create new account by exsiting account and sync to the wallet's mnemonic file.
 
 </pre></hr>
 %libra ledger
 <hr/><pre>
 USAGE: 
-<span style="color: #40ea40">	ledger &lt;arg&gt;
+<span style="color: #40ea40">	ledger &lt;params&gt;
 </span>
-Use one of the following args for this command:
+Use one of the following params for this command:
 
 <span style="color: #40ea40">info | i</span><span style="color: #4040ea"> </span>
 	Get the latest ledger info of Libra blockchain
