@@ -1,5 +1,5 @@
 from libra.hasher import *
-import pdb
+#import pdb
 
 def test_placeholder_hash():
     assert ACCUMULATOR_PLACEHOLDER_HASH == [65, 67, 67, 85, 77, 85, 76, 65, 84, 79, 82, 95, 80, 76, 65, 67, 69, 72, 79, 76, 68, 69, 82, 95, 72, 65, 83, 72, 0, 0, 0, 0]

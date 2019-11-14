@@ -2,7 +2,7 @@ import libra
 from tempfile import NamedTemporaryFile
 from libra.key_factory import has_sha3
 import pytest
-import pdb
+#import pdb
 
 
 def test_wallet():
@@ -14,6 +14,7 @@ def test_wallet():
     assert a0.address_hex == "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
     assert a0.public_key_hex == "d1f4e85a3582015deb92d8aba35061a8032865d754a364d2429d475d10829c2a"
     assert a0.private_key_hex == "177bb836b2bb9be29f5accdf74a95d917946001282d7ee74b18d0c81764ee383"
+    assert libra.account.Account.gen_address_from_pk(a0.public_key) == a0.address
     a1 = wallet.accounts[1]
     assert a1.address_hex == "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde"
     assert a1.public_key_hex == "6b72f3922ccbe671409c5ad0552f93888427f466ea0b7fdf3f066b31bce5c6a6"

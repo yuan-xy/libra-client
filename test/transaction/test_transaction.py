@@ -1,12 +1,15 @@
 import libra
 from libra.transaction import *
 from libra.client import TransactionError, TransactionTimeoutError
+from canoser import Uint64
+from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
 import nacl
-import pdb
+#import pdb
 
 
 def test_raw_txn():
+    assert RawTransaction.__doc__.startswith("RawTransaction is the portion of a transaction that a client signs")
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
@@ -80,3 +83,34 @@ def test_amount_illegal():
         #message: "Failed to update gas price to 0"
         pass
 
+def test_query():
+    c = libra.Client("testnet")
+    txs = c.get_transactions(1, "1")
+    txs = c.get_transactions("1", 1)
+    txs = c.get_transactions(1, "1", False)
+    with pytest.raises(TypeError):
+        c.get_transactions(1, True)
+
+
+def test_get_transaction_invalid():
+    client = libra.Client("testnet")
+    with pytest.raises(TypeError):
+        client.get_transaction(-1)
+    tx = client.get_transaction(Uint64.max_value)
+    assert tx is None
+    with pytest.raises(TypeError):
+        client.get_transaction(Uint64.max_value+1)
+
+def test_tx_id_overflow():
+    client = libra.Client("testnet")
+    start_version = Uint64.max_value+1
+    request = UpdateToLatestLedgerRequest()
+    item = request.requested_items.add()
+    with pytest.raises(ValueError):
+        item.get_transactions_request.start_version = start_version
+    with pytest.raises(ValueError):
+        item.get_transactions_request.start_version = -1
+    # item.get_transactions_request.limit = 1
+    # item.get_transactions_request.fetch_events = False
+    # resp = client.update_to_latest_ledger(request)
+    # print(resp)

@@ -8,10 +8,12 @@ from libra.account import Account
 from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
-from libra.transaction import Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload
+from libra.transaction import (
+    Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
+from libra.event import ContractEvent
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -89,6 +91,14 @@ class Client:
 
     @classmethod
     def new(cls, host, port, validator_set_file, faucet_file=None):
+        if port == 0:
+            try:
+                tests = os.environ['TESTNET_LOCAL'].split(";")
+                host = tests[0]
+                port = int(tests[1])
+                validator_set_file = tests[2]
+            except KeyError:
+                port = 8000
         ret = cls.__new__(cls)
         ret.host = host
         if isinstance(port, str):
@@ -141,6 +151,7 @@ class Client:
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
         self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
+        self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp
 
     def get_latest_ledger_info(self):
@@ -158,7 +169,9 @@ class Client:
         return self.get_latest_ledger_info().version
 
     def _get_txs(self, start_version, limit=1, fetch_events=False):
-        if limit <= 0 or limit >= Uint64.max_value:
+        start_version = Uint64.int_safe(start_version)
+        limit = Uint64.int_safe(limit)
+        if limit == 0:
             raise ValueError(f"limit:{limit} is invalid.")
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
@@ -170,19 +183,32 @@ class Client:
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request, resp = self._get_txs(start_version, limit, fetch_events)
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
-        assert txnp.first_transaction_version.value == start_version
+        if txnp.first_transaction_version.value != int(start_version):
+            raise AssertionError(f"first_transaction_version:{txnp.first_transaction_version.value} != start_version:{start_version}")
         return (txnp.transactions, txnp.events_for_versions)
 
-    def get_transactions(self, start_version, limit=1, fetch_events=True):
-        transactions, events = self.get_transactions_proto(start_version, limit, fetch_events)
-        txs = [Transaction.deserialize(x.transaction).value for x in transactions]
+    def get_transactions(self, start_version, limit=1, fetch_events=False):
+        _req, resp = self._get_txs(start_version, limit, fetch_events)
+        txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
+        if len(txnp.transactions) == 0:
+            return []
+        if txnp.first_transaction_version.value != int(start_version):
+            raise AssertionError(f"first_transaction_version:{txnp.first_transaction_version.value} != start_version:{start_version}")
+        txs = [Transaction.deserialize(x.transaction).value for x in txnp.transactions]
+        infos = [TransactionInfo.from_proto(x) for x in txnp.proof.transaction_infos]
+        for tx, info in zip(txs, infos):
+            tx.transaction_info = info
         if fetch_events:
-            for tx, event_list in zip(txs, events.events_for_version):
-                tx.check_events(event_list)
+            for tx, event_list in zip(txs, txnp.events_for_versions.events_for_version):
+                tx.events = [ContractEvent.from_proto(x) for x in event_list.events]
         return txs
 
-    def get_transaction(self, start_version, fetch_events=True):
-        return self.get_transactions(start_version, 1, fetch_events)[0]
+    def get_transaction(self, start_version, fetch_events=False):
+        txs = self.get_transactions(start_version, 1, fetch_events)
+        if txs == []:
+            return None
+        else:
+            return txs[0]
 
     def get_account_transaction_proto(self, address, sequence_number, fetch_events=False):
         address = Address.normalize_to_bytes(address)
@@ -202,7 +228,8 @@ class Client:
     # `limit` events that were emitted after `start_event_seq_num`. Otherwise it will return up to
     # `limit` events in the reverse order. Both cases are inclusive.
     def get_events(self, address, path, start_sequence_number, ascending=True, limit=1):
-        if limit <= 0 or limit >= Uint64.max_value:
+        limit = Uint64.int_safe(limit)
+        if limit == 0:
             raise ValueError(f"limit:{limit} is invalid.")
         address = Address.normalize_to_bytes(address)
         request = UpdateToLatestLedgerRequest()
@@ -251,9 +278,9 @@ class Client:
             raise IOError(
                 "Failed to send request to faucet service: {}".format(self.faucet_host)
             )
-        sequence_number = Uint64.int_safe(resp.text)
+        sequence_number = Uint64.int_safe(resp.text) - 1
         if is_blocking:
-            self.wait_for_transaction(AccountConfig.association_address(), sequence_number-1)
+            self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
@@ -287,15 +314,15 @@ class Client:
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)
 
-    def create_account(self, sender_account, fresh_address):
+    def create_account(self, sender_account, fresh_address, is_blocking=True):
         script = Script.gen_create_account_script(fresh_address)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload)
+        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
 
-    def rotate_authentication_key(self, sender_account, public_key):
+    def rotate_authentication_key(self, sender_account, public_key, is_blocking=True):
         script = Script.gen_rotate_auth_key_script(public_key)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload)
+        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
 
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):

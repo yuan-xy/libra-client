@@ -12,6 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 from libra.version import version
 from libra import Client, WalletLibrary
 from libra.cli.command import *
+from libra.cli.ledger_cmds import LedgerCmd
 from account_commands import AccountCommand
 from query_commands import QueryCommand
 from transfer_commands import TransferCommand
@@ -21,7 +22,7 @@ from libra.cli.color import support_color, print_color
 
 
 def get_commands(include_dev: bool):
-    commands = [AccountCommand(), QueryCommand(), TransferCommand()]
+    commands = [AccountCommand(), QueryCommand(), TransferCommand(), LedgerCmd()]
     if include_dev:
         commands.append(DevCommand())
     return get_commands_alias(commands)
@@ -34,7 +35,7 @@ def run_shell(args):
     except Exception as err:
         report_error(f"Not able to connect to validator at {args.host}:{args.port}", err, args.verbose)
         return
-    client = ClientProxy(grpc_client, args)
+    client_proxy = ClientProxy(grpc_client, args)
     client_info = f"Connected to validator at: {args.host}:{args.port}"
     print(client_info)
     (commands, alias_to_cmd) = get_commands(grpc_client.faucet_account is not None)
@@ -53,7 +54,7 @@ def run_shell(args):
         if cmd is not None:
             if args.verbose:
                 print(datetime.now().strftime("%Y-%m-%d,%H:%M:%S"))
-            cmd.execute(client, params)
+            cmd.execute(client_proxy, params, proxy=True)
         else:
             if params[0] == "quit" or params[0] == "q!":
                 break
@@ -76,7 +77,7 @@ def print_help(client_info: str, commands):
 def get_parser():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
-    parser.add_argument('-p', "--port", default=8000, help='Admission Control port to connect to. [default: 8000]')
+    parser.add_argument('-p', "--port", default=0, help='Admission Control port to connect to. [default: 8000]')
     parser.add_argument('-r', "--sync", action='store_true', default=False, help='If set, client will sync with validator during wallet recovery.')
     parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
     parser.add_argument('-n', "--mnemonic_file", help='File location from which to load mnemonic word for user account address/key generation.')

@@ -8,7 +8,6 @@ from libra.validator_verifier import VerifyError
 
 import collections
 import more_itertools
-import pdb
 
 
 def bail(hint, *args):

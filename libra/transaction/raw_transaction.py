@@ -8,6 +8,9 @@ from libra.transaction.script import Script
 
 
 class RawTransaction(Struct):
+    """RawTransaction is the portion of a transaction that a client signs.
+    It can be either to publish a module, to execute a script, or to issue a writeset transaction.
+    """
     _fields = [
         ('sender', Address),
         ('sequence_number', Uint64),
@@ -36,6 +39,9 @@ class RawTransaction(Struct):
     @classmethod
     def new_script_tx(cls, sender_address, sequence_number, script, max_gas_amount=140_000,
             gas_unit_price=0, txn_expiration=100):
+        """Create a new `RawTransaction` with a script.
+        A script transaction contains only code to execute. No publishing is allowed in scripts.
+        """
         payload = TransactionPayload('Script', script)
         return cls.new_tx(sender_address, sequence_number, payload, max_gas_amount,
             gas_unit_price, txn_expiration)

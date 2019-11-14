@@ -2,13 +2,12 @@ import libra
 from libra.transaction import *
 import os
 import pytest
-import pdb
+#import pdb
 
 
 def test_get_transaction():
     c = libra.Client("testnet")
-    stx = c.get_transaction(1)
-    assert stx.success == True
+    stx = c.get_transaction(1, True)
     assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
     assert stx.raw_txn.sequence_number == 1
     assert stx.raw_txn.payload.index == 2
@@ -27,17 +26,32 @@ def test_get_transaction():
     assert len(stx.signature) == 64
     stx.check_signature()
     stx.__str__()
+    info = stx.transaction_info
+    if info.major_status == 4001:
+        assert info.gas_used == 0
+        assert len(stx.events) == 2
+        assert stx.events[0].type_tag.Struct == True
+        assert stx.events[0].type_tag.value.is_pay_tag() == True
+        assert stx.events[1].type_tag.Struct == True
+        assert stx.events[1].type_tag.value.is_pay_tag() == True
+    else:
+        assert len(stx.events) == 0
 
 def test_get_transaction_without_events():
     c = libra.Client("testnet")
+    assert hasattr(c, "latest_time") == False
     transactions = c.get_transactions(1, 1, False)
     assert len(transactions) == 1
     assert hasattr(transactions[0], 'success') == False
+    assert hasattr(c, "latest_time") == True
+    assert c.latest_time > 1570_000_000_000_000
 
 
 def test_get_tx_with_events():
     c = libra.Client("testnet")
     transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
+    if c.client_known_version == 1:
+        return
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2
 
@@ -54,6 +68,8 @@ def test_get_tx_from_zero():
 def test_get_tx_latest():
     c = libra.Client("testnet")
     ver = c.get_latest_transaction_version()
+    if ver == 1:
+        return
     transactions, events_for_versions = c.get_transactions_proto(ver-2, 2, True)
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2
@@ -66,7 +82,7 @@ def test_get_tx_zero():
 
 def test_get_tx_invalid():
     c = libra.Client("testnet")
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         c.get_transactions_proto(1, -1, True)
 
 def test_get_latest_transaction_version():
@@ -114,12 +130,12 @@ def test_get_account_transaction_proto():
     txn, usecs = c.get_account_transaction_proto(address, 1, True)
     len(str(usecs)) == 16
     assert usecs//1000_000 > 1570_000_000
-    assert txn.events.events[0].sequence_number == 1
-    assert len(txn.transaction.transaction) > 0
-    #TODO: transaction.transaction to transaction.txn_bytes will be better.
     assert txn.version > 0
     assert txn.proof.HasField("ledger_info_to_transaction_info_proof")
     assert txn.proof.HasField("transaction_info")
+    assert len(txn.transaction.transaction) > 0
+    if txn.proof.transaction_info.major_status == 4001:
+        assert txn.events.events[0].sequence_number == 1
 
 
 def test_transfer_coin():

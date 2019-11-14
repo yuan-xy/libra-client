@@ -3,7 +3,7 @@ from mnemonic import Mnemonic
 from nacl.signing import SigningKey
 from libra.key_factory import has_sha3
 
-import pdb
+#import pdb
 
 def test_key():
     if not has_sha3():

@@ -6,6 +6,10 @@ from libra.transaction.transaction_argument import ED25519_PUBLIC_KEY_LENGTH, ED
 
 
 class SignedTransaction(Struct):
+    """A transaction that has been signed.
+    A `SignedTransaction` is a single transaction that can be atomically executed. Clients submit
+    these to validator nodes, and the validator and executor submits these to the VM.
+    """
     _fields = [
         ('raw_txn', RawTransaction),
         ('public_key', [Uint8, ED25519_PUBLIC_KEY_LENGTH]),
@@ -13,22 +17,24 @@ class SignedTransaction(Struct):
 #        ('transaction_length', Uint64)
     ]
 
-    def check_events(self, event_list):
-        if len(event_list.events) > 0:
-            self.success = True
-        else:
-            self.success = False
 
     def to_json_serializable(self):
         amap = super().to_json_serializable()
-        if hasattr(self, 'success'):
-            amap["success"] = self.success
+        if hasattr(self, 'transaction_info'):
+            amap["transaction_info"] = self.transaction_info.to_json_serializable()
+        if hasattr(self, 'events'):
+            amap["events"] = [x.to_json_serializable() for x in self.events]
         if hasattr(self, 'version'):
             amap["version"] = self.version
+        if hasattr(self, 'success'):
+            amap["success"] = self.success
         return amap
 
     @classmethod
     def gen_from_raw_txn(cls, raw_tx, sender_account):
+        """Signs the given `RawTransaction`and return a `SignedTransaction`.
+        For a transaction that has just been signed, its signature is expected to be valid.
+        """
         tx_hash = raw_tx.hash()
         signature = sender_account.sign(tx_hash)[:64]
         return SignedTransaction(raw_tx,

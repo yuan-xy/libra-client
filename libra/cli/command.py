@@ -19,10 +19,10 @@ class Command(metaclass = abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         pass
 
-    def subcommand_execute(self, parent_command_name, commands, client, params):
+    def subcommand_execute(self, parent_command_name, commands, client, params, **kwargs):
         if len(params) == 0:
             self.print_subcommand_help(parent_command_name, commands)
             return
@@ -42,7 +42,7 @@ class Command(metaclass = abc.ABCMeta):
                 self.print_subcommand_help(parent_command_name, commands)
                 return
             try:
-                commands[idx].execute(client, params)
+                commands[idx].execute(client, params, **kwargs)
             except Exception as err:
                 report_error(commands[idx].get_description().split('.')[0], err, client.verbose)
         else:

@@ -1,6 +1,6 @@
 from libra.access_path import *
 from libra.account_config import AccountConfig
-import pdb
+#import pdb
 
 def test_resource_access_vec():
     array = AccessPath.resource_access_vec(AccountConfig.account_struct_tag(), [])

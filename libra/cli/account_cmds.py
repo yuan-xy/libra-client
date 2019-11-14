@@ -11,7 +11,7 @@ class AccountCmd(Command):
     def get_description(self):
         return "Account query by address"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         commands = [
             AccountCmdConfig(),
             AccountCmdGetBalance(),
@@ -21,7 +21,7 @@ class AccountCmd(Command):
             AccountCmdMint(),
             AccountCmdRotateAuthenticationKey()
         ]
-        self.subcommand_execute(params[0], commands, client, params[1:])
+        self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
 
 class AccountCmdConfig(Command):
@@ -31,7 +31,7 @@ class AccountCmdConfig(Command):
     def get_description(self):
         return "Show the config of Libra"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         json_print_in_cmd(AccountConfig.all_config(), sort_keys=False)
 
 
@@ -45,7 +45,7 @@ class AccountCmdGetBalance(Command):
     def get_description(self):
         return "Get the current balance of an account by address"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         balance = client.get_balance(params[1])
         json_print_in_cmd({"balance": balance})
 
@@ -60,7 +60,7 @@ class AccountCmdGetSeqNum(Command):
     def get_description(self):
         return ("Get the current sequence number for an account by address")
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         sn = client.get_sequence_number(params[1])
         json_print_in_cmd({"sequence": sn})
 
@@ -76,7 +76,7 @@ class AccountCmdGetLatestAccountState(Command):
     def get_description(self):
         return "Get the latest state for an account by address"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         state = client.get_account_state(params[1])
         json_print_in_cmd(state)
 
@@ -92,7 +92,7 @@ class AccountCmdGetTxnByAccountSeq(Command):
         return ("Get the committed transaction by account and sequence number.  "
          "Optionally also fetch events emitted by this transaction.")
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         fetch_events = parse_bool(params[3])
         seq = Uint64.int_safe(params[2])
         transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
@@ -110,7 +110,7 @@ class AccountCmdMint(Command):
     def get_description(self):
         return "Mint micro_libra to the address. Suffix 'b' is for blocking"
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         is_blocking = blocking_cmd(params[0])
         resp = client.mint_coins(params[1],Uint64.int_safe(params[2]), is_blocking)
         json_print_in_cmd({"sequence_number": resp})
@@ -127,7 +127,7 @@ class AccountCmdRotateAuthenticationKey(Command):
     def get_description(self):
         return "Rotate the authentication key of account in wallet."
 
-    def execute(self, client, params):
+    def execute(self, client, params, **kwargs):
         wallet = WalletLibrary.recover(params[3])
         account = wallet.get_account_by_address_or_refid(params[1])
         client.rotate_authentication_key(account, params[2])

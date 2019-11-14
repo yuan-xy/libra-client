@@ -1,6 +1,6 @@
 from libra.language_storage import *
 from canoser import Uint32
-import pdb
+#import pdb
 
 
 def test_struct_tag():

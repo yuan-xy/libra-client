@@ -2,7 +2,7 @@ from libra.account_config import *
 from libra.event import *
 from libra.account_address import Address
 import libra
-import pdb
+#import pdb
 
 
 def test_event_sent():
