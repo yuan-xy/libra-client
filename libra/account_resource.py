@@ -49,6 +49,10 @@ class AccountState(Struct):
 
 
 class AccountResource(Struct):
+    """
+    A Rust/Python representation of an Account resource.
+    This is not how the Account is represented in the VM but it's a convenient representation.
+    """
     _fields = [
         ('authentication_key', [Uint8]),
         ('balance', Uint64),

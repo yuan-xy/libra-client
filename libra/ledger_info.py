@@ -8,6 +8,7 @@ class OptionValidatorSet(RustOptional):
     _type = ValidatorSet
 
 class LedgerInfo(Struct):
+    #TODO: Add BlockInfo
     _fields = [
         ('version', Version),
         ('transaction_accumulator_hash', [Uint8]),

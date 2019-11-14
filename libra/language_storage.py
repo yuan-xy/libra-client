@@ -34,9 +34,8 @@ class TypeTag(RustEnum):
 
 
 
-# Represents the intitial key into global storage where we first index by the address, and then
-# the struct tag
 class ResourceKey(Struct):
+    """Represents the intitial key into global storage where we first index by the address, and then the struct tag"""
     _fields = [
         ('address', Address),
         ('type_', StructTag)
