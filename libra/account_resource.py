@@ -34,7 +34,7 @@ class AccountState(Struct):
         amap = super().to_json_serializable()
         ar = self.get_resource()
         if ar:
-            amap["account_resource_path"] = AccountConfig.account_resource_path()
+            amap["account_resource_path"] = AccountConfig.account_resource_path().hex()
             amap["decoded_account_resource"] = ar.to_json_serializable()
         return amap
 
