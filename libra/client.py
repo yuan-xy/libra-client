@@ -36,6 +36,19 @@ class AccountError(LibraError):
 class TransactionError(LibraError):
     pass
 
+class VMError(TransactionError):
+    @property
+    def error_code(self):
+        code, _ = self.args
+        return code
+
+    @property
+    def error_msg(self):
+        _, msg = self.args
+        return msg
+
+
+
 class TransactionTimeoutError(LibraError):
     pass
 
@@ -331,14 +344,19 @@ class Client:
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
             payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
-        request = SubmitTransactionRequest()
-        request.transaction.txn_bytes = signed_txn.serialize()
-        self.submit_transaction(request, raw_tx, is_blocking)
+        self.submit_signed_txn(signed_txn, is_blocking)
         return signed_txn
 
-    def submit_transaction(self, request, raw_tx, is_blocking):
+    def submit_signed_txn(self, signed_txn, is_blocking=False):
+        request = SubmitTransactionRequest()
+        request.transaction.txn_bytes = signed_txn.serialize()
+        return self.submit_transaction(request, signed_txn, is_blocking)
+
+
+    def submit_transaction(self, request, signed_txn, is_blocking):
         resp = self.submit_transaction_non_block(request)
         if is_blocking:
+            raw_tx = signed_txn.raw_txn
             address = bytes(raw_tx.sender)
             sequence_number = raw_tx.sequence_number
             expiration_time = raw_tx.expiration_time
@@ -354,7 +372,9 @@ class Client:
             else:
                 raise TransactionError(f"Status code: {resp.ac_status.code}")
         elif status == 'vm_status':
-            raise TransactionError(resp.vm_status.__str__())
+            from libra.vm_error import VMStatus
+            vms = VMStatus.from_proto(resp.vm_status)
+            raise VMError(vms.major_status, vms.err_msg())
         elif status == 'mempool_status':
             raise TransactionError(resp.mempool_status.__str__())
         else:

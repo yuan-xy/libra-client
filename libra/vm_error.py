@@ -1,4 +1,4 @@
-from canoser import Struct, RustEnum, Uint64
+from canoser import Struct, RustEnum, Uint64, RustOptional
 # The minimum status code for validation statuses
 VALIDATION_STATUS_MIN_CODE = 0
 
@@ -29,6 +29,14 @@ EXECUTION_STATUS_MIN_CODE = 4000
 # The maximum status code for runtim statuses
 EXECUTION_STATUS_MAX_CODE = 4999
 
+class OptionUInt64(RustOptional):
+    _type = Uint64
+
+
+class OptionStr(RustOptional):
+    _type = str
+
+
 class VMStatus(Struct):
     """
     A `VMStatus` is represented as a required major status that is semantic coupled with with
@@ -36,9 +44,30 @@ class VMStatus(Struct):
     """
     _fields = [
         ('major_status', Uint64),
-        ('sub_status', Uint64),
-        ('message', str)
+        ('sub_status', OptionUInt64),
+        ('message', OptionStr)
     ]
+
+    def err_msg(self):
+        if self.message.value is not None:
+            return self.message.value
+        else:
+            return StatusCode.get_name(self.major_status)
+
+    @classmethod
+    def from_proto(cls, proto):
+        ret = cls()
+        ret.major_status = proto.major_status
+        if proto.has_sub_status:
+            ret.sub_status = OptionUInt64(proto.sub_status)
+        else:
+            ret.sub_status = OptionUInt64(None)
+        if proto.has_message:
+            ret.message = OptionStr(proto.message)
+        else:
+            ret.message = OptionStr(None)
+        return ret
+        
 
 
 
