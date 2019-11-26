@@ -3,7 +3,7 @@ from libra.hasher import gen_hasher
 from libra.language_storage import TypeTag
 from libra.account_config import AccountEvent
 
-EVENT_KEY_LENGTH = 32
+EVENT_KEY_LENGTH = 40
 
 class EventKey(DelegateT):
     delegate_type = [Uint8, EVENT_KEY_LENGTH]
