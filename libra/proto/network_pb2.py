@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='network',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rnetwork.proto\x12\x07network\"(\n\x08PeerInfo\x12\r\n\x05\x65poch\x18\x01 \x01(\x04\x12\r\n\x05\x61\x64\x64rs\x18\x02 \x03(\x0c\"6\n\x0eSignedPeerInfo\x12\x11\n\tpeer_info\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\"7\n\x0f\x46ullNodePayload\x12\r\n\x05\x65poch\x18\x01 \x01(\x04\x12\x15\n\rdns_seed_addr\x18\x02 \x01(\x0c\";\n\x15SignedFullNodePayload\x12\x0f\n\x07payload\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\"\x8c\x01\n\x04Note\x12\x0f\n\x07peer_id\x18\x01 \x01(\x0c\x12\x31\n\x10signed_peer_info\x18\x02 \x01(\x0b\x32\x17.network.SignedPeerInfo\x12@\n\x18signed_full_node_payload\x18\x03 \x01(\x0b\x32\x1e.network.SignedFullNodePayload\",\n\x0c\x44iscoveryMsg\x12\x1c\n\x05notes\x18\x01 \x03(\x0b\x32\r.network.Note\"\x8a\x01\n\x0bIdentityMsg\x12\x0f\n\x07peer_id\x18\x01 \x01(\x0c\x12\x1b\n\x13supported_protocols\x18\x02 \x03(\x0c\x12\'\n\x04role\x18\x03 \x01(\x0e\x32\x19.network.IdentityMsg.Role\"$\n\x04Role\x12\r\n\tVALIDATOR\x10\x00\x12\r\n\tFULL_NODE\x10\x01\"\x06\n\x04Ping\"\x06\n\x04Pongb\x06proto3')
+  serialized_pb=_b('\n\rnetwork.proto\x12\x07network\"(\n\x08PeerInfo\x12\r\n\x05\x65poch\x18\x01 \x01(\x04\x12\r\n\x05\x61\x64\x64rs\x18\x02 \x03(\x0c\"6\n\x0eSignedPeerInfo\x12\x11\n\tpeer_info\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\"7\n\x0f\x46ullNodePayload\x12\r\n\x05\x65poch\x18\x01 \x01(\x04\x12\x15\n\rdns_seed_addr\x18\x02 \x01(\x0c\";\n\x15SignedFullNodePayload\x12\x0f\n\x07payload\x18\x01 \x01(\x0c\x12\x11\n\tsignature\x18\x02 \x01(\x0c\"\x8c\x01\n\x04Note\x12\x0f\n\x07peer_id\x18\x01 \x01(\x0c\x12\x31\n\x10signed_peer_info\x18\x02 \x01(\x0b\x32\x17.network.SignedPeerInfo\x12@\n\x18signed_full_node_payload\x18\x03 \x01(\x0b\x32\x1e.network.SignedFullNodePayload\",\n\x0c\x44iscoveryMsg\x12\x1c\n\x05notes\x18\x01 \x03(\x0b\x32\r.network.Note\"\x8a\x01\n\x0bIdentityMsg\x12\x0f\n\x07peer_id\x18\x01 \x01(\x0c\x12\x1b\n\x13supported_protocols\x18\x02 \x03(\x0c\x12\'\n\x04role\x18\x03 \x01(\x0e\x32\x19.network.IdentityMsg.Role\"$\n\x04Role\x12\r\n\tVALIDATOR\x10\x00\x12\r\n\tFULL_NODE\x10\x01\x62\x06proto3')
 )
 
 
@@ -321,54 +321,6 @@ _IDENTITYMSG = _descriptor.Descriptor(
   serialized_end=570,
 )
 
-
-_PING = _descriptor.Descriptor(
-  name='Ping',
-  full_name='network.Ping',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=572,
-  serialized_end=578,
-)
-
-
-_PONG = _descriptor.Descriptor(
-  name='Pong',
-  full_name='network.Pong',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=580,
-  serialized_end=586,
-)
-
 _NOTE.fields_by_name['signed_peer_info'].message_type = _SIGNEDPEERINFO
 _NOTE.fields_by_name['signed_full_node_payload'].message_type = _SIGNEDFULLNODEPAYLOAD
 _DISCOVERYMSG.fields_by_name['notes'].message_type = _NOTE
@@ -381,8 +333,6 @@ DESCRIPTOR.message_types_by_name['SignedFullNodePayload'] = _SIGNEDFULLNODEPAYLO
 DESCRIPTOR.message_types_by_name['Note'] = _NOTE
 DESCRIPTOR.message_types_by_name['DiscoveryMsg'] = _DISCOVERYMSG
 DESCRIPTOR.message_types_by_name['IdentityMsg'] = _IDENTITYMSG
-DESCRIPTOR.message_types_by_name['Ping'] = _PING
-DESCRIPTOR.message_types_by_name['Pong'] = _PONG
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PeerInfo = _reflection.GeneratedProtocolMessageType('PeerInfo', (_message.Message,), {
@@ -433,20 +383,6 @@ IdentityMsg = _reflection.GeneratedProtocolMessageType('IdentityMsg', (_message.
   # @@protoc_insertion_point(class_scope:network.IdentityMsg)
   })
 _sym_db.RegisterMessage(IdentityMsg)
-
-Ping = _reflection.GeneratedProtocolMessageType('Ping', (_message.Message,), {
-  'DESCRIPTOR' : _PING,
-  '__module__' : 'network_pb2'
-  # @@protoc_insertion_point(class_scope:network.Ping)
-  })
-_sym_db.RegisterMessage(Ping)
-
-Pong = _reflection.GeneratedProtocolMessageType('Pong', (_message.Message,), {
-  'DESCRIPTOR' : _PONG,
-  '__module__' : 'network_pb2'
-  # @@protoc_insertion_point(class_scope:network.Pong)
-  })
-_sym_db.RegisterMessage(Pong)
 
 
 # @@protoc_insertion_point(module_scope)
