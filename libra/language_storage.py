@@ -13,7 +13,7 @@ class StructTag(Struct):
     ]
 
     def hash(self):
-        shazer = gen_hasher(b"VM_ACCESS_PATH")
+        shazer = gen_hasher(b"StructTag::libra_types::language_storage")
         shazer.update(self.serialize())
         return shazer.digest()
 
@@ -49,6 +49,6 @@ class ModuleId(Struct):
     ]
 
     def hash(self):
-        shazer = gen_hasher(b"VM_ACCESS_PATH")
+        shazer = gen_hasher(b"ModuleId::libra_types::language_storage")
         shazer.update(self.serialize())
         return shazer.digest()

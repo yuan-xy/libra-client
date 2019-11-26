@@ -53,6 +53,6 @@ class ContractEvent(Struct):
         return amap
 
     def hash(self):
-        shazer = gen_hasher(b"ContractEvent")
+        shazer = gen_hasher(b"ContractEvent::libra_types::event")
         shazer.update(self.serialize())
         return shazer.digest()

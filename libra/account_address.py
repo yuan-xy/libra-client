@@ -12,7 +12,7 @@ class Address(DelegateT):
 
     @classmethod
     def hash(cls, address):
-        shazer = gen_hasher(b"AccountAddress")
+        shazer = gen_hasher(b"AccountAddress::libra_types::account_address")
         shazer.update(address)
         return shazer.digest()
 

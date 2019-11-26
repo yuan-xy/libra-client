@@ -13,7 +13,7 @@ class AccountStateBlob:
         return cls(proto.blob)
 
     def hash(self):
-        shazer = gen_hasher(b"AccountStateBlob")
+        shazer = gen_hasher(b"AccountStateBlob::libra_types::account_resource")
         shazer.update(self.blob)
         return shazer.digest()
 

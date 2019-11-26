@@ -17,8 +17,9 @@ class AccountConfig:
 
     @classmethod
     def account_resource_path(cls):
-        #return AccessPath.resource_access_vec(AccountConfig.account_struct_tag(), [])
-        return b'\x01\xa2\x08\xdf\x13O\xef\xed\x84B\xb1\xf0\x1f\xabY\x07\x18\x98\xf5\xa1\xafQd\xe1,YM\xe5Zp\x04\xa9\x1c'
+        from libra.access_path import AccessPath
+        return bytes(AccessPath.resource_access_vec(AccountConfig.account_struct_tag(), []))
+        #return b'\x01\xa2\x08\xdf\x13O\xef\xed\x84B\xb1\xf0\x1f\xabY\x07\x18\x98\xf5\xa1\xafQd\xe1,YM\xe5Zp\x04\xa9\x1c'
 
     @classmethod
     def account_sent_event_path(cls):
