@@ -1,5 +1,5 @@
 from libra.hasher import *
-from libra.event import ContractEvent
+from libra.contract_event import ContractEvent
 import more_itertools
 
 

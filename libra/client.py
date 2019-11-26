@@ -13,7 +13,7 @@ from libra.transaction import (
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
-from libra.event import ContractEvent
+from libra.contract_event import ContractEvent
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub

@@ -1,5 +1,5 @@
 from libra.proof import ensure, bail, verify_accumulator_element, verify_transaction_info
-from libra.event import ContractEvent
+from libra.contract_event import ContractEvent
 from libra.hasher import EventAccumulatorHasher
 
 class EventWithProof:
