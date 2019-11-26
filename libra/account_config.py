@@ -1,4 +1,4 @@
-from canoser import hex_to_int_list, Struct, Uint64
+from canoser import hex_to_int_list, Struct, Uint64, Uint8
 from libra.language_storage import StructTag
 from libra.account_address import HEX_ADDRESS_LENGTH, Address
 
@@ -77,6 +77,7 @@ class AccountConfig:
 class AccountEvent(Struct):
     _fields = [
         ('amount', Uint64),
-        ('account', Address)
+        ('account', Address),
+        ('metadata', [Uint8])
     ]
 
