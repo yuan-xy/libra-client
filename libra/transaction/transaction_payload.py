@@ -7,7 +7,7 @@ from libra.transaction.module import Module
 
 class TransactionPayload(RustEnum):
     _enums = [
-        ('Program', Program),
+        ('Program', None),
         ('WriteSet', WriteSet),
         ('Script', Script),
         ('Module', Module)
