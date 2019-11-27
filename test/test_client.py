@@ -20,6 +20,11 @@ def test_get_transaction():
     assert info.major_status == 4001
     assert info.gas_used == 0
 
+def test_get_transactions3():
+    c = libra.Client("testnet")
+    txs = c.get_transactions(0, limit=3, fetch_events=True)
+    assert len(txs) == 3
+
 
 
 def test_get_transaction_without_events():

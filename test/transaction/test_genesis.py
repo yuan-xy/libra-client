@@ -15,8 +15,7 @@ except KeyError:
 def test_genesis():
     c = libra.Client("testnet")
     tx = c.get_transaction(0, True)
-    assert len(tx.events) == 0
-    #TODO: why zero events?
+    assert len(tx.events) == 3
     #The genesis tx should emit 3 events: a pair of payment sent/received events for minting to the genesis address, and a ValidatorSet.ChangeEvent
     amap = tx.to_json_serializable()
     assert amap["raw_txn"]["sender"] == "000000000000000000000000000000000000000000000000000000000a550c18"
@@ -26,12 +25,15 @@ def test_genesis():
     assert tx.raw_txn.expiration_time == 18446744073709551615
     if TESTNET_LOCAL:
         assert_key_related_local(tx, amap)
-        return
     else:
         assert_key_related_testnet(tx, amap)
-    wset = tx.raw_txn.payload.value
-    assert type(wset) == libra.transaction.write_set.WriteSet
-    assert len(wset.write_set) == 43
+    cset = tx.raw_txn.payload.value
+    assert type(cset) == libra.transaction.change_set.ChangeSet
+    wset = cset.write_set
+    if TESTNET_LOCAL:
+        assert len(wset.write_set) == 24
+    else:
+        assert len(wset.write_set) == 43
     non_zero_addrs = {}
     for index, wop in enumerate(wset.write_set):
         ap, _ = wop
@@ -41,7 +43,22 @@ def test_genesis():
         if index not in non_zero_addrs.keys():
             assert ap.address == [0]*32
     jstr = json_dumps(non_zero_addrs)
-    assert jstr == """{
+    if TESTNET_LOCAL:
+        assert jstr == """{
+    "1": "00000000000000000000000000000000000000000000000000000000000001d8",
+    "2": "00000000000000000000000000000000000000000000000000000000000001d8",
+    "3": "0000000000000000000000000000000000000000000000000000000000000fee",
+    "4": "0000000000000000000000000000000000000000000000000000000000000fee",
+    "5": "000000000000000000000000000000000000000000000000000000000a550c18",
+    "6": "000000000000000000000000000000000000000000000000000000000a550c18",
+    "7": "000000000000000000000000000000000000000000000000000000000a550c18",
+    "8": "000000000000000000000000000000000000000000000000000000000a550c18",
+    "9": "000000000000000000000000000000000000000000000000000000000a550c18",
+    "10": "8deeeaed65f0cd7484a9e4e5ac51fbac548f2f71299a05e000156031ca78fb9f",
+    "11": "8deeeaed65f0cd7484a9e4e5ac51fbac548f2f71299a05e000156031ca78fb9f"
+}"""
+    else:
+        assert jstr == """{
     "1": "00000000000000000000000000000000000000000000000000000000000001d8",
     "2": "00000000000000000000000000000000000000000000000000000000000001d8",
     "3": "00000000000000000000000000000000000000000000000000000000000001d8",
@@ -77,11 +94,11 @@ def test_genesis():
 
 def assert_key_related_local(tx, amap):
     assert amap["public_key"] == "5302e9093c3a35e9ae9bd2ddb84e29cec4a95094151523594687e7da37d08f95"
-    assert amap["signature"] == "de73110ca14f0538528c51f8e96b4dff782bbff01e2861efdcf5a2ea45fabcfa8984211c82db0f90f60c375123f9a677aabf874b3ca0b83a8dabce7ff796d70c"
+    assert amap["signature"] == "71c902743b21e4bf32d2f0d887bf0cdee119e106e814368960e76153f268c8d01e2bc95c4e8699091cbf4437a35864a7560f180651b166c6e063216956ced206"
     assert json_dumps(tx.transaction_info) == """{
-    "transaction_hash": "96f91848ace9c48ed4333963f70eb13b48694eb9fba2b4df338b7dbfda9a359a",
-    "state_root_hash": "d68f23ae2675e7a4ffb92571b745da7558e94adce77ab18d06c4156fcc6fe07e",
-    "event_root_hash": "414343554d554c41544f525f504c414345484f4c4445525f4841534800000000",
+    "transaction_hash": "613b226d0180e3ce06e9ddc3d483e388fcfe163cffb5508e071abb33db02f6c1",
+    "state_root_hash": "83aae0498f53dc181930992820cd0487d1298d367c8d575780506157b13a7279",
+    "event_root_hash": "4d59582dee7d15449806ff6089cdedd7c5f420c930611158c29310798d2fa49d",
     "gas_used": 0,
     "major_status": 4001
 }"""
