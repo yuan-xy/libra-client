@@ -152,9 +152,9 @@ def test_publish_module_to_testnet(capsys):
     output = exec_input(f"dev p 0 transaction_scripts/peer_to_peer_transfer.mv", capsys)
     assert "ERROR" in output
     if TESTNET_LOCAL:
-        assert 'Publish move module on-chain: major_status: 3001' in output
+        assert 'Publish move module on-chain: (3001' in output
     else:
-        assert 'Publish move module on-chain: major_status: 12' in output
+        assert 'Publish move module on-chain: (12' in output
 
 def test_faucet_key_no_host(capsys):
     with pytest.raises(ValueError):

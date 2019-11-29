@@ -1,6 +1,7 @@
 from canoser import Struct, Uint8, Uint64, RustEnum, DelegateT, bytes_to_int_list, hex_to_int_list
 from libra.account_address import Address
 from libra.account_config import AccountConfig
+from libra.language_storage import ModuleId
 from typing import List
 
 #SEPARATOR is used as a delimiter between fields. It should not be a legal part of any identifier
@@ -58,6 +59,20 @@ class AccessPath(Struct):
         astr = Accesses.as_separated_string(accesses)
         key.extend(AccessPath.str_to_ints(astr))
         return key
+
+    @classmethod
+    def code_access_path_vec(cls, key: ModuleId):
+        root = []
+        root.append(cls.CODE_TAG)
+        root.extend(bytes_to_int_list(key.hash()))
+        return root
+
+    @classmethod
+    def code_access_path(cls, key: ModuleId):
+        path = AccessPath.code_access_path_vec(key)
+        return AccessPath(key.address, path)
+
+
 
 # VALIDATOR_SET_ACCESS_PATH = AccessPath(
 #     hex_to_int_list(AccountConfig.association_address()),

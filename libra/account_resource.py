@@ -34,7 +34,8 @@ class AccountState(Struct):
         amap = super().to_json_serializable()
         ar = self.get_resource()
         if ar:
-            amap["Decoded_resource"] = ar.to_json_serializable()
+            amap["account_resource_path"] = AccountConfig.account_resource_path().hex()
+            amap["decoded_account_resource"] = ar.to_json_serializable()
         return amap
 
 
@@ -49,6 +50,10 @@ class AccountState(Struct):
 
 
 class AccountResource(Struct):
+    """
+    A Rust/Python representation of an Account resource.
+    This is not how the Account is represented in the VM but it's a convenient representation.
+    """
     _fields = [
         ('authentication_key', [Uint8]),
         ('balance', Uint64),
