@@ -66,26 +66,27 @@ class SparseMerkleProof:
                 raise VerifyError(f"Mailformed proof. Leaf has {len(proto_leaf)} bytes")
         else:
             leaf = None
-        bitmap = proto_proof.bitmap
-        if bitmap[-1] == b'0':
-            raise VerifyError("Malformed proof. The last byte of the bitmap is zero.")
-        bit_str = bytes_to_bits(bitmap)
-        num_non_default_siblings = bit_str.count('1')
-        if num_non_default_siblings != len(proto_proof.non_default_siblings):
-            raise VerifyError("Malformed proof. Bitmap not match non-default siblings")
-        proto_siblings = proto_proof.non_default_siblings
-        #  Iterate from the MSB of the first byte to the rightmost 1-bit in the bitmap. If a bit is
-        #  set, the corresponding sibling is non-default and we take the sibling from
-        #  proto_siblings. Otherwise the sibling on this position is default.
-        siblings = []
-        index = 0
-        for bit in bit_str.rstrip('0'):
-            if bit == '1':
-                siblings.append(proto_siblings[index])
-                index += 1
-            elif bit == '0':
-                siblings.append(bytes(SPARSE_MERKLE_PLACEHOLDER_HASH))
-            else:
-                assert False
+        # bitmap = proto_proof.bitmap
+        # if bitmap[-1] == b'0':
+        #     raise VerifyError("Malformed proof. The last byte of the bitmap is zero.")
+        # bit_str = bytes_to_bits(bitmap)
+        # num_non_default_siblings = bit_str.count('1')
+        # if num_non_default_siblings != len(proto_proof.non_default_siblings):
+        #     raise VerifyError("Malformed proof. Bitmap not match non-default siblings")
+        # proto_siblings = proto_proof.non_default_siblings
+        # #  Iterate from the MSB of the first byte to the rightmost 1-bit in the bitmap. If a bit is
+        # #  set, the corresponding sibling is non-default and we take the sibling from
+        # #  proto_siblings. Otherwise the sibling on this position is default.
+        # siblings = []
+        # index = 0
+        # for bit in bit_str.rstrip('0'):
+        #     if bit == '1':
+        #         siblings.append(proto_siblings[index])
+        #         index += 1
+        #     elif bit == '0':
+        #         siblings.append(bytes(SPARSE_MERKLE_PLACEHOLDER_HASH))
+        #     else:
+        #         assert False
+        siblings = [ sibling if len(sibling) else bytes(SPARSE_MERKLE_PLACEHOLDER_HASH) for sibling in proto_proof.siblings]
         return cls(leaf, siblings)
 

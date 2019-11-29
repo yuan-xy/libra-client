@@ -120,7 +120,7 @@ def verify_sparse_merkle_element(
     else:
         current_hash = bytes(SPARSE_MERKLE_PLACEHOLDER_HASH)
     iter_bits = bytes_to_bits(element_key)[0:len(siblings)]
-    zipped = zip(reversed(siblings), reversed(iter_bits))
+    zipped = zip(siblings, reversed(iter_bits))
     for sibling_hash, bit in zipped:
         hasher = SparseMerkleInternalHasher()
         if bit == '1':
