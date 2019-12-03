@@ -63,6 +63,19 @@ def test_gax_too_large():
     with pytest.raises(TransactionError):
         c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
 
+
+def test_amount_zero():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
+    c = libra.Client("testnet")
+    ret = c.transfer_coin(a0, a1.address, 0, is_blocking=True)
+    proto, _ = c.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number)
+    stx = Transaction.deserialize(proto.transaction.transaction).value
+    assert stx == ret
+    assert proto.proof.transaction_info.major_status == 4016
+
+
 def test_amount_illegal():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
