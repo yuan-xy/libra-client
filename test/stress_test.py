@@ -30,6 +30,24 @@ def test_429():
         print(err)
 
 
+def test_mint_429():
+    if is_in_ci():
+        return
+    wallet = libra.WalletLibrary.new()
+    a0 = wallet.new_account()
+    c = libra.Client("testnet")
+    count = 1
+    try:
+        while True:
+            time.sleep(1)
+            a1 = wallet.new_account()
+            c.mint_coins(a1.address_hex, count, is_blocking=False)
+            count += 1
+    except Exception as err:
+        print(err)
+
+
+
 def test_seq_too_old():
     if is_in_ci():
         return
