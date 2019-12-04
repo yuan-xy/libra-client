@@ -192,3 +192,12 @@ def test_client_error():
         libra.Client.new("localhost", 8000)
     with pytest.raises(FileNotFoundError):
         libra.Client.new("localhost", 8000, "non_exsits_file")
+
+def test_timeout():
+    c = libra.Client("testnet")
+    c.timeout = 0.001
+    with pytest.raises(Exception) as excinfo:
+        stx = c.get_transaction(1, True)
+    error = excinfo.value
+    assert error.code().name == 'DEADLINE_EXCEEDED'
+    assert error.details() == 'Deadline Exceeded'

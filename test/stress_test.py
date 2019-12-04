@@ -37,14 +37,16 @@ def test_mint_429():
     a0 = wallet.new_account()
     c = libra.Client("testnet")
     count = 1
-    try:
-        while True:
-            time.sleep(1)
+    while True:
+        try:
+            time.sleep(2)
             a1 = wallet.new_account()
-            c.mint_coins(a1.address_hex, count, is_blocking=False)
+            c.mint_coins(a1.address_hex, count*1000000, is_blocking=False)
             count += 1
-    except Exception as err:
-        print(err)
+            print(count, flush=True)
+            time.sleep(2)
+        except Exception as err:
+            print(err, flush=True)
 
 
 

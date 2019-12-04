@@ -77,6 +77,7 @@ class Client:
         self.init_validators(validator_set_file)
         self.init_grpc()
         self.init_faucet_account(faucet_file)
+        self.timeout = 30
         self.client_known_version = 0
         self.verbose = True
 
@@ -160,7 +161,7 @@ class Client:
 
     def update_to_latest_ledger(self, request):
         request.client_known_version = self.client_known_version
-        resp = self.stub.UpdateToLatestLedger(request)
+        resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
         self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
@@ -286,7 +287,7 @@ class Client:
 
     def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
         url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
-        resp = requests.post(url)
+        resp = requests.post(url, timeout=self.timeout)
         if resp.status_code != 200:
             raise IOError(
                 "Failed to send request to faucet service: {}".format(self.faucet_host)
@@ -364,7 +365,7 @@ class Client:
         return resp
 
     def submit_transaction_non_block(self, request):
-        resp = self.stub.SubmitTransaction(request)
+        resp = self.stub.SubmitTransaction(request, timeout=self.timeout)
         status = resp.WhichOneof('status')
         if status == 'ac_status':
             if resp.ac_status.code == AdmissionControlStatusCode.Accepted:
