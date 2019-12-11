@@ -11,9 +11,12 @@ def is_in_ci():
         return True
     return False
 
+def run_stress_test():
+    return 'STRESS_TEST' in os.environ
+
 
 def test_429():
-    if is_in_ci():
+    if not run_stress_test():
         return
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
@@ -31,7 +34,7 @@ def test_429():
 
 
 def test_mint_429():
-    if is_in_ci():
+    if not run_stress_test():
         return
     wallet = libra.WalletLibrary.new()
     a0 = wallet.new_account()
@@ -51,7 +54,7 @@ def test_mint_429():
 
 
 def test_seq_too_old():
-    if is_in_ci():
+    if not run_stress_test():
         return
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
