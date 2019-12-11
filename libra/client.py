@@ -294,7 +294,7 @@ class Client:
         resp = requests.post(url, timeout=self.timeout)
         if resp.status_code != 200:
             raise IOError(
-                "Failed to send request to faucet service: {}".format(self.faucet_host)
+                f"Faucet service {self.faucet_host} error: {resp.status_code}, {resp.text}"
             )
         sequence_number = Uint64.int_safe(resp.text) - 1
         if is_blocking:
