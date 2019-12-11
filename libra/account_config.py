@@ -54,6 +54,11 @@ class AccountConfig:
         return "1d8".rjust(HEX_ADDRESS_LENGTH, '0')
 
     @classmethod
+    def discovery_set_address(cls):
+        return "D15C0".rjust(HEX_ADDRESS_LENGTH, '0')
+
+
+    @classmethod
     def account_struct_tag(cls):
         return StructTag(
             hex_to_int_list(cls.core_code_address()),
