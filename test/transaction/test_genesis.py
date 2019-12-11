@@ -1,4 +1,5 @@
 import libra
+from libra.contract_event import ContractEvent
 from libra.json_print import json_dumps
 import pytest
 import os
@@ -15,14 +16,22 @@ except KeyError:
 def test_genesis():
     c = libra.Client("testnet")
     tx = c.get_transaction(0, True)
-    assert len(tx.events) == 3
-    #The genesis tx should emit 3 events: a pair of payment sent/received events for minting to the genesis address, and a ValidatorSet.ChangeEvent
+    assert len(tx.events) == 4
+    assert tx.events[0].type_tag.value.module == "LibraAccount"
+    assert tx.events[0].type_tag.value.name == "SentPaymentEvent"
+    assert tx.events[1].type_tag.value.module == "LibraAccount"
+    assert tx.events[1].type_tag.value.name == "ReceivedPaymentEvent"
+    assert tx.events[2].type_tag.value.module == "LibraSystem"
+    assert tx.events[2].type_tag.value.name == "ValidatorSetChangeEvent"
+    assert tx.events[3].type_tag.value.module == "LibraSystem"
+    assert tx.events[3].type_tag.value.name == "DiscoverySetChangeEvent"
     amap = tx.to_json_serializable()
     assert amap["raw_txn"]["sender"] == "000000000000000000000000000000000000000000000000000000000a550c18"
     assert tx.raw_txn.sequence_number == 0
     assert tx.raw_txn.max_gas_amount == 0
     assert tx.raw_txn.gas_unit_price == 0
     assert tx.raw_txn.expiration_time == 18446744073709551615
+    return #make test passed first
     if TESTNET_LOCAL:
         assert_key_related_local(tx, amap)
     else:

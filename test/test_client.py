@@ -54,9 +54,10 @@ def test_get_tx_from_zero():
     assert len(transactions) == 1
     assert len(events_for_versions.events_for_version) == 1
     events = events_for_versions.events_for_version[0].events
-    assert len(events) == 3
-    # ces = [ContractEvent.from_proto(x) for x in events]
-    # assert len(ces) == 0
+    assert len(events) == 4
+    ces = [ContractEvent.from_proto(x) for x in events]
+    assert len(ces) == 4
+
 
 def test_get_tx_latest():
     c = libra.Client("testnet")
