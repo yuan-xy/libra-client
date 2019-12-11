@@ -43,7 +43,7 @@ class SignedTransaction(Struct):
             )
 
     def hash(self):
-        shazer = gen_hasher(b"SignedTransaction")
+        shazer = gen_hasher(b"SignedTransaction::libra_types::transaction")
         shazer.update(self.serialize())
         return shazer.digest()
 

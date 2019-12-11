@@ -6,7 +6,7 @@ from nacl.signing import VerifyKey
 
 
 def test_validator_set_path():
-    validator_set_path = [1, 199, 67, 201, 192, 92, 228, 217, 21, 182, 247, 123, 112, 78, 146, 191, 135, 208, 102, 202, 138, 27, 160, 213, 102, 254, 217, 189, 145, 54, 181, 212, 21]
+    validator_set_path = [1, 146, 133, 100, 168, 65, 88, 76, 83, 113, 115, 248, 50, 183, 193, 152, 108, 246, 65, 147, 93, 224, 42, 61, 48, 107, 126, 146, 213, 178, 116, 197, 26]
     assert ValidatorSet.validator_set_path() == validator_set_path
 
 

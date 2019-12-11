@@ -13,7 +13,7 @@ class AccountStateBlob:
         return cls(proto.blob)
 
     def hash(self):
-        shazer = gen_hasher(b"AccountStateBlob")
+        shazer = gen_hasher(b"AccountStateBlob::libra_types::account_resource")
         shazer.update(self.blob)
         return shazer.digest()
 
@@ -61,7 +61,8 @@ class AccountResource(Struct):
         ('delegated_withdrawal_capability', bool),
         ('received_events', EventHandle),
         ('sent_events', EventHandle),
-        ('sequence_number', Uint64)
+        ('sequence_number', Uint64),
+        ('event_generator', Uint64)
     ]
 
     @classmethod

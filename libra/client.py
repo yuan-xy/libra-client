@@ -13,7 +13,7 @@ from libra.transaction import (
 from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
-from libra.event import ContractEvent
+from libra.contract_event import ContractEvent
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -34,9 +34,6 @@ class AccountError(LibraError):
     pass
 
 class TransactionError(LibraError):
-    pass
-
-class VMError(TransactionError):
     @property
     def error_code(self):
         code, _ = self.args
@@ -47,7 +44,14 @@ class VMError(TransactionError):
         _, msg = self.args
         return msg
 
+class AdmissionControlError(TransactionError):
+    pass
 
+class VMError(TransactionError):
+    pass
+
+class MempoolError(TransactionError):
+    pass
 
 class TransactionTimeoutError(LibraError):
     pass
@@ -371,13 +375,13 @@ class Client:
             if resp.ac_status.code == AdmissionControlStatusCode.Accepted:
                 return resp
             else:
-                raise TransactionError(f"Status code: {resp.ac_status.code}")
+                raise AdmissionControlError(resp.ac_status.code, resp.ac_status.message)
         elif status == 'vm_status':
             from libra.vm_error import VMStatus
             vms = VMStatus.from_proto(resp.vm_status)
             raise VMError(vms.major_status, vms.err_msg())
         elif status == 'mempool_status':
-            raise TransactionError(resp.mempool_status.__str__())
+            raise MempoolError(resp.mempool_status.code, resp.mempool_status.message)
         else:
-            raise TransactionError(f"Unknown Error: {resp}")
+            raise AssertionError(f"Unknown Error: {resp}")
         raise AssertionError("unreacheable")

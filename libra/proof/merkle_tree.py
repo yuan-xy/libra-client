@@ -1,5 +1,5 @@
 from libra.hasher import *
-from libra.event import ContractEvent
+from libra.contract_event import ContractEvent
 import more_itertools
 
 
@@ -44,7 +44,7 @@ class SparseMerkleLeafNode:
         self.value_hash = value_hash
 
     def hash(self):
-        shazer = gen_hasher(b"SparseMerkleLeaf")
+        shazer = gen_hasher(b"SparseMerkleLeaf::libra_types::proof")
         shazer.update(self.key)
         shazer.update(self.value_hash)
         return shazer.digest()

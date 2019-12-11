@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='types',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x16validator_change.proto\x12\x05types\x1a\x0c\x65vents.proto\x1a\x11ledger_info.proto\"\x90\x01\n\x1dValidatorChangeEventWithProof\x12>\n\x15ledger_info_with_sigs\x18\x01 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\x12/\n\x10\x65vent_with_proof\x18\x02 \x01(\x0b\x32\x15.types.EventWithProofb\x06proto3')
+  serialized_pb=_b('\n\x16validator_change.proto\x12\x05types\x1a\x0c\x65vents.proto\x1a\x11ledger_info.proto\"_\n\x1dValidatorChangeEventWithProof\x12>\n\x15ledger_info_with_sigs\x18\x01 \x03(\x0b\x32\x1f.types.LedgerInfoWithSignaturesb\x06proto3')
   ,
   dependencies=[events__pb2.DESCRIPTOR,ledger__info__pb2.DESCRIPTOR,])
 
@@ -38,15 +38,8 @@ _VALIDATORCHANGEEVENTWITHPROOF = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='ledger_info_with_sigs', full_name='types.ValidatorChangeEventWithProof.ledger_info_with_sigs', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='event_with_proof', full_name='types.ValidatorChangeEventWithProof.event_with_proof', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -62,12 +55,11 @@ _VALIDATORCHANGEEVENTWITHPROOF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=67,
-  serialized_end=211,
+  serialized_start=66,
+  serialized_end=161,
 )
 
 _VALIDATORCHANGEEVENTWITHPROOF.fields_by_name['ledger_info_with_sigs'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
-_VALIDATORCHANGEEVENTWITHPROOF.fields_by_name['event_with_proof'].message_type = events__pb2._EVENTWITHPROOF
 DESCRIPTOR.message_types_by_name['ValidatorChangeEventWithProof'] = _VALIDATORCHANGEEVENTWITHPROOF
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 

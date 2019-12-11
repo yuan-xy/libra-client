@@ -1,5 +1,6 @@
 import libra
 from libra.transaction import *
+from libra.contract_event import ContractEvent
 import os
 import pytest
 #import pdb
@@ -8,34 +9,23 @@ import pytest
 def test_get_transaction():
     c = libra.Client("testnet")
     stx = c.get_transaction(1, True)
-    assert bytes(stx.raw_txn.sender).hex() == libra.AccountConfig.association_address()
-    assert stx.raw_txn.sequence_number == 1
-    assert stx.raw_txn.payload.index == 2
-    assert stx.raw_txn.payload.Script == True
-    assert stx.raw_txn.payload.value.code == Script.get_script_bytecode("mint")
-    assert stx.raw_txn.payload.value.args[0].index == 1
-    assert stx.raw_txn.payload.value.args[0].Address == True
-    assert stx.raw_txn.payload.value.args[1].index == 0
-    assert stx.raw_txn.payload.value.args[1].U64 == True
-    #assert stx.raw_txn.payload.value.args[1].value == 1000000000000
-    assert stx.raw_txn.max_gas_amount == 140000
-    assert stx.raw_txn.gas_unit_price == 0
-    assert stx.raw_txn.expiration_time > 1_568_000_000
-    assert stx.raw_txn.expiration_time < 11_568_000_000
-    assert len(stx.public_key) == 32
-    assert len(stx.signature) == 64
-    stx.check_signature()
-    stx.__str__()
+    print(stx)
+    assert isinstance(stx, libra.block_metadata.BlockMetadata) == True
+    assert stx.previous_block_votes == {}
+    assert len(stx.proposer) == 32
+    assert len(stx.id) == 32
+    assert stx.timestamp_usec > 1570_000_000_000_000
+    assert len(stx.events) == 0
     info = stx.transaction_info
-    if info.major_status == 4001:
-        assert info.gas_used == 0
-        assert len(stx.events) == 2
-        assert stx.events[0].type_tag.Struct == True
-        assert stx.events[0].type_tag.value.is_pay_tag() == True
-        assert stx.events[1].type_tag.Struct == True
-        assert stx.events[1].type_tag.value.is_pay_tag() == True
-    else:
-        assert len(stx.events) == 0
+    assert info.major_status == 4001
+    assert info.gas_used == 0
+
+def test_get_transactions3():
+    c = libra.Client("testnet")
+    txs = c.get_transactions(0, limit=3, fetch_events=True)
+    assert len(txs) == 3
+
+
 
 def test_get_transaction_without_events():
     c = libra.Client("testnet")
@@ -63,7 +53,10 @@ def test_get_tx_from_zero():
     transactions, events_for_versions = c.get_transactions_proto(0, 1, True)
     assert len(transactions) == 1
     assert len(events_for_versions.events_for_version) == 1
-    assert len(events_for_versions.events_for_version[0].events) == 0
+    events = events_for_versions.events_for_version[0].events
+    assert len(events) == 3
+    # ces = [ContractEvent.from_proto(x) for x in events]
+    # assert len(ces) == 0
 
 def test_get_tx_latest():
     c = libra.Client("testnet")
@@ -91,10 +84,10 @@ def test_get_latest_transaction_version():
     assert ver > 0
 
 def test_get_balance():
-    address = libra.AccountConfig.association_address()
+    address = libra.AccountConfig.transaction_fee_address()
     c = libra.Client("testnet")
     balance = c.get_balance(address)
-    assert balance > 0
+    assert balance >= 0
 
 def test_get_account_resource():
     address = libra.AccountConfig.association_address()
@@ -105,9 +98,9 @@ def test_get_account_resource():
     assert ret.delegated_key_rotation_capability == False
     assert ret.delegated_withdrawal_capability == False
     assert ret.received_events.count > 0
-    assert len(ret.received_events.key) == 32
+    assert len(ret.received_events.key) == libra.event.EVENT_KEY_LENGTH
     assert ret.sent_events.count > 0
-    assert len(ret.sent_events.key) == 32
+    assert len(ret.sent_events.key) == libra.event.EVENT_KEY_LENGTH
     assert ret.sequence_number > 0
     addr = b'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\nU\x0c\x18'
     assert addr == bytes.fromhex(address)

@@ -13,7 +13,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import ledger_info_pb2 as ledger__info__pb2
+import validator_change_pb2 as validator__change__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -21,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='consensus',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x11ledger_info.proto\"\xb0\x02\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x05 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x12\x36\n\x0bledger_info\x18\x06 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignaturesH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRespondBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x16validator_change.proto\"\xe8\x02\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x05 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x12<\n\x0c\x65poch_change\x18\x06 \x01(\x0b\x32$.types.ValidatorChangeEventWithProofH\x00\x12\x30\n\rrequest_epoch\x18\x07 \x01(\x0b\x32\x17.consensus.RequestEpochH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRespondBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestEpoch\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\x62\x06proto3')
   ,
-  dependencies=[ledger__info__pb2.DESCRIPTOR,])
+  dependencies=[validator__change__pb2.DESCRIPTOR,])
 
 
 
@@ -71,8 +71,15 @@ _CONSENSUSMSG = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='ledger_info', full_name='consensus.ConsensusMsg.ledger_info', index=5,
+      name='epoch_change', full_name='consensus.ConsensusMsg.epoch_change', index=5,
       number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='request_epoch', full_name='consensus.ConsensusMsg.request_epoch', index=6,
+      number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -92,8 +99,8 @@ _CONSENSUSMSG = _descriptor.Descriptor(
       name='message', full_name='consensus.ConsensusMsg.message',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=50,
-  serialized_end=354,
+  serialized_start=55,
+  serialized_end=415,
 )
 
 
@@ -123,8 +130,8 @@ _PROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=356,
-  serialized_end=381,
+  serialized_start=417,
+  serialized_end=442,
 )
 
 
@@ -154,8 +161,8 @@ _SYNCINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=383,
-  serialized_end=408,
+  serialized_start=444,
+  serialized_end=469,
 )
 
 
@@ -185,8 +192,8 @@ _BLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=410,
-  serialized_end=432,
+  serialized_start=471,
+  serialized_end=493,
 )
 
 
@@ -216,8 +223,8 @@ _VOTEMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=434,
-  serialized_end=458,
+  serialized_start=495,
+  serialized_end=519,
 )
 
 
@@ -247,8 +254,8 @@ _VOTEPROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=460,
-  serialized_end=489,
+  serialized_start=521,
+  serialized_end=550,
 )
 
 
@@ -278,8 +285,8 @@ _REQUESTBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=491,
-  serialized_end=520,
+  serialized_start=552,
+  serialized_end=581,
 )
 
 
@@ -309,8 +316,39 @@ _RESPONDBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=522,
-  serialized_end=551,
+  serialized_start=583,
+  serialized_end=612,
+)
+
+
+_REQUESTEPOCH = _descriptor.Descriptor(
+  name='RequestEpoch',
+  full_name='consensus.RequestEpoch',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='bytes', full_name='consensus.RequestEpoch.bytes', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=614,
+  serialized_end=643,
 )
 
 _CONSENSUSMSG.fields_by_name['proposal'].message_type = _PROPOSAL
@@ -318,7 +356,8 @@ _CONSENSUSMSG.fields_by_name['vote_msg'].message_type = _VOTEMSG
 _CONSENSUSMSG.fields_by_name['request_block'].message_type = _REQUESTBLOCK
 _CONSENSUSMSG.fields_by_name['respond_block'].message_type = _RESPONDBLOCK
 _CONSENSUSMSG.fields_by_name['sync_info'].message_type = _SYNCINFO
-_CONSENSUSMSG.fields_by_name['ledger_info'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
+_CONSENSUSMSG.fields_by_name['epoch_change'].message_type = validator__change__pb2._VALIDATORCHANGEEVENTWITHPROOF
+_CONSENSUSMSG.fields_by_name['request_epoch'].message_type = _REQUESTEPOCH
 _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
   _CONSENSUSMSG.fields_by_name['proposal'])
 _CONSENSUSMSG.fields_by_name['proposal'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
@@ -335,8 +374,11 @@ _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
   _CONSENSUSMSG.fields_by_name['sync_info'])
 _CONSENSUSMSG.fields_by_name['sync_info'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
 _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
-  _CONSENSUSMSG.fields_by_name['ledger_info'])
-_CONSENSUSMSG.fields_by_name['ledger_info'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
+  _CONSENSUSMSG.fields_by_name['epoch_change'])
+_CONSENSUSMSG.fields_by_name['epoch_change'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
+_CONSENSUSMSG.oneofs_by_name['message'].fields.append(
+  _CONSENSUSMSG.fields_by_name['request_epoch'])
+_CONSENSUSMSG.fields_by_name['request_epoch'].containing_oneof = _CONSENSUSMSG.oneofs_by_name['message']
 DESCRIPTOR.message_types_by_name['ConsensusMsg'] = _CONSENSUSMSG
 DESCRIPTOR.message_types_by_name['Proposal'] = _PROPOSAL
 DESCRIPTOR.message_types_by_name['SyncInfo'] = _SYNCINFO
@@ -345,6 +387,7 @@ DESCRIPTOR.message_types_by_name['VoteMsg'] = _VOTEMSG
 DESCRIPTOR.message_types_by_name['VoteProposal'] = _VOTEPROPOSAL
 DESCRIPTOR.message_types_by_name['RequestBlock'] = _REQUESTBLOCK
 DESCRIPTOR.message_types_by_name['RespondBlock'] = _RESPONDBLOCK
+DESCRIPTOR.message_types_by_name['RequestEpoch'] = _REQUESTEPOCH
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ConsensusMsg = _reflection.GeneratedProtocolMessageType('ConsensusMsg', (_message.Message,), {
@@ -402,6 +445,13 @@ RespondBlock = _reflection.GeneratedProtocolMessageType('RespondBlock', (_messag
   # @@protoc_insertion_point(class_scope:consensus.RespondBlock)
   })
 _sym_db.RegisterMessage(RespondBlock)
+
+RequestEpoch = _reflection.GeneratedProtocolMessageType('RequestEpoch', (_message.Message,), {
+  'DESCRIPTOR' : _REQUESTEPOCH,
+  '__module__' : 'consensus_pb2'
+  # @@protoc_insertion_point(class_scope:consensus.RequestEpoch)
+  })
+_sym_db.RegisterMessage(RequestEpoch)
 
 
 # @@protoc_insertion_point(module_scope)

@@ -100,7 +100,7 @@ def get_commands_alias(commands):
 
 def report_error(msg, err=None, verbose=False):
     if err is not None:
-        msg = f"{msg}: {err}"
+        msg = f"{msg}: {err.__class__.__name__} {err}"
     json_print({"ERROR": msg}, color=support_color(), bgcolor='\u001b[43;1m')
     #http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#background-colors
     if verbose:

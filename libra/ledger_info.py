@@ -15,12 +15,13 @@ class LedgerInfo(Struct):
         ('consensus_data_hash', [Uint8]),
         ('consensus_block_id', [Uint8]),
         ('epoch', Uint64),
+        ('round', Uint64),
         ('timestamp_usecs', Uint64),
         ('next_validator_set', OptionValidatorSet)
     ]
 
     def hash(self):
-        shazer = gen_hasher(b"LedgerInfo")
+        shazer = gen_hasher(b"LedgerInfo::libra_types::ledger_info")
         shazer.update(self.serialize())
         return shazer.digest()
 
@@ -32,6 +33,7 @@ class LedgerInfo(Struct):
         ret.consensus_data_hash = bytes_to_int_list(proto.consensus_data_hash)
         ret.consensus_block_id = bytes_to_int_list(proto.consensus_block_id)
         ret.epoch = proto.epoch
+        ret.round = proto.round
         ret.timestamp_usecs = proto.timestamp_usecs
         if proto.HasField("next_validator_set"):
             vset = ValidatorSet.from_proto(proto.next_validator_set)

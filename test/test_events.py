@@ -1,5 +1,6 @@
 from libra.account_config import *
 from libra.event import *
+from libra.contract_event import ContractEvent
 from libra.account_address import Address
 import libra
 #import pdb
@@ -22,11 +23,11 @@ def test_event_sent():
     assert tag1.module == 'LibraAccount'
     assert tag1.name == 'SentPaymentEvent'
     assert tag1.is_pay_tag() == True
-    assert len(contracts[0].event_data) == 40
-    assert len(contracts[0].event_data) == 40
+    assert len(contracts[0].event_data) == 44
+    assert len(contracts[0].event_data) == 44
     assert contracts[0].key == contracts[1].key
     assert contracts[0].event_seq_num-1 == contracts[1].event_seq_num
-    assert len(contracts[0].event_data) == 40
+    assert len(contracts[0].event_data) == 44
     aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
     assert len(aes[0].account) == 32
@@ -39,24 +40,30 @@ def test_event_sent():
     assert res.sent_events.count == contracts[0].event_seq_num+1
     assert res.sequence_number >= res.sent_events.count
 
-def test_event_received():
+def test_latest_events_received():
     address = libra.AccountConfig.association_address()
     c = libra.Client("testnet")
     events = c.get_latest_events_received(address, 1)
-    if len(events) == 0:
-        #pdb.set_trace()
-        return
     assert len(events) == 1
-    assert events[0].transaction_version > 0
+    assert events[0].transaction_version >= 0
+
+
+def test_events_received():
+    address = libra.AccountConfig.association_address()
+    c = libra.Client("testnet")
+    events = c.get_events_received(address, 0, limit=1)
+    assert len(events) == 1
+    assert events[0].transaction_version >= 0
     contracts = [ContractEvent.from_proto(x.event) for x in events]
     tag0 = contracts[0].type_tag.value
     assert tag0.address == libra.AccountConfig.core_code_address_ints()
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
-    assert len(contracts[0].event_data) == 40
+    assert len(contracts[0].event_data) == 44
     aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
     assert len(aes[0].account) == 32
     res = c.get_account_resource(address)
     assert res.received_events.key == contracts[0].key
     assert res.received_events.count == contracts[0].event_seq_num+1
+    assert res.event_generator == 2

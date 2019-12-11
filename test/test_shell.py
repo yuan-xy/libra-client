@@ -123,6 +123,10 @@ def test_transfer_error(capsys):
     assert 'transfer | transferb | t | tb' in output
 
 def test_execute_script_on_testnet(capsys):
+    if TESTNET_LOCAL:
+        #TODO: why should sleep some seconds to avoid MempoolError
+        import time
+        time.sleep(1)
     client = libra.Client("testnet")
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
@@ -134,8 +138,10 @@ def test_execute_script_on_testnet(capsys):
     output = exec_input(f"dev e 0 transaction_scripts/peer_to_peer_transfer.mv {addr1} 1", capsys)
     assert 'Compiling program' in output
     if TESTNET_LOCAL:
-        assert "code: InvalidUpdate" in output
-        assert "Failed to update gas price to 0" in output
+        if "MempoolError" in output:
+            assert "Failed to update gas price to 0" in output
+        else:
+            assert "Successfully finished execution" in output
     else:
         seq = client.get_sequence_number(a0.address_hex)
         client.wait_for_transaction(a0.address_hex, seq-1)
@@ -152,9 +158,11 @@ def test_publish_module_to_testnet(capsys):
     output = exec_input(f"dev p 0 transaction_scripts/peer_to_peer_transfer.mv", capsys)
     assert "ERROR" in output
     if TESTNET_LOCAL:
-        assert 'Publish move module on-chain: (3001' in output
+        assert 'Publish move module on-chain: ' in output
+        assert 'VMError (3001' in output
     else:
-        assert 'Publish move module on-chain: (12' in output
+        assert 'Publish move module on-chain: ' in output
+        assert 'VMError (12' in output
 
 def test_faucet_key_no_host(capsys):
     with pytest.raises(ValueError):
