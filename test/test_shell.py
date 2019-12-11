@@ -178,3 +178,12 @@ def exec_input_with_client(input, client, alias_to_cmd):
     params = parse_cmd(input)
     cmd = alias_to_cmd.get(params[0])
     cmd.execute(client, params)
+
+def test_ledger_time(capsys):
+    # output = exec_input("ledger time", capsys)
+    from libra.cli.ledger_cmds import LedgerCmdTime
+    client = libra.Client("testnet")
+    LedgerCmdTime().execute(client, {})
+    output = capsys.readouterr().out
+    assert 'start_time' in output
+    assert 'latest_time' in output
