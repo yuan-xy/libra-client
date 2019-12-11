@@ -1,47 +1,7 @@
-from canoser import *
-from libra.account_address import Address
-from libra.language_storage import StructTag
-from libra.account_config import AccountConfig
-from libra.access_path import AccessPath
-
 
 class VerifyError(Exception):
     pass
 
-class ValidatorPublicKeys(Struct):
-    _fields = [
-        ('account_address', Address),
-        ('consensus_public_key', [Uint8]),
-        ('network_identity_public_key', [Uint8]), #TODO: X25519StaticPublicKey::to_bytes(&self.network_identity_public_key)[..])
-        ('network_signing_public_key', [Uint8]) #only consensus_public_key exsits in consensus_peer.config
-    ]
-
-class ValidatorSet(DelegateT):
-    delegate_type = [ValidatorPublicKeys]
-
-    LIBRA_SYSTEM_MODULE_NAME = "LibraSystem"
-    VALIDATOR_SET_STRUCT_NAME = "ValidatorSet"
-
-
-    VALIDATOR_SET_MODULE_NAME = LIBRA_SYSTEM_MODULE_NAME
-
-    @classmethod
-    def validator_set_tag(cls) -> StructTag:
-        return StructTag(
-            hex_to_int_list(AccountConfig.core_code_address()),
-            cls.VALIDATOR_SET_MODULE_NAME,
-            cls.VALIDATOR_SET_STRUCT_NAME,
-            []
-        )
-
-    @classmethod
-    def validator_set_path(cls):
-        return AccessPath.resource_access_vec(cls.validator_set_tag(), [])
-
-    @classmethod
-    def from_proto(cls, next_validator_set_proto):
-        #TODO: validator_set change
-        raise Exception("not implemented.")
 
 class ValidatorVerifier:
     def __init__(self, validators):

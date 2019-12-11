@@ -1,5 +1,5 @@
 from canoser import *
-from libra.validator_verifier import ValidatorSet
+from libra.validator_set import ValidatorSet
 from libra.hasher import gen_hasher
 
 Version = Uint64
