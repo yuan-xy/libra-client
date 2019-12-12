@@ -139,11 +139,8 @@ def test_transfer_coin():
     a1 = wallet.new_account()
     c = libra.Client("testnet")
     c.mint_coins(a0.address.hex(), 1234, True)
-    balance0 = c.get_balance(a0.address)
-    try:
-        balance1 = c.get_balance(a1.address)
-    except libra.client.AccountError:
-        balance1 = 0
+    balance0 = c.get_balance(a0.address, retry=True)
+    balance1 = c.get_balance(a1.address, retry=True)
     ret = c.transfer_coin(a0, a1.address, 1234, unit_price=0, is_blocking=True)
     assert bytes(ret.raw_txn.sender) == a0.address
     assert ret.raw_txn.sequence_number == 0

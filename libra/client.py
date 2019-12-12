@@ -138,32 +138,33 @@ class Client:
         version = resp.ledger_info_with_sigs.ledger_info.version
         return (blob, version)
 
-    def get_account_state(self, address):
-        blob, version = self.get_account_blob(address)
+    def get_account_state(self, address, retry=False):
+        try:
+            blob, version = self.get_account_blob(address)
+        except Exception:
+            if retry:
+                blob, version = self.get_account_blob(address)
+            else:
+                raise
         if len(blob.__str__()) == 0:
             #TODO: bad smell
             raise AccountError("Account state blob is empty.")
         return AccountState.deserialize(blob.blob)
 
-    def get_account_resource(self, address):
-        state = self.get_account_state(address)
+    def get_account_resource(self, address, retry=False):
+        state = self.get_account_state(address, retry)
         return state.get_resource()
 
     def get_sequence_number(self, address, retry=False):
         try:
-            state = self.get_account_resource(address)
+            state = self.get_account_resource(address, retry)
             return state.sequence_number
         except AccountError:
             return 0
-        except Exception as err:
-            if retry:
-                return self.get_sequence_number(address)
-            else:
-                raise err
 
-    def get_balance(self, address):
+    def get_balance(self, address, retry=False):
         try:
-            state = self.get_account_resource(address)
+            state = self.get_account_resource(address, retry)
             return state.balance
         except AccountError:
             return 0
