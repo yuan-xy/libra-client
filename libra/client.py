@@ -149,12 +149,17 @@ class Client:
         state = self.get_account_state(address)
         return state.get_resource()
 
-    def get_sequence_number(self, address):
+    def get_sequence_number(self, address, retry=False):
         try:
             state = self.get_account_resource(address)
             return state.sequence_number
         except AccountError:
             return 0
+        except Exception as err:
+            if retry:
+                return self.get_sequence_number(address)
+            else:
+                raise err
 
     def get_balance(self, address):
         try:
@@ -344,7 +349,7 @@ class Client:
 
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
-        sequence_number = self.get_sequence_number(sender_account.address)
+        sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         #TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
             payload, max_gas, unit_price, txn_expiration)
