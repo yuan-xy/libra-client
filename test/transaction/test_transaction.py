@@ -82,6 +82,23 @@ def test_amount_zero():
     assert proto.proof.transaction_info.major_status == 4016
 
 
+def test_transfer_to_self():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    c = libra.Client("testnet")
+    balance = c.get_balance(a0.address)
+    if balance == 0:
+        c.mint_coins(a0.address, 1, is_blocking=True)
+    ret = c.transfer_coin(a0, a0.address, 1, is_blocking=True)
+    proto, _ = c.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
+    stx = Transaction.deserialize(proto.transaction.transaction).value
+    assert proto.version > 1
+    assert len(proto.events.events) == 2
+    assert proto.proof.transaction_info.major_status == 4001
+    assert balance == c.get_balance(a0.address)
+
+
+
 def test_amount_illegal():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
