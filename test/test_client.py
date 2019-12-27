@@ -3,6 +3,8 @@ from libra.transaction import *
 from libra.contract_event import ContractEvent
 import os
 import pytest
+import requests
+
 #import pdb
 
 
@@ -138,7 +140,14 @@ def test_transfer_coin():
     a0 = wallet.new_account()
     a1 = wallet.new_account()
     c = libra.Client("testnet")
-    c.mint_coins(a0.address.hex(), 1234, True)
+    try:
+        c.mint_coins(a0.address.hex(), 1234, True)
+    except Exception:
+        params = {
+            "receiver_account_address": a0.address.hex(),
+            "number_of_micro_libra": 1234
+        }
+        requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
     balance0 = c.get_balance(a0.address, retry=True)
     balance1 = c.get_balance(a1.address, retry=True)
     ret = c.transfer_coin(a0, a1.address, 1234, unit_price=0, is_blocking=True)
