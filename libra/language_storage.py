@@ -1,4 +1,4 @@
-from canoser import Struct, RustEnum, Uint64, Uint8
+from canoser import Struct, RustEnum, Uint64, Uint8, Uint128
 from libra.account_address import Address
 from libra.identifier import Identifier
 from libra.hasher import gen_hasher
@@ -26,7 +26,9 @@ class StructTag(Struct):
 class TypeTag(RustEnum):
     _enums = [
         ('Bool', bool),
+        ('U8', Uint8),
         ('U64', Uint64),
+        ('U128', Uint128),
         ('ByteArray', [Uint8]),
         ('Address', Address),
         ('Struct', StructTag)
