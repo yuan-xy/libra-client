@@ -1,6 +1,8 @@
 from canoser import Struct, Uint8
+from libra.account_address import Address
 from libra.block_info import BlockInfo
 from libra.hasher import HashValue
+from libra.crypto.ed25519 import ED25519_SIGNATURE_LENGTH
 
 
 class LedgerInfo(Struct):
@@ -35,3 +37,18 @@ class LedgerInfo(Struct):
         ret.commit_info = block_info
         ret.consensus_data_hash = bytes_to_int_list(proto.consensus_data_hash)
         return ret
+
+
+# The validator node returns this structure which includes signatures
+# from validators that confirm the state.  The client needs to only pass back
+# the LedgerInfo element since the validator node doesn't need to know the signatures
+# again when the client performs a query, those are only there for the client
+# to be able to verify the state
+class LedgerInfoWithSignatures(Struct):
+
+    _fields = [
+        ('ledger_info', LedgerInfo),
+        # The validator is identified by its account address: in order to verify a signature
+        # one needs to retrieve the public key of the validator for the given epoch.
+        ('signatures', {Address: [Uint8, ED25519_SIGNATURE_LENGTH]})
+    ]
