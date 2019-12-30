@@ -19,12 +19,6 @@ class LedgerCmd(DualCommand):
         ]
         self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
-    def get_real_client(self, client, **kwargs):
-        if kwargs is not None and 'proxy' in kwargs:
-            if kwargs['proxy']:
-                return client.grpc_client
-        return client
-
 
 class LedgerCmdInfo(DualCommand):
     def get_aliases(self):
