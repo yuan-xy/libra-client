@@ -1,5 +1,6 @@
-from canoser import Struct
+from canoser import Struct, Uint8
 from libra.block_info import BlockInfo
+from libra.hasher import HashValue
 
 
 class LedgerInfo(Struct):
@@ -8,7 +9,7 @@ class LedgerInfo(Struct):
         ('commit_info', BlockInfo),
         # Hash of consensus specific data that is opaque to all parts of the system other than
         # consensus.
-        ('consensus_data_hash', [Uint8])
+        ('consensus_data_hash', HashValue)
     ]
 
     def hash(self):

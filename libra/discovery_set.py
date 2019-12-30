@@ -1,9 +1,10 @@
-from canoser import Struct
+from canoser import DelegateT
 from libra.account_config import AccountConfig
 from libra.event import EventKey
+from libra.discovery_info import DiscoveryInfo
 
-class DiscoverySet(Struct):
-    _fields = []
+class DiscoverySet(DelegateT):
+    delegate_type = [DiscoveryInfo]
 
     DISCOVERY_SET_STRUCT_NAME = "DiscoverySet"
 
