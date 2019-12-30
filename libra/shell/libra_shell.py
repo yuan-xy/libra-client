@@ -31,12 +31,14 @@ def get_commands(include_dev: bool):
 def run_shell(args):
     grpc_client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
     try:
-        grpc_client.get_latest_transaction_version()
+        info = grpc_client.get_latest_ledger_info()
+        time = datetime.fromtimestamp(info.timestamp_usecs / 1000_000)
+        ledger_info_str = f"latest version = {info.version}, timestamp = {time}"
     except Exception as err:
         report_error(f"Not able to connect to validator at {args.host}:{args.port}", err, args.verbose)
         return
     client_proxy = ClientProxy(grpc_client, args)
-    client_info = f"Connected to validator at: {args.host}:{args.port}"
+    client_info = f"Connected to validator at: {grpc_client.host}:{grpc_client.port}, {ledger_info_str}"
     print(client_info)
     (commands, alias_to_cmd) = get_commands(grpc_client.faucet_account is not None)
     while True:
