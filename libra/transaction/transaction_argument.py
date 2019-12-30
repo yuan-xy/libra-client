@@ -21,8 +21,8 @@ class TransactionArgument(RustEnum):
     _enums = [
         ('U64', Uint64),
         ('Address', Address),
-        ('String', str),
-        ('ByteArray', [Uint8])
+        ('ByteArray', [Uint8]),
+        ('Bool', bool)
     ]
 
     @classmethod
