@@ -38,6 +38,6 @@ def test_ledger_info():
     diff = localtime - secs
     if diff != 0:
         print(f"localtime {localtime}, ledger_info time{secs}, diff:{diff}")
-    assert abs(diff) < 5
+    assert abs(diff) < 10
     #assert abs(datetime.utcnow().timestamp() - secs) < 5
 
