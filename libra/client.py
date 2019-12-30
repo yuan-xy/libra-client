@@ -331,9 +331,9 @@ class Client:
                     print(".", end='', flush=True)
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
-    def transfer_coin(self, sender_account, receiver_address, micro_libra,
+    def transfer_coin(self, sender_account, receiver_address, micro_libra, metadata=None,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
-        script = Script.gen_transfer_script(receiver_address,micro_libra)
+        script = Script.gen_transfer_script(receiver_address,micro_libra, metadata)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)

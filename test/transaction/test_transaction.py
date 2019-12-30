@@ -5,7 +5,7 @@ from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
 import nacl
-#import pdb
+import pdb
 
 
 def test_raw_txn():
@@ -28,6 +28,26 @@ def test_raw_txn():
     assert script.args[1].index == 0
     assert script.args[1].U64 == True
     assert script.args[1].value == 123
+
+
+def test_raw_txn_with_metadata():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    a1 = wallet.accounts[1]
+    raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 9, [2,3,4])
+    assert raw_tx.payload.value_type == Script
+    script = raw_tx.payload.value
+    assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
+    assert script.args[0].index == 1
+    assert script.args[0].Address == True
+    assert script.args[0].enum_name == 'Address'
+    assert script.args[1].index == 0
+    assert script.args[1].U64 == True
+    assert script.args[1].value == 9
+    assert script.args[2].index == 2
+    assert script.args[2].ByteArray == True
+    assert script.args[2].value == [2,3,4]
+
 
 def test_signed_txn():
     wallet = libra.WalletLibrary.recover('test/test.wallet')
@@ -155,3 +175,26 @@ def test_tx_id_overflow():
     # item.get_transactions_request.fetch_events = False
     # resp = client.update_to_latest_ledger(request)
     # print(resp)
+
+
+def test_transfer_with_metadata():
+    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    a0 = wallet.accounts[0]
+    client = libra.Client("testnet")
+    balance = client.get_balance(a0.address)
+    if balance == 0:
+        client.mint_coins(a0.address, 1000000, is_blocking=True)
+    ret = client.transfer_coin(a0, a0.address, 1, metadata=[3,4,5], is_blocking=True)
+    script = ret.raw_txn.payload.value
+    assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
+    assert bytes(script.args[0].value) == a0.address
+    assert script.args[1].value == 1
+    assert script.args[2].value == [3,4,5]
+    proto, _ = client.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
+    assert proto.version > 1
+    assert len(proto.events.events) == 2
+    assert proto.proof.transaction_info.major_status == 4001
+    stx = Transaction.deserialize(proto.transaction.transaction).value
+    assert stx.raw_txn == ret.raw_txn
+
+

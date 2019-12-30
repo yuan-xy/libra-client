@@ -62,8 +62,8 @@ class RawTransaction(Struct):
 
     @classmethod
     def _gen_transfer_transaction(cls, sender_address, sequence_number, receiver_address,
-        micro_libra, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
-        script = Script.gen_transfer_script(receiver_address,micro_libra)
+        micro_libra, metadata=None, max_gas_amount=140_000, gas_unit_price=0, txn_expiration=100):
+        script = Script.gen_transfer_script(receiver_address, micro_libra, metadata)
         return RawTransaction.new_script_tx(
             sender_address,
             sequence_number,

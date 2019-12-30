@@ -11,16 +11,24 @@ class Script(Struct):
     ]
 
     @classmethod
-    def gen_transfer_script(cls, receiver_address,micro_libra):
+    def gen_transfer_script(cls, receiver_address,micro_libra, metadata=None):
         if isinstance(receiver_address, bytes):
             receiver_address = bytes_to_int_list(receiver_address)
         if isinstance(receiver_address, str):
             receiver_address = hex_to_int_list(receiver_address)
-        code = bytecodes["peer_to_peer_transfer"]
-        args = [
-                TransactionArgument('Address', receiver_address),
-                TransactionArgument('U64', micro_libra)
-            ]
+        if metadata is None:
+            code = bytecodes["peer_to_peer_transfer"]
+            args = [
+                    TransactionArgument('Address', receiver_address),
+                    TransactionArgument('U64', micro_libra)
+                ]
+        else:
+            code = bytecodes["peer_to_peer_transfer_with_metadata"]
+            args = [
+                    TransactionArgument('Address', receiver_address),
+                    TransactionArgument('U64', micro_libra),
+                    TransactionArgument('ByteArray', metadata)
+                ]
         return Script(code, args)
 
     @classmethod

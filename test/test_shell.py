@@ -174,7 +174,6 @@ def test_publish_module_to_testnet(capsys):
     assert "ERROR" in output
     if TESTNET_LOCAL:
         assert 'Publish move module on-chain: ' in output
-        assert 'VMError (3001' in output
     else:
         assert 'Publish move module on-chain: ' in output
         assert 'VMError (12' in output
