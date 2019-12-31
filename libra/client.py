@@ -321,9 +321,12 @@ class Client:
                 if len(transaction.events.events) == 0:
                     if self.verbose:
                         print("no events emitted")
-                    return False
+                major_status = transaction.proof.transaction_info.major_status
+                if major_status != 4001:
+                    from libra.vm_error import StatusCode
+                    raise VMError(major_status, StatusCode.get_name(major_status))
                 else:
-                    return True
+                    return
             else:
                 if expiration_time <= (usecs // 1000_000):
                     raise TransactionTimeoutError("Transaction expired.")
@@ -331,8 +334,8 @@ class Client:
                     print(".", end='', flush=True)
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
-    def transfer_coin(self, sender_account, receiver_address, micro_libra, metadata=None,
-        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
+    def transfer_coin(self, sender_account, receiver_address, micro_libra,
+        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
         script = Script.gen_transfer_script(receiver_address,micro_libra, metadata)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
