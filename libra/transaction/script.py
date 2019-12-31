@@ -42,12 +42,12 @@ class Script(Struct):
         return Script(code, args)
 
     @classmethod
-    def gen_create_account_script(cls, fresh_address):
+    def gen_create_account_script(cls, fresh_address, initial_balance=0):
         fresh_address = Address.normalize_to_int_list(fresh_address)
         code = bytecodes["create_account"]
         args = [
                 TransactionArgument('Address', fresh_address),
-                TransactionArgument('U64', 0)
+                TransactionArgument('U64', initial_balance)
             ]
         return Script(code, args)
 
@@ -59,6 +59,63 @@ class Script(Struct):
                 TransactionArgument('ByteArray', key)
             ]
         return Script(code, args)
+
+    @classmethod
+    def gen_rotate_consensus_pubkey_script(cls, public_key):
+        key = normalize_public_key(public_key)
+        code = bytecodes["rotate_consensus_pubkey"]
+        args = [
+                TransactionArgument('ByteArray', key)
+            ]
+        return Script(code, args)
+
+
+    @classmethod
+    def gen_add_validator_script(cls, address):
+        address = Address.normalize_to_int_list(address)
+        code = bytecodes["add_validator"]
+        args = [
+                TransactionArgument('Address', address)
+            ]
+        return Script(code, args)
+
+
+    @classmethod
+    def gen_remove_validator_script(cls, address):
+        address = Address.normalize_to_int_list(address)
+        code = bytecodes["remove_validator"]
+        args = [
+                TransactionArgument('Address', address)
+            ]
+        return Script(code, args)
+
+
+    @classmethod
+    def gen_register_validator_script(cls,
+        consensus_pubkey,
+        validator_network_signing_pubkey,
+        validator_network_identity_pubkey,
+        validator_network_address,
+        fullnodes_network_identity_pubkey,
+        fullnodes_network_address
+        ):
+        validator_network_address = Address.normalize_to_int_list(validator_network_address)
+        fullnodes_network_address = Address.normalize_to_int_list(fullnodes_network_address)
+        consensus_pubkey = normalize_public_key(consensus_pubkey)
+        validator_network_signing_pubkey = normalize_public_key(validator_network_signing_pubkey)
+        validator_network_identity_pubkey = normalize_public_key(validator_network_identity_pubkey)
+        fullnodes_network_identity_pubkey = normalize_public_key(fullnodes_network_identity_pubkey)
+        code = bytecodes["register_validator"]
+        args = [
+                TransactionArgument('ByteArray', consensus_pubkey),
+                TransactionArgument('ByteArray', validator_network_signing_pubkey),
+                TransactionArgument('ByteArray', validator_network_identity_pubkey),
+                TransactionArgument('Address', validator_network_address),
+                TransactionArgument('ByteArray', fullnodes_network_identity_pubkey),
+                TransactionArgument('Address', fullnodes_network_address)
+            ]
+        return Script(code, args)
+
 
     @staticmethod
     def get_script_bytecode(script_name):

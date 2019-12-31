@@ -317,7 +317,7 @@ class Client:
             transaction, usecs = self.get_account_transaction_proto(address, sequence_number, True)
             if transaction.HasField("events"):
                 if self.verbose:
-                    print("transaction is stored!")
+                    print(f"\ntransaction {transaction.version} is stored!")
                 if len(transaction.events.events) == 0:
                     if self.verbose:
                         print("no events emitted")
@@ -347,6 +347,33 @@ class Client:
         script = Script.gen_rotate_auth_key_script(public_key)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
+
+    def add_validator_with_faucet_account(self, validator_address, is_blocking=True):
+        script = Script.gen_add_validator_script(validator_address)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+
+    def remove_validator_with_faucet_account(self, validator_address, is_blocking=True):
+        script = Script.gen_remove_validator_script(validator_address)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+
+    def register_validator_with_faucet_account(self, consensus_pubkey,
+        validator_network_signing_pubkey,
+        validator_network_identity_pubkey,
+        validator_network_address,
+        fullnodes_network_identity_pubkey,
+        fullnodes_network_address,
+        is_blocking=True):
+        script = Script.gen_register_validator_script(consensus_pubkey,
+            validator_network_signing_pubkey,
+            validator_network_identity_pubkey,
+            validator_network_address,
+            fullnodes_network_identity_pubkey,
+            fullnodes_network_address)
+        payload = TransactionPayload('Script', script)
+        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+
 
     def submit_payload(self, sender_account, payload,
         max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):

@@ -14,7 +14,10 @@ class DevCommand(Command):
         commands = [
             DevCommandCompile(),
             DevCommandPublish(),
-            DevCommandExecute()
+            DevCommandExecute(),
+            DevCommandAddValidator(),
+            DevCommandRemoveValidator(),
+            DevCommandRegisterValidator()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
@@ -71,5 +74,51 @@ class DevCommandExecute(Command):
     def execute(self, client, params, **kwargs):
         print(">> Compiling program")
         client.execute_script(params[1], params[2], params[3:])
+        print("Successfully finished execution")
+
+
+
+class DevCommandAddValidator(Command):
+    def get_aliases(self):
+        return ["add_validator"]
+
+    def get_params_help(self):
+        return "<validator_account_address>"
+
+    def get_description(self):
+        return "Add an account address to the validator set"
+
+    def execute(self, client, params, **kwargs):
+        client.grpc_client.add_validator_with_faucet_account(params[1])
+        print("Successfully finished execution")
+
+
+class DevCommandRemoveValidator(Command):
+    def get_aliases(self):
+        return ["remove_validator"]
+
+    def get_params_help(self):
+        return "<validator_account_address>"
+
+    def get_description(self):
+        return "Remove an existing account address from the validator set"
+
+    def execute(self, client, params, **kwargs):
+        client.grpc_client.remove_validator_with_faucet_account(params[1])
+        print("Successfully finished execution")
+
+
+class DevCommandRegisterValidator(Command):
+    def get_aliases(self):
+        return ["register_validator"]
+
+    def get_params_help(self):
+        return "<consensus_pubkey> <validator_network_signing_pubkey> <validator_network_identity_pubkey> <validator_network_address> <fullnodes_network_identity_pubkey> <fullnodes_network_address>"
+
+    def get_description(self):
+        return "Register an validator candidate"
+
+    def execute(self, client, params, **kwargs):
+        client.grpc_client.register_validator_with_faucet_account(params[1],params[2],params[3],params[4],params[5],params[6])
         print("Successfully finished execution")
 
