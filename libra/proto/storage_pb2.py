@@ -13,11 +13,13 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+import account_state_blob_pb2 as account__state__blob__pb2
 import get_with_proof_pb2 as get__with__proof__pb2
 import ledger_info_pb2 as ledger__info__pb2
-import transaction_pb2 as transaction__pb2
-import account_state_blob_pb2 as account__state__blob__pb2
 import proof_pb2 as proof__pb2
+import transaction_pb2 as transaction__pb2
+import validator_change_pb2 as validator__change__pb2
+import validator_set_pb2 as validator__set__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -25,9 +27,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='storage',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\rstorage.proto\x12\x07storage\x1a\x14get_with_proof.proto\x1a\x11ledger_info.proto\x1a\x11transaction.proto\x1a\x18\x61\x63\x63ount_state_blob.proto\x1a\x0bproof.proto\"\xaa\x01\n\x17SaveTransactionsRequest\x12\x32\n\x0etxns_to_commit\x18\x01 \x03(\x0b\x32\x1a.types.TransactionToCommit\x12\x15\n\rfirst_version\x18\x02 \x01(\x04\x12\x44\n\x1bledger_info_with_signatures\x18\x03 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\x1a\n\x18SaveTransactionsResponse\"q\n\x16GetTransactionsRequest\x12\x15\n\rstart_version\x18\x01 \x01(\x04\x12\x12\n\nbatch_size\x18\x02 \x01(\x04\x12\x16\n\x0eledger_version\x18\x03 \x01(\x04\x12\x14\n\x0c\x66\x65tch_events\x18\x04 \x01(\x08\"W\n\x17GetTransactionsResponse\x12<\n\x13txn_list_with_proof\x18\x01 \x01(\x0b\x32\x1f.types.TransactionListWithProof\"L\n(GetAccountStateWithProofByVersionRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x0c\x12\x0f\n\x07version\x18\x02 \x01(\x04\"\x97\x01\n)GetAccountStateWithProofByVersionResponse\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x01 \x01(\x0b\x32\x17.types.AccountStateBlob\x12\x35\n\x13sparse_merkle_proof\x18\x02 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\x17\n\x15GetStartupInfoRequest\"<\n\x16GetStartupInfoResponse\x12\"\n\x04info\x18\x01 \x01(\x0b\x32\x14.storage.StartupInfo\"c\n\tTreeState\x12\x0f\n\x07version\x18\x01 \x01(\x04\x12$\n\x1cledger_frozen_subtree_hashes\x18\x02 \x03(\x0c\x12\x1f\n\x17\x61\x63\x63ount_state_root_hash\x18\x03 \x01(\x0c\"\xea\x01\n\x0bStartupInfo\x12\x34\n\x0bledger_info\x18\x01 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\x12\x44\n\x1bledger_info_with_validators\x18\x02 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\x12\x30\n\x14\x63ommitted_tree_state\x18\x03 \x01(\x0b\x32\x12.storage.TreeState\x12-\n\x11synced_tree_state\x18\x04 \x01(\x0b\x32\x12.storage.TreeState\"7\n GetEpochChangeLedgerInfosRequest\x12\x13\n\x0bstart_epoch\x18\x01 \x01(\x04\"a\n!GetEpochChangeLedgerInfosResponse\x12<\n\x13latest_ledger_infos\x18\x01 \x03(\x0b\x32\x1f.types.LedgerInfoWithSignatures2\xed\x04\n\x07Storage\x12W\n\x10SaveTransactions\x12 .storage.SaveTransactionsRequest\x1a!.storage.SaveTransactionsResponse\x12_\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\x12T\n\x0fGetTransactions\x12\x1f.storage.GetTransactionsRequest\x1a .storage.GetTransactionsResponse\x12\x8a\x01\n!GetAccountStateWithProofByVersion\x12\x31.storage.GetAccountStateWithProofByVersionRequest\x1a\x32.storage.GetAccountStateWithProofByVersionResponse\x12Q\n\x0eGetStartupInfo\x12\x1e.storage.GetStartupInfoRequest\x1a\x1f.storage.GetStartupInfoResponse\x12r\n\x19GetEpochChangeLedgerInfos\x12).storage.GetEpochChangeLedgerInfosRequest\x1a*.storage.GetEpochChangeLedgerInfosResponseb\x06proto3')
+  serialized_pb=_b('\n\rstorage.proto\x12\x07storage\x1a\x18\x61\x63\x63ount_state_blob.proto\x1a\x14get_with_proof.proto\x1a\x11ledger_info.proto\x1a\x0bproof.proto\x1a\x11transaction.proto\x1a\x16validator_change.proto\x1a\x13validator_set.proto\"\xaa\x01\n\x17SaveTransactionsRequest\x12\x32\n\x0etxns_to_commit\x18\x01 \x03(\x0b\x32\x1a.types.TransactionToCommit\x12\x15\n\rfirst_version\x18\x02 \x01(\x04\x12\x44\n\x1bledger_info_with_signatures\x18\x03 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\x1a\n\x18SaveTransactionsResponse\"q\n\x16GetTransactionsRequest\x12\x15\n\rstart_version\x18\x01 \x01(\x04\x12\x12\n\nbatch_size\x18\x02 \x01(\x04\x12\x16\n\x0eledger_version\x18\x03 \x01(\x04\x12\x14\n\x0c\x66\x65tch_events\x18\x04 \x01(\x08\"W\n\x17GetTransactionsResponse\x12<\n\x13txn_list_with_proof\x18\x01 \x01(\x0b\x32\x1f.types.TransactionListWithProof\"\x1b\n\x19GetLatestStateRootRequest\"F\n\x1aGetLatestStateRootResponse\x12\x0f\n\x07version\x18\x01 \x01(\x04\x12\x17\n\x0fstate_root_hash\x18\x02 \x01(\x0c\"/\n\x1cGetLatestAccountStateRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x0c\"T\n\x1dGetLatestAccountStateResponse\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x01 \x01(\x0b\x32\x17.types.AccountStateBlob\"L\n(GetAccountStateWithProofByVersionRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x0c\x12\x0f\n\x07version\x18\x02 \x01(\x04\"\x97\x01\n)GetAccountStateWithProofByVersionResponse\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x01 \x01(\x0b\x32\x17.types.AccountStateBlob\x12\x35\n\x13sparse_merkle_proof\x18\x02 \x01(\x0b\x32\x18.types.SparseMerkleProof\"\x17\n\x15GetStartupInfoRequest\"<\n\x16GetStartupInfoResponse\x12\"\n\x04info\x18\x01 \x01(\x0b\x32\x14.storage.StartupInfo\"c\n\tTreeState\x12\x0f\n\x07version\x18\x01 \x01(\x04\x12$\n\x1cledger_frozen_subtree_hashes\x18\x02 \x03(\x0c\x12\x1f\n\x17\x61\x63\x63ount_state_root_hash\x18\x03 \x01(\x0c\"\xde\x01\n\x0bStartupInfo\x12;\n\x12latest_ledger_info\x18\x01 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\x12\x31\n\x14latest_validator_set\x18\x02 \x01(\x0b\x32\x13.types.ValidatorSet\x12\x30\n\x14\x63ommitted_tree_state\x18\x03 \x01(\x0b\x32\x12.storage.TreeState\x12-\n\x11synced_tree_state\x18\x04 \x01(\x0b\x32\x12.storage.TreeState\"J\n GetEpochChangeLedgerInfosRequest\x12\x13\n\x0bstart_epoch\x18\x01 \x01(\x04\x12\x11\n\tend_epoch\x18\x02 \x01(\x04\",\n\x19\x42\x61\x63kupAccountStateRequest\x12\x0f\n\x07version\x18\x01 \x01(\x04\"f\n\x1a\x42\x61\x63kupAccountStateResponse\x12\x13\n\x0b\x61\x63\x63ount_key\x18\x01 \x01(\x0c\x12\x33\n\x12\x61\x63\x63ount_state_blob\x18\x02 \x01(\x0b\x32\x17.types.AccountStateBlob\"J\n GetAccountStateRangeProofRequest\x12\x15\n\rrightmost_key\x18\x01 \x01(\x0c\x12\x0f\n\x07version\x18\x02 \x01(\x04\"Q\n!GetAccountStateRangeProofResponse\x12,\n\x05proof\x18\x01 \x01(\x0b\x32\x1d.types.SparseMerkleRangeProof2\xfa\x07\n\x07Storage\x12W\n\x10SaveTransactions\x12 .storage.SaveTransactionsRequest\x1a!.storage.SaveTransactionsResponse\x12_\n\x14UpdateToLatestLedger\x12\".types.UpdateToLatestLedgerRequest\x1a#.types.UpdateToLatestLedgerResponse\x12T\n\x0fGetTransactions\x12\x1f.storage.GetTransactionsRequest\x1a .storage.GetTransactionsResponse\x12]\n\x12GetLatestStateRoot\x12\".storage.GetLatestStateRootRequest\x1a#.storage.GetLatestStateRootResponse\x12\x66\n\x15GetLatestAccountState\x12%.storage.GetLatestAccountStateRequest\x1a&.storage.GetLatestAccountStateResponse\x12\x8a\x01\n!GetAccountStateWithProofByVersion\x12\x31.storage.GetAccountStateWithProofByVersionRequest\x1a\x32.storage.GetAccountStateWithProofByVersionResponse\x12Q\n\x0eGetStartupInfo\x12\x1e.storage.GetStartupInfoRequest\x1a\x1f.storage.GetStartupInfoResponse\x12\x63\n\x19GetEpochChangeLedgerInfos\x12).storage.GetEpochChangeLedgerInfosRequest\x1a\x1b.types.ValidatorChangeProof\x12_\n\x12\x42\x61\x63kupAccountState\x12\".storage.BackupAccountStateRequest\x1a#.storage.BackupAccountStateResponse0\x01\x12r\n\x19GetAccountStateRangeProof\x12).storage.GetAccountStateRangeProofRequest\x1a*.storage.GetAccountStateRangeProofResponseb\x06proto3')
   ,
-  dependencies=[get__with__proof__pb2.DESCRIPTOR,ledger__info__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,account__state__blob__pb2.DESCRIPTOR,proof__pb2.DESCRIPTOR,])
+  dependencies=[account__state__blob__pb2.DESCRIPTOR,get__with__proof__pb2.DESCRIPTOR,ledger__info__pb2.DESCRIPTOR,proof__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,validator__change__pb2.DESCRIPTOR,validator__set__pb2.DESCRIPTOR,])
 
 
 
@@ -72,8 +74,8 @@ _SAVETRANSACTIONSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=126,
-  serialized_end=296,
+  serialized_start=171,
+  serialized_end=341,
 )
 
 
@@ -96,8 +98,8 @@ _SAVETRANSACTIONSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=298,
-  serialized_end=324,
+  serialized_start=343,
+  serialized_end=369,
 )
 
 
@@ -148,8 +150,8 @@ _GETTRANSACTIONSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=326,
-  serialized_end=439,
+  serialized_start=371,
+  serialized_end=484,
 )
 
 
@@ -179,8 +181,132 @@ _GETTRANSACTIONSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=441,
-  serialized_end=528,
+  serialized_start=486,
+  serialized_end=573,
+)
+
+
+_GETLATESTSTATEROOTREQUEST = _descriptor.Descriptor(
+  name='GetLatestStateRootRequest',
+  full_name='storage.GetLatestStateRootRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=575,
+  serialized_end=602,
+)
+
+
+_GETLATESTSTATEROOTRESPONSE = _descriptor.Descriptor(
+  name='GetLatestStateRootResponse',
+  full_name='storage.GetLatestStateRootResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='version', full_name='storage.GetLatestStateRootResponse.version', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='state_root_hash', full_name='storage.GetLatestStateRootResponse.state_root_hash', index=1,
+      number=2, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=604,
+  serialized_end=674,
+)
+
+
+_GETLATESTACCOUNTSTATEREQUEST = _descriptor.Descriptor(
+  name='GetLatestAccountStateRequest',
+  full_name='storage.GetLatestAccountStateRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='address', full_name='storage.GetLatestAccountStateRequest.address', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=676,
+  serialized_end=723,
+)
+
+
+_GETLATESTACCOUNTSTATERESPONSE = _descriptor.Descriptor(
+  name='GetLatestAccountStateResponse',
+  full_name='storage.GetLatestAccountStateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='account_state_blob', full_name='storage.GetLatestAccountStateResponse.account_state_blob', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=725,
+  serialized_end=809,
 )
 
 
@@ -217,8 +343,8 @@ _GETACCOUNTSTATEWITHPROOFBYVERSIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=530,
-  serialized_end=606,
+  serialized_start=811,
+  serialized_end=887,
 )
 
 
@@ -255,8 +381,8 @@ _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=609,
-  serialized_end=760,
+  serialized_start=890,
+  serialized_end=1041,
 )
 
 
@@ -279,8 +405,8 @@ _GETSTARTUPINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=762,
-  serialized_end=785,
+  serialized_start=1043,
+  serialized_end=1066,
 )
 
 
@@ -310,8 +436,8 @@ _GETSTARTUPINFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=787,
-  serialized_end=847,
+  serialized_start=1068,
+  serialized_end=1128,
 )
 
 
@@ -355,8 +481,8 @@ _TREESTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=849,
-  serialized_end=948,
+  serialized_start=1130,
+  serialized_end=1229,
 )
 
 
@@ -368,14 +494,14 @@ _STARTUPINFO = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ledger_info', full_name='storage.StartupInfo.ledger_info', index=0,
+      name='latest_ledger_info', full_name='storage.StartupInfo.latest_ledger_info', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='ledger_info_with_validators', full_name='storage.StartupInfo.ledger_info_with_validators', index=1,
+      name='latest_validator_set', full_name='storage.StartupInfo.latest_validator_set', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -407,8 +533,8 @@ _STARTUPINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=951,
-  serialized_end=1185,
+  serialized_start=1232,
+  serialized_end=1454,
 )
 
 
@@ -426,34 +552,10 @@ _GETEPOCHCHANGELEDGERINFOSREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1187,
-  serialized_end=1242,
-)
-
-
-_GETEPOCHCHANGELEDGERINFOSRESPONSE = _descriptor.Descriptor(
-  name='GetEpochChangeLedgerInfosResponse',
-  full_name='storage.GetEpochChangeLedgerInfosResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
     _descriptor.FieldDescriptor(
-      name='latest_ledger_infos', full_name='storage.GetEpochChangeLedgerInfosResponse.latest_ledger_infos', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='end_epoch', full_name='storage.GetEpochChangeLedgerInfosRequest.end_epoch', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -469,25 +571,169 @@ _GETEPOCHCHANGELEDGERINFOSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1244,
-  serialized_end=1341,
+  serialized_start=1456,
+  serialized_end=1530,
+)
+
+
+_BACKUPACCOUNTSTATEREQUEST = _descriptor.Descriptor(
+  name='BackupAccountStateRequest',
+  full_name='storage.BackupAccountStateRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='version', full_name='storage.BackupAccountStateRequest.version', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1532,
+  serialized_end=1576,
+)
+
+
+_BACKUPACCOUNTSTATERESPONSE = _descriptor.Descriptor(
+  name='BackupAccountStateResponse',
+  full_name='storage.BackupAccountStateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='account_key', full_name='storage.BackupAccountStateResponse.account_key', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='account_state_blob', full_name='storage.BackupAccountStateResponse.account_state_blob', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1578,
+  serialized_end=1680,
+)
+
+
+_GETACCOUNTSTATERANGEPROOFREQUEST = _descriptor.Descriptor(
+  name='GetAccountStateRangeProofRequest',
+  full_name='storage.GetAccountStateRangeProofRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='rightmost_key', full_name='storage.GetAccountStateRangeProofRequest.rightmost_key', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='version', full_name='storage.GetAccountStateRangeProofRequest.version', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1682,
+  serialized_end=1756,
+)
+
+
+_GETACCOUNTSTATERANGEPROOFRESPONSE = _descriptor.Descriptor(
+  name='GetAccountStateRangeProofResponse',
+  full_name='storage.GetAccountStateRangeProofResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='proof', full_name='storage.GetAccountStateRangeProofResponse.proof', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1758,
+  serialized_end=1839,
 )
 
 _SAVETRANSACTIONSREQUEST.fields_by_name['txns_to_commit'].message_type = transaction__pb2._TRANSACTIONTOCOMMIT
 _SAVETRANSACTIONSREQUEST.fields_by_name['ledger_info_with_signatures'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
 _GETTRANSACTIONSRESPONSE.fields_by_name['txn_list_with_proof'].message_type = transaction__pb2._TRANSACTIONLISTWITHPROOF
+_GETLATESTACCOUNTSTATERESPONSE.fields_by_name['account_state_blob'].message_type = account__state__blob__pb2._ACCOUNTSTATEBLOB
 _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE.fields_by_name['account_state_blob'].message_type = account__state__blob__pb2._ACCOUNTSTATEBLOB
 _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE.fields_by_name['sparse_merkle_proof'].message_type = proof__pb2._SPARSEMERKLEPROOF
 _GETSTARTUPINFORESPONSE.fields_by_name['info'].message_type = _STARTUPINFO
-_STARTUPINFO.fields_by_name['ledger_info'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
-_STARTUPINFO.fields_by_name['ledger_info_with_validators'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
+_STARTUPINFO.fields_by_name['latest_ledger_info'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
+_STARTUPINFO.fields_by_name['latest_validator_set'].message_type = validator__set__pb2._VALIDATORSET
 _STARTUPINFO.fields_by_name['committed_tree_state'].message_type = _TREESTATE
 _STARTUPINFO.fields_by_name['synced_tree_state'].message_type = _TREESTATE
-_GETEPOCHCHANGELEDGERINFOSRESPONSE.fields_by_name['latest_ledger_infos'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
+_BACKUPACCOUNTSTATERESPONSE.fields_by_name['account_state_blob'].message_type = account__state__blob__pb2._ACCOUNTSTATEBLOB
+_GETACCOUNTSTATERANGEPROOFRESPONSE.fields_by_name['proof'].message_type = proof__pb2._SPARSEMERKLERANGEPROOF
 DESCRIPTOR.message_types_by_name['SaveTransactionsRequest'] = _SAVETRANSACTIONSREQUEST
 DESCRIPTOR.message_types_by_name['SaveTransactionsResponse'] = _SAVETRANSACTIONSRESPONSE
 DESCRIPTOR.message_types_by_name['GetTransactionsRequest'] = _GETTRANSACTIONSREQUEST
 DESCRIPTOR.message_types_by_name['GetTransactionsResponse'] = _GETTRANSACTIONSRESPONSE
+DESCRIPTOR.message_types_by_name['GetLatestStateRootRequest'] = _GETLATESTSTATEROOTREQUEST
+DESCRIPTOR.message_types_by_name['GetLatestStateRootResponse'] = _GETLATESTSTATEROOTRESPONSE
+DESCRIPTOR.message_types_by_name['GetLatestAccountStateRequest'] = _GETLATESTACCOUNTSTATEREQUEST
+DESCRIPTOR.message_types_by_name['GetLatestAccountStateResponse'] = _GETLATESTACCOUNTSTATERESPONSE
 DESCRIPTOR.message_types_by_name['GetAccountStateWithProofByVersionRequest'] = _GETACCOUNTSTATEWITHPROOFBYVERSIONREQUEST
 DESCRIPTOR.message_types_by_name['GetAccountStateWithProofByVersionResponse'] = _GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE
 DESCRIPTOR.message_types_by_name['GetStartupInfoRequest'] = _GETSTARTUPINFOREQUEST
@@ -495,7 +741,10 @@ DESCRIPTOR.message_types_by_name['GetStartupInfoResponse'] = _GETSTARTUPINFORESP
 DESCRIPTOR.message_types_by_name['TreeState'] = _TREESTATE
 DESCRIPTOR.message_types_by_name['StartupInfo'] = _STARTUPINFO
 DESCRIPTOR.message_types_by_name['GetEpochChangeLedgerInfosRequest'] = _GETEPOCHCHANGELEDGERINFOSREQUEST
-DESCRIPTOR.message_types_by_name['GetEpochChangeLedgerInfosResponse'] = _GETEPOCHCHANGELEDGERINFOSRESPONSE
+DESCRIPTOR.message_types_by_name['BackupAccountStateRequest'] = _BACKUPACCOUNTSTATEREQUEST
+DESCRIPTOR.message_types_by_name['BackupAccountStateResponse'] = _BACKUPACCOUNTSTATERESPONSE
+DESCRIPTOR.message_types_by_name['GetAccountStateRangeProofRequest'] = _GETACCOUNTSTATERANGEPROOFREQUEST
+DESCRIPTOR.message_types_by_name['GetAccountStateRangeProofResponse'] = _GETACCOUNTSTATERANGEPROOFRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 SaveTransactionsRequest = _reflection.GeneratedProtocolMessageType('SaveTransactionsRequest', (_message.Message,), {
@@ -525,6 +774,34 @@ GetTransactionsResponse = _reflection.GeneratedProtocolMessageType('GetTransacti
   # @@protoc_insertion_point(class_scope:storage.GetTransactionsResponse)
   })
 _sym_db.RegisterMessage(GetTransactionsResponse)
+
+GetLatestStateRootRequest = _reflection.GeneratedProtocolMessageType('GetLatestStateRootRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTSTATEROOTREQUEST,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestStateRootRequest)
+  })
+_sym_db.RegisterMessage(GetLatestStateRootRequest)
+
+GetLatestStateRootResponse = _reflection.GeneratedProtocolMessageType('GetLatestStateRootResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTSTATEROOTRESPONSE,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestStateRootResponse)
+  })
+_sym_db.RegisterMessage(GetLatestStateRootResponse)
+
+GetLatestAccountStateRequest = _reflection.GeneratedProtocolMessageType('GetLatestAccountStateRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTACCOUNTSTATEREQUEST,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestAccountStateRequest)
+  })
+_sym_db.RegisterMessage(GetLatestAccountStateRequest)
+
+GetLatestAccountStateResponse = _reflection.GeneratedProtocolMessageType('GetLatestAccountStateResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETLATESTACCOUNTSTATERESPONSE,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetLatestAccountStateResponse)
+  })
+_sym_db.RegisterMessage(GetLatestAccountStateResponse)
 
 GetAccountStateWithProofByVersionRequest = _reflection.GeneratedProtocolMessageType('GetAccountStateWithProofByVersionRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETACCOUNTSTATEWITHPROOFBYVERSIONREQUEST,
@@ -575,12 +852,33 @@ GetEpochChangeLedgerInfosRequest = _reflection.GeneratedProtocolMessageType('Get
   })
 _sym_db.RegisterMessage(GetEpochChangeLedgerInfosRequest)
 
-GetEpochChangeLedgerInfosResponse = _reflection.GeneratedProtocolMessageType('GetEpochChangeLedgerInfosResponse', (_message.Message,), {
-  'DESCRIPTOR' : _GETEPOCHCHANGELEDGERINFOSRESPONSE,
+BackupAccountStateRequest = _reflection.GeneratedProtocolMessageType('BackupAccountStateRequest', (_message.Message,), {
+  'DESCRIPTOR' : _BACKUPACCOUNTSTATEREQUEST,
   '__module__' : 'storage_pb2'
-  # @@protoc_insertion_point(class_scope:storage.GetEpochChangeLedgerInfosResponse)
+  # @@protoc_insertion_point(class_scope:storage.BackupAccountStateRequest)
   })
-_sym_db.RegisterMessage(GetEpochChangeLedgerInfosResponse)
+_sym_db.RegisterMessage(BackupAccountStateRequest)
+
+BackupAccountStateResponse = _reflection.GeneratedProtocolMessageType('BackupAccountStateResponse', (_message.Message,), {
+  'DESCRIPTOR' : _BACKUPACCOUNTSTATERESPONSE,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.BackupAccountStateResponse)
+  })
+_sym_db.RegisterMessage(BackupAccountStateResponse)
+
+GetAccountStateRangeProofRequest = _reflection.GeneratedProtocolMessageType('GetAccountStateRangeProofRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTSTATERANGEPROOFREQUEST,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetAccountStateRangeProofRequest)
+  })
+_sym_db.RegisterMessage(GetAccountStateRangeProofRequest)
+
+GetAccountStateRangeProofResponse = _reflection.GeneratedProtocolMessageType('GetAccountStateRangeProofResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTSTATERANGEPROOFRESPONSE,
+  '__module__' : 'storage_pb2'
+  # @@protoc_insertion_point(class_scope:storage.GetAccountStateRangeProofResponse)
+  })
+_sym_db.RegisterMessage(GetAccountStateRangeProofResponse)
 
 
 
@@ -590,8 +888,8 @@ _STORAGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1344,
-  serialized_end=1965,
+  serialized_start=1842,
+  serialized_end=2860,
   methods=[
   _descriptor.MethodDescriptor(
     name='SaveTransactions',
@@ -621,9 +919,27 @@ _STORAGE = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='GetLatestStateRoot',
+    full_name='storage.Storage.GetLatestStateRoot',
+    index=3,
+    containing_service=None,
+    input_type=_GETLATESTSTATEROOTREQUEST,
+    output_type=_GETLATESTSTATEROOTRESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetLatestAccountState',
+    full_name='storage.Storage.GetLatestAccountState',
+    index=4,
+    containing_service=None,
+    input_type=_GETLATESTACCOUNTSTATEREQUEST,
+    output_type=_GETLATESTACCOUNTSTATERESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='GetAccountStateWithProofByVersion',
     full_name='storage.Storage.GetAccountStateWithProofByVersion',
-    index=3,
+    index=5,
     containing_service=None,
     input_type=_GETACCOUNTSTATEWITHPROOFBYVERSIONREQUEST,
     output_type=_GETACCOUNTSTATEWITHPROOFBYVERSIONRESPONSE,
@@ -632,7 +948,7 @@ _STORAGE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetStartupInfo',
     full_name='storage.Storage.GetStartupInfo',
-    index=4,
+    index=6,
     containing_service=None,
     input_type=_GETSTARTUPINFOREQUEST,
     output_type=_GETSTARTUPINFORESPONSE,
@@ -641,10 +957,28 @@ _STORAGE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetEpochChangeLedgerInfos',
     full_name='storage.Storage.GetEpochChangeLedgerInfos',
-    index=5,
+    index=7,
     containing_service=None,
     input_type=_GETEPOCHCHANGELEDGERINFOSREQUEST,
-    output_type=_GETEPOCHCHANGELEDGERINFOSRESPONSE,
+    output_type=validator__change__pb2._VALIDATORCHANGEPROOF,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='BackupAccountState',
+    full_name='storage.Storage.BackupAccountState',
+    index=8,
+    containing_service=None,
+    input_type=_BACKUPACCOUNTSTATEREQUEST,
+    output_type=_BACKUPACCOUNTSTATERESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetAccountStateRangeProof',
+    full_name='storage.Storage.GetAccountStateRangeProof',
+    index=9,
+    containing_service=None,
+    input_type=_GETACCOUNTSTATERANGEPROOFREQUEST,
+    output_type=_GETACCOUNTSTATERANGEPROOFRESPONSE,
     serialized_options=None,
   ),
 ])

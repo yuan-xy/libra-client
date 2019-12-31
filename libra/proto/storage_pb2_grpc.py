@@ -3,6 +3,7 @@ import grpc
 
 import get_with_proof_pb2 as get__with__proof__pb2
 import storage_pb2 as storage__pb2
+import validator_change_pb2 as validator__change__pb2
 
 
 class StorageStub(object):
@@ -33,6 +34,16 @@ class StorageStub(object):
         request_serializer=storage__pb2.GetTransactionsRequest.SerializeToString,
         response_deserializer=storage__pb2.GetTransactionsResponse.FromString,
         )
+    self.GetLatestStateRoot = channel.unary_unary(
+        '/storage.Storage/GetLatestStateRoot',
+        request_serializer=storage__pb2.GetLatestStateRootRequest.SerializeToString,
+        response_deserializer=storage__pb2.GetLatestStateRootResponse.FromString,
+        )
+    self.GetLatestAccountState = channel.unary_unary(
+        '/storage.Storage/GetLatestAccountState',
+        request_serializer=storage__pb2.GetLatestAccountStateRequest.SerializeToString,
+        response_deserializer=storage__pb2.GetLatestAccountStateResponse.FromString,
+        )
     self.GetAccountStateWithProofByVersion = channel.unary_unary(
         '/storage.Storage/GetAccountStateWithProofByVersion',
         request_serializer=storage__pb2.GetAccountStateWithProofByVersionRequest.SerializeToString,
@@ -46,7 +57,17 @@ class StorageStub(object):
     self.GetEpochChangeLedgerInfos = channel.unary_unary(
         '/storage.Storage/GetEpochChangeLedgerInfos',
         request_serializer=storage__pb2.GetEpochChangeLedgerInfosRequest.SerializeToString,
-        response_deserializer=storage__pb2.GetEpochChangeLedgerInfosResponse.FromString,
+        response_deserializer=validator__change__pb2.ValidatorChangeProof.FromString,
+        )
+    self.BackupAccountState = channel.unary_stream(
+        '/storage.Storage/BackupAccountState',
+        request_serializer=storage__pb2.BackupAccountStateRequest.SerializeToString,
+        response_deserializer=storage__pb2.BackupAccountStateResponse.FromString,
+        )
+    self.GetAccountStateRangeProof = channel.unary_unary(
+        '/storage.Storage/GetAccountStateRangeProof',
+        request_serializer=storage__pb2.GetAccountStateRangeProofRequest.SerializeToString,
+        response_deserializer=storage__pb2.GetAccountStateRangeProofResponse.FromString,
         )
 
 
@@ -87,6 +108,20 @@ class StorageServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def GetLatestStateRoot(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetLatestAccountState(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def GetAccountStateWithProofByVersion(self, request, context):
     # missing associated documentation comment in .proto file
     pass
@@ -104,6 +139,20 @@ class StorageServicer(object):
   def GetEpochChangeLedgerInfos(self, request, context):
     """Returns latest ledger infos per epoch.
     """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def BackupAccountState(self, request, context):
+    """Returns a stream of account states.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetAccountStateRangeProof(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
@@ -126,6 +175,16 @@ def add_StorageServicer_to_server(servicer, server):
           request_deserializer=storage__pb2.GetTransactionsRequest.FromString,
           response_serializer=storage__pb2.GetTransactionsResponse.SerializeToString,
       ),
+      'GetLatestStateRoot': grpc.unary_unary_rpc_method_handler(
+          servicer.GetLatestStateRoot,
+          request_deserializer=storage__pb2.GetLatestStateRootRequest.FromString,
+          response_serializer=storage__pb2.GetLatestStateRootResponse.SerializeToString,
+      ),
+      'GetLatestAccountState': grpc.unary_unary_rpc_method_handler(
+          servicer.GetLatestAccountState,
+          request_deserializer=storage__pb2.GetLatestAccountStateRequest.FromString,
+          response_serializer=storage__pb2.GetLatestAccountStateResponse.SerializeToString,
+      ),
       'GetAccountStateWithProofByVersion': grpc.unary_unary_rpc_method_handler(
           servicer.GetAccountStateWithProofByVersion,
           request_deserializer=storage__pb2.GetAccountStateWithProofByVersionRequest.FromString,
@@ -139,7 +198,17 @@ def add_StorageServicer_to_server(servicer, server):
       'GetEpochChangeLedgerInfos': grpc.unary_unary_rpc_method_handler(
           servicer.GetEpochChangeLedgerInfos,
           request_deserializer=storage__pb2.GetEpochChangeLedgerInfosRequest.FromString,
-          response_serializer=storage__pb2.GetEpochChangeLedgerInfosResponse.SerializeToString,
+          response_serializer=validator__change__pb2.ValidatorChangeProof.SerializeToString,
+      ),
+      'BackupAccountState': grpc.unary_stream_rpc_method_handler(
+          servicer.BackupAccountState,
+          request_deserializer=storage__pb2.BackupAccountStateRequest.FromString,
+          response_serializer=storage__pb2.BackupAccountStateResponse.SerializeToString,
+      ),
+      'GetAccountStateRangeProof': grpc.unary_unary_rpc_method_handler(
+          servicer.GetAccountStateRangeProof,
+          request_deserializer=storage__pb2.GetAccountStateRangeProofRequest.FromString,
+          response_serializer=storage__pb2.GetAccountStateRangeProofResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

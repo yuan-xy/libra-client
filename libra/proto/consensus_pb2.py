@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='consensus',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x16validator_change.proto\"\xe8\x02\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x05 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x12<\n\x0c\x65poch_change\x18\x06 \x01(\x0b\x32$.types.ValidatorChangeEventWithProofH\x00\x12\x30\n\rrequest_epoch\x18\x07 \x01(\x0b\x32\x17.consensus.RequestEpochH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRespondBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestEpoch\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\x62\x06proto3')
+  serialized_pb=_b('\n\x0f\x63onsensus.proto\x12\tconsensus\x1a\x16validator_change.proto\"\xdf\x02\n\x0c\x43onsensusMsg\x12\'\n\x08proposal\x18\x01 \x01(\x0b\x32\x13.consensus.ProposalH\x00\x12&\n\x08vote_msg\x18\x02 \x01(\x0b\x32\x12.consensus.VoteMsgH\x00\x12\x30\n\rrequest_block\x18\x03 \x01(\x0b\x32\x17.consensus.RequestBlockH\x00\x12\x30\n\rrespond_block\x18\x04 \x01(\x0b\x32\x17.consensus.RespondBlockH\x00\x12(\n\tsync_info\x18\x05 \x01(\x0b\x32\x13.consensus.SyncInfoH\x00\x12\x33\n\x0c\x65poch_change\x18\x06 \x01(\x0b\x32\x1b.types.ValidatorChangeProofH\x00\x12\x30\n\rrequest_epoch\x18\x07 \x01(\x0b\x32\x17.consensus.RequestEpochH\x00\x42\t\n\x07message\"\x19\n\x08Proposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x19\n\x08SyncInfo\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x16\n\x05\x42lock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x18\n\x07VoteMsg\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cVoteProposal\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRespondBlock\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x1d\n\x0cRequestEpoch\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\x62\x06proto3')
   ,
   dependencies=[validator__change__pb2.DESCRIPTOR,])
 
@@ -100,7 +100,7 @@ _CONSENSUSMSG = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=55,
-  serialized_end=415,
+  serialized_end=406,
 )
 
 
@@ -130,8 +130,8 @@ _PROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=417,
-  serialized_end=442,
+  serialized_start=408,
+  serialized_end=433,
 )
 
 
@@ -161,8 +161,8 @@ _SYNCINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=444,
-  serialized_end=469,
+  serialized_start=435,
+  serialized_end=460,
 )
 
 
@@ -192,8 +192,8 @@ _BLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=471,
-  serialized_end=493,
+  serialized_start=462,
+  serialized_end=484,
 )
 
 
@@ -223,8 +223,8 @@ _VOTEMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=495,
-  serialized_end=519,
+  serialized_start=486,
+  serialized_end=510,
 )
 
 
@@ -254,8 +254,8 @@ _VOTEPROPOSAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=521,
-  serialized_end=550,
+  serialized_start=512,
+  serialized_end=541,
 )
 
 
@@ -285,8 +285,8 @@ _REQUESTBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=552,
-  serialized_end=581,
+  serialized_start=543,
+  serialized_end=572,
 )
 
 
@@ -316,8 +316,8 @@ _RESPONDBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=583,
-  serialized_end=612,
+  serialized_start=574,
+  serialized_end=603,
 )
 
 
@@ -347,8 +347,8 @@ _REQUESTEPOCH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=614,
-  serialized_end=643,
+  serialized_start=605,
+  serialized_end=634,
 )
 
 _CONSENSUSMSG.fields_by_name['proposal'].message_type = _PROPOSAL
@@ -356,7 +356,7 @@ _CONSENSUSMSG.fields_by_name['vote_msg'].message_type = _VOTEMSG
 _CONSENSUSMSG.fields_by_name['request_block'].message_type = _REQUESTBLOCK
 _CONSENSUSMSG.fields_by_name['respond_block'].message_type = _RESPONDBLOCK
 _CONSENSUSMSG.fields_by_name['sync_info'].message_type = _SYNCINFO
-_CONSENSUSMSG.fields_by_name['epoch_change'].message_type = validator__change__pb2._VALIDATORCHANGEEVENTWITHPROOF
+_CONSENSUSMSG.fields_by_name['epoch_change'].message_type = validator__change__pb2._VALIDATORCHANGEPROOF
 _CONSENSUSMSG.fields_by_name['request_epoch'].message_type = _REQUESTEPOCH
 _CONSENSUSMSG.oneofs_by_name['message'].fields.append(
   _CONSENSUSMSG.fields_by_name['proposal'])

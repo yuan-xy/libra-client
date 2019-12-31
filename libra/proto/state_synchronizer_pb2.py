@@ -13,8 +13,6 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import ledger_info_pb2 as ledger__info__pb2
-import transaction_pb2 as transaction__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -22,9 +20,8 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='state_synchronizer',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x18state_synchronizer.proto\x12\x12state_synchronizer\x1a\x11ledger_info.proto\x1a\x11transaction.proto\"\x88\x01\n\x0fGetChunkRequest\x12\x15\n\rknown_version\x18\x01 \x01(\x04\x12\r\n\x05limit\x18\x02 \x01(\x04\x12\x0f\n\x07timeout\x18\x03 \x01(\x04\x12>\n\x15ledger_info_with_sigs\x18\x04 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\"\x90\x01\n\x10GetChunkResponse\x12>\n\x15ledger_info_with_sigs\x18\x01 \x01(\x0b\x32\x1f.types.LedgerInfoWithSignatures\x12<\n\x13txn_list_with_proof\x18\x02 \x01(\x0b\x32\x1f.types.TransactionListWithProof\"\x9f\x01\n\x14StateSynchronizerMsg\x12<\n\rchunk_request\x18\x01 \x01(\x0b\x32#.state_synchronizer.GetChunkRequestH\x00\x12>\n\x0e\x63hunk_response\x18\x02 \x01(\x0b\x32$.state_synchronizer.GetChunkResponseH\x00\x42\t\n\x07messageb\x06proto3')
-  ,
-  dependencies=[ledger__info__pb2.DESCRIPTOR,transaction__pb2.DESCRIPTOR,])
+  serialized_pb=_b('\n\x18state_synchronizer.proto\x12\x12state_synchronizer\" \n\x0fGetChunkRequest\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"!\n\x10GetChunkResponse\x12\r\n\x05\x62ytes\x18\x01 \x01(\x0c\"\x9f\x01\n\x14StateSynchronizerMsg\x12<\n\rchunk_request\x18\x01 \x01(\x0b\x32#.state_synchronizer.GetChunkRequestH\x00\x12>\n\x0e\x63hunk_response\x18\x02 \x01(\x0b\x32$.state_synchronizer.GetChunkResponseH\x00\x42\t\n\x07messageb\x06proto3')
+)
 
 
 
@@ -37,30 +34,9 @@ _GETCHUNKREQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='known_version', full_name='state_synchronizer.GetChunkRequest.known_version', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='limit', full_name='state_synchronizer.GetChunkRequest.limit', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='timeout', full_name='state_synchronizer.GetChunkRequest.timeout', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='ledger_info_with_sigs', full_name='state_synchronizer.GetChunkRequest.ledger_info_with_sigs', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='bytes', full_name='state_synchronizer.GetChunkRequest.bytes', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -76,8 +52,8 @@ _GETCHUNKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=87,
-  serialized_end=223,
+  serialized_start=48,
+  serialized_end=80,
 )
 
 
@@ -89,16 +65,9 @@ _GETCHUNKRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ledger_info_with_sigs', full_name='state_synchronizer.GetChunkResponse.ledger_info_with_sigs', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='txn_list_with_proof', full_name='state_synchronizer.GetChunkResponse.txn_list_with_proof', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='bytes', full_name='state_synchronizer.GetChunkResponse.bytes', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -114,8 +83,8 @@ _GETCHUNKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=226,
-  serialized_end=370,
+  serialized_start=82,
+  serialized_end=115,
 )
 
 
@@ -155,13 +124,10 @@ _STATESYNCHRONIZERMSG = _descriptor.Descriptor(
       name='message', full_name='state_synchronizer.StateSynchronizerMsg.message',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=373,
-  serialized_end=532,
+  serialized_start=118,
+  serialized_end=277,
 )
 
-_GETCHUNKREQUEST.fields_by_name['ledger_info_with_sigs'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
-_GETCHUNKRESPONSE.fields_by_name['ledger_info_with_sigs'].message_type = ledger__info__pb2._LEDGERINFOWITHSIGNATURES
-_GETCHUNKRESPONSE.fields_by_name['txn_list_with_proof'].message_type = transaction__pb2._TRANSACTIONLISTWITHPROOF
 _STATESYNCHRONIZERMSG.fields_by_name['chunk_request'].message_type = _GETCHUNKREQUEST
 _STATESYNCHRONIZERMSG.fields_by_name['chunk_response'].message_type = _GETCHUNKRESPONSE
 _STATESYNCHRONIZERMSG.oneofs_by_name['message'].fields.append(
