@@ -1,4 +1,4 @@
-from canoser import Uint64
+from canoser import Uint64, hex_to_int_list
 import libra
 from libra import Client, WalletLibrary
 from libra.account import AccountStatus
@@ -136,11 +136,12 @@ class ClientProxy:
             raise IOError(f"address {sender} not in wallet.")
         return account
 
-    def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking):
+    def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking, metadata):
         account = self.address_or_refid_to_account(sender)
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = Uint64.int_safe(coin) * 1_000_000
-        self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking)
+        metadata = hex_to_int_list(metadata)
+        self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking, metadata=metadata)
         return account.sequence_number
 
     def execute_script(self, address_or_refid, code_file, script_args):
