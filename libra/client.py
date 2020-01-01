@@ -137,7 +137,7 @@ class Client:
         request = UpdateToLatestLedgerRequest()
         item = request.requested_items.add()
         item.get_account_state_request.address = address
-        resp = self.update_to_latest_ledger(request)
+        resp = self.get_with_proof(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
         version = resp.ledger_info_with_sigs.ledger_info.version
         return (blob, version)
@@ -173,18 +173,18 @@ class Client:
         except AccountError:
             return 0
 
-    def update_to_latest_ledger(self, request):
-        request.client_known_version = 0#self.client_known_version
+    def get_with_proof(self, request):
+        request.client_known_version = self.state.version
         resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
         #verify(self.validator_verifier, request, resp)
         #TODO:need update to latest proof, bitmap is removed.
-        self.client_known_version = resp.ledger_info_with_sigs.ledger_info.version
+        self.state.version = resp.ledger_info_with_sigs.ledger_info.version
         self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp
 
     def get_latest_ledger_info(self):
         request = UpdateToLatestLedgerRequest()
-        resp = self.update_to_latest_ledger(request)
+        resp = self.get_with_proof(request)
         return resp.ledger_info_with_sigs.ledger_info
 
     def _get_time_diff(self):
@@ -206,7 +206,7 @@ class Client:
         item.get_transactions_request.start_version = start_version
         item.get_transactions_request.limit = limit
         item.get_transactions_request.fetch_events = fetch_events
-        return (request, self.update_to_latest_ledger(request))
+        return (request, self.get_with_proof(request))
 
     def get_transactions_proto(self, start_version, limit=1, fetch_events=False):
         request, resp = self._get_txs(start_version, limit, fetch_events)
@@ -246,7 +246,7 @@ class Client:
         itemreq.account = address
         itemreq.sequence_number = sequence_number
         itemreq.fetch_events = fetch_events
-        resp = self.update_to_latest_ledger(request)
+        resp = self.get_with_proof(request)
         usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
         return (transaction.transaction_with_proof, usecs)
@@ -267,7 +267,7 @@ class Client:
         item.get_events_by_event_access_path_request.start_event_seq_num = start_sequence_number
         item.get_events_by_event_access_path_request.ascending = ascending
         item.get_events_by_event_access_path_request.limit = limit
-        resp = self.update_to_latest_ledger(request)
+        resp = self.get_with_proof(request)
         return resp.response_items[0].get_events_by_event_access_path_response.events_with_proof
 
     def get_events_sent(self, address, start_sequence_number, ascending=True, limit=1):
