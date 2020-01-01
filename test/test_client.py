@@ -157,16 +157,13 @@ def test_transfer_coin():
     assert c.get_balance(a1.address) == balance1 + 1234
 
 def test_client_init():
-    c = libra.Client.new("localhost","8080", "libra/consensus_peers.config.toml")
+    c = libra.Client.new("localhost","8080")
     assert c.host == "localhost"
     assert c.port == 8080
     assert hasattr(c, "faucet_host") == False
     assert c.verbose == True
     assert c.faucet_account is not None
-    assert len(c.validator_verifier.validators) > 0
-    address, key = c.validator_verifier.validators.popitem()
-    assert len(address) == libra.account_address.ADDRESS_LENGTH
-    assert len(key._key) == 32
+
 
 def test_client_testnet():
     c2 = libra.Client("testnet")
@@ -189,8 +186,6 @@ def test_client_error():
         libra.Client("xnet")
     with pytest.raises(libra.LibraNetError):
         libra.Client("mainnet")
-    with pytest.raises(TypeError):
-        libra.Client.new("localhost", 8000)
     with pytest.raises(FileNotFoundError):
         libra.Client.new("localhost", 8000, "non_exsits_file")
 

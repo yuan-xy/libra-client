@@ -19,17 +19,15 @@ def test_shell():
     assert args.host == "ac.testnet.libra.org"
     assert args.port == 0
     assert args.sync == False
-    assert args.validator_set_file == None
-    grpc_client = libra.Client.new(args.host, args.port, args.validator_set_file)
+    grpc_client = libra.Client.new(args.host, args.port)
     assert TESTNET_LOCAL or hasattr(grpc_client, "faucet_host")
 
 
 def test_recover_account_on_init(capsys):
     parser = get_parser()
-    args = parser.parse_args("-n test/test.wallet -s libra/consensus_peers.config.toml".split())
+    args = parser.parse_args("-n test/test.wallet".split())
     assert args.mnemonic_file == "test/test.wallet"
-    assert args.validator_set_file == "libra/consensus_peers.config.toml"
-    grpc_client = libra.Client.new(args.host, args.port, args.validator_set_file)
+    grpc_client = libra.Client.new(args.host, args.port)
     client = ClientProxy(grpc_client, args)
     assert len(client.accounts) == 2
 
@@ -37,9 +35,9 @@ def test_recover_account_on_init(capsys):
 def prepare_shell(shell_args):
     parser = get_parser()
     if shell_args is None:
-        shell_args = "-n test/test.wallet -s libra/consensus_peers.config.toml"
+        shell_args = "-n test/test.wallet"
     args = parser.parse_args(shell_args.split())
-    grpc_client = libra.Client.new(args.host, args.port, args.validator_set_file)
+    grpc_client = libra.Client.new(args.host, args.port)
     client = ClientProxy(grpc_client, args)
     (_, alias_to_cmd) = get_commands(True)
     return (client, alias_to_cmd)
@@ -183,7 +181,7 @@ def test_faucet_key_no_host(capsys):
         prepare_shell("-m libra/faucet_key_for_test")
 
 def test_faucet_key_with_host(capsys):
-    args = "-m libra/faucet_key_for_test -a localhost -s libra/consensus_peers.config.toml"
+    args = "-m libra/faucet_key_for_test -a localhost"
     client, _ = prepare_shell(args)
     assert client.faucet_account
 

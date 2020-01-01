@@ -7,7 +7,7 @@ LibraClient is a collection of tools which allows you interact whith [Libra Netw
 2. **`libra`**, a command line tool. It has a modern colorful text interface and its output is the standard json format. So, it can be integrated to any programming language easily.
 3. **`python api`**, a collection of apis for client access to libra. For Python programmers, you can call this client side api to interact with Libra Network with more control than by using `libra` command.
 
-In following docuement, all command prefix with `$` meants it is typed and run in standard linux shell; all command prefix with `libra%` meants it is typed and run in `libra_shell`. 
+In following docuement, all command prefix with `$` meants it is typed and run in standard linux shell; all command prefix with `libra%` meants it is typed and run in `libra_shell`.
 
 For exmaple, **`$ libra`** meants run `libra` command in linux shell, which is different than **`libra%`**.
 
@@ -110,8 +110,6 @@ Optional arguments:
 
  -a | --host HOST  Host address/name to connect to. [default:testnet]
  -p | --port PORT  Admission Control port to connect to. [default: 8000]
- -s | --validator_set_file
-	    File location from which to load config of trusted validators.
  -v | --verbose Verbose output
  -V | --version Show program's version number and exit
  -h | --help Show this help message and exit

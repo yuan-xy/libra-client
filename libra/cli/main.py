@@ -38,7 +38,7 @@ def run_cmd(args):
         report_error(f"command `{args.command[0]}` does not exsits.")
         print_help(commands)
         return
-    client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
+    client = Client.new(args.host, args.port, args.faucet_account_file)
     client.verbose = args.verbose
     #TODO: some cmd doesn't need client to be initialized.
     cmd.execute(client, args.command)
@@ -49,7 +49,6 @@ def get_parser():
     parser.add_argument('-h', "--help", action='store_true', default=False)
     parser.add_argument('-a', "--host", default=TESTNET)
     parser.add_argument('-p', "--port", default=0)
-    parser.add_argument('-s', "--validator_set_file")
     parser.add_argument('-m', "--faucet_account_file")
     parser.add_argument('-v', "--verbose", action='store_true', default=False)
     parser.add_argument('-V', '--version', action='version', version=f'libra {version}')
@@ -70,8 +69,6 @@ def print_help(commands):
     print_color(" -p | --port", bcolors.OKBLUE, end='')
     print(" PORT  Admission Control port to connect to.", end='')
     print_color(" [default: 8000]", bcolors.WARNING)
-    print_color(" -s | --validator_set_file", bcolors.OKBLUE, end='')
-    print("\n\t    File location from which to load config of trusted validators.")
     print_color(" -v | --verbose", bcolors.OKBLUE, end='')
     print(" Verbose output")
     print_color(" -V | --version", bcolors.OKBLUE, end='')

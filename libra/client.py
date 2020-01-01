@@ -10,7 +10,6 @@ from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import (
     Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
-from libra.trusted_peers import ConsensusPeersConfig
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
@@ -61,24 +60,21 @@ class LibraNetError(LibraError):
 
 
 class Client:
-    def __init__(self, network="testnet", validator_set_file=None, faucet_file=None):
+    def __init__(self, network="testnet", faucet_file=None):
         if network == "mainnet":
             raise LibraNetError("Mainnet is not supported currently")
         if network != "testnet":
             raise LibraNetError(f"Unknown network: {network}")
-        self.host = NETWORKS[network]['host']
-        self.port = NETWORKS[network]['port']
-        try:
-            tests = os.environ['TESTNET_LOCAL'].split(";")
-            self.host = tests[0]
-            self.port = int(tests[1])
-            validator_set_file = tests[2]
-        except KeyError:
-            pass
-        self.do_init(validator_set_file, faucet_file)
+        if 'TESTNET_LOCAL' in os.environ:
+            test_hosts = os.environ['TESTNET_LOCAL'].split(";")
+            self.host = test_hosts[0]
+            self.port = int(test_hosts[1])
+        else:
+            self.host = NETWORKS[network]['host']
+            self.port = NETWORKS[network]['port']
+        self.do_init(faucet_file)
 
-    def do_init(self, validator_set_file=None, faucet_file=None):
-        self.init_validators(validator_set_file)
+    def do_init(self, faucet_file=None):
         self.init_grpc()
         self.init_faucet_account(faucet_file)
         self.timeout = 30
@@ -100,21 +96,13 @@ class Client:
     def is_testnet(self):
         return self.host == NETWORKS['testnet']['host']
 
-    def init_validators(self, validator_set_file):
-        if self.is_testnet() and validator_set_file is None:
-            validator_set_file = ConsensusPeersConfig.testnet_file_path()
-        if validator_set_file is None:
-            raise LibraError("Validator_set_file is required except testnet.")
-        self.validator_verifier = ConsensusPeersConfig.parse(validator_set_file)
-
     @classmethod
-    def new(cls, host, port, validator_set_file, faucet_file=None):
+    def new(cls, host, port, faucet_file=None):
         if port == 0:
             try:
                 tests = os.environ['TESTNET_LOCAL'].split(";")
                 host = tests[0]
                 port = int(tests[1])
-                validator_set_file = tests[2]
             except KeyError:
                 port = 8000
         ret = cls.__new__(cls)
@@ -124,7 +112,7 @@ class Client:
         if port <=0 or port > 65535:
             raise LibraNetError("port must be between 1 and 65535")
         ret.port = port
-        ret.do_init(validator_set_file, faucet_file)
+        ret.do_init(faucet_file)
         return ret
 
 

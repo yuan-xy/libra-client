@@ -29,7 +29,7 @@ def get_commands(include_dev: bool):
 
 
 def run_shell(args):
-    grpc_client = Client.new(args.host, args.port, args.validator_set_file, args.faucet_account_file)
+    grpc_client = Client.new(args.host, args.port, args.faucet_account_file)
     try:
         info = grpc_client.get_latest_ledger_info()
         time = datetime.fromtimestamp(info.timestamp_usecs / 1000_000)
@@ -81,7 +81,6 @@ def get_parser():
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
     parser.add_argument('-p', "--port", default=0, help='Admission Control port to connect to. [default: 8000]')
     parser.add_argument('-r', "--sync", action='store_true', default=False, help='If set, client will sync with validator during wallet recovery.')
-    parser.add_argument('-s', "--validator_set_file", help='File location from which to load config of trusted validators.')
     parser.add_argument('-n', "--mnemonic_file", help='File location from which to load mnemonic word for user account address/key generation.')
     parser.add_argument('-m', "--faucet_account_file", help='Path to the generated keypair for the faucet account.')
     parser.add_argument('-v', "--verbose", action='store_true', default=False, help='Verbose output.')

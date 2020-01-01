@@ -23,13 +23,13 @@ You will see something like this:
 ```plaintext
 Faucet account created in (loaded from) file "/tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys"
 To run the Libra CLI client in a separate process and connect to the validator nodes you just spawned, use this command:
-        cargo run --bin client -- -a localhost -p 52014 -s "./tmp1/0/consensus_peers.config.toml" -m "/tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys"
+        cargo run --bin client -- -a localhost -p 52014 -m "/tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys"
 ```
 
 of course, you can run `libra-client` by specify above parameters, for example:
 
 ```
-libra -a localhost -p 52014 -s "./tmp1/0/consensus_peers.config.toml" -m "/tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys"
+libra -a localhost -p 52014 -m "/tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys"
 ```
 
 but you can't run test over local libra-swarm. Below tests connect to libra testnet "ac.testnet.libra.org", not yours network.
@@ -52,7 +52,7 @@ cp /tmp/3b201f0f792e5736daa1b2330d72562b/temp_faucet_keys libra-client/libra/fau
 
 ```
 $ cd libra-client
-$ export TESTNET_LOCAL="localhost;52014;../libra/tmp1/0/consensus_peers.config.toml"
+$ export TESTNET_LOCAL="localhost;52014"
 ```
 
 Now you can run test over your local testnet.
