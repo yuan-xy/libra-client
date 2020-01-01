@@ -157,12 +157,17 @@ def test_transfer_coin():
     assert c.get_balance(a1.address) == balance1 + 1234
 
 def test_client_init():
-    c = libra.Client.new("localhost","8080")
-    assert c.host == "localhost"
-    assert c.port == 8080
-    assert hasattr(c, "faucet_host") == False
-    assert c.verbose == True
-    assert c.faucet_account is not None
+    client = libra.Client.new("localhost","8080")
+    assert client.host == "localhost"
+    assert client.port == 8080
+    assert hasattr(client, "faucet_host") == False
+    assert client.verbose == True
+    assert client.faucet_account is not None
+    assert client.state.version == 0
+    assert client.state.verifier.enum_name == 'TrustedVerifier'
+    assert client.state.verifier.value.epoch == 0
+    assert client.state.verifier.value.verifier.address_to_validator_info == {}
+    assert client.state.latest_epoch_change_li is None
 
 
 def test_client_testnet():

@@ -9,10 +9,11 @@ from libra.account_address import Address
 from libra.account_resource import AccountState, AccountResource
 from libra.account_config import AccountConfig
 from libra.transaction import (
-    Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
+    Version, Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
+from libra.validator_change import VerifierType
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -59,8 +60,15 @@ class LibraNetError(LibraError):
     pass
 
 
+class TrustedState:
+    def __init__(self, version : Version, verifier : VerifierType, latest_epoch_change_li=None):
+        self.version = version
+        self.verifier = verifier
+        self.latest_epoch_change_li = latest_epoch_change_li
+
+
 class Client:
-    def __init__(self, network="testnet", faucet_file=None):
+    def __init__(self, network="testnet", faucet_file=None, waypoint=None):
         if network == "mainnet":
             raise LibraNetError("Mainnet is not supported currently")
         if network != "testnet":
@@ -72,14 +80,22 @@ class Client:
         else:
             self.host = NETWORKS[network]['host']
             self.port = NETWORKS[network]['port']
-        self.do_init(faucet_file)
+        self.do_init(faucet_file, waypoint)
 
-    def do_init(self, faucet_file=None):
+    def do_init(self, faucet_file=None, waypoint=None):
         self.init_grpc()
         self.init_faucet_account(faucet_file)
+        self.init_trusted_state(waypoint)
         self.timeout = 30
         self.client_known_version = 0
         self.verbose = True
+
+    def init_trusted_state(self, waypoint):
+        if waypoint is None:
+            from libra.crypto_proxies import EpochInfo
+            self.state = TrustedState(0, VerifierType('TrustedVerifier', EpochInfo.empty()))
+        else:
+            self.state = TrustedState(waypoint.version, VerifierType('Waypoint', waypoint))
 
     def init_grpc(self):
         #TODO: should check under ipv6, add [] around ipv6 host
@@ -97,7 +113,7 @@ class Client:
         return self.host == NETWORKS['testnet']['host']
 
     @classmethod
-    def new(cls, host, port, faucet_file=None):
+    def new(cls, host, port, faucet_file=None, waypoint=None):
         if port == 0:
             try:
                 tests = os.environ['TESTNET_LOCAL'].split(";")

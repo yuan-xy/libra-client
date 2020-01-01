@@ -2,7 +2,8 @@ import toml
 import os
 import libra
 from nacl.signing import VerifyKey
-from libra.validator_verifier import ValidatorVerifier
+from libra.validator_verifier import ValidatorVerifier, ValidatorInfo
+from canoser import hex_to_int_list
 
 # pub struct ConsensusPeerInfo {
 #     #[serde(rename = "c")]
@@ -21,10 +22,11 @@ class ConsensusPeersConfig:
     @classmethod
     def parse(cls, file_path):
         amap = toml.load(file_path)
-        author_to_public_keys = {}
+        address_to_validator_info = {}
         for k, v in amap.items():
             address = bytes.fromhex(k)
-            author_to_public_keys[address] = VerifyKey(bytes.fromhex(v['c']))
-        return ValidatorVerifier(author_to_public_keys)
+            publickey = hex_to_int_list(v['c'])
+            address_to_validator_info[address] = ValidatorInfo(publickey, 1)
+        return ValidatorVerifier(address_to_validator_info)
 
 

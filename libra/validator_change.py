@@ -1,13 +1,15 @@
 from canoser import RustEnum
 from typing import List
 from libra.ledger_info import LedgerInfoWithSignatures
+from libra.waypoint import Waypoint
+from libra.crypto_proxies import EpochInfo
 
 # A vector of LedgerInfo with contiguous increasing epoch numbers to prove a sequence of
 # validator changes from the first LedgerInfo's epoch.
 class ValidatorChangeProof:
     # pub ledger_info_with_sigs: Vec<LedgerInfoWithSignatures>,
     # pub more: bool,
-    def __init__(self, ledger_info_with_sigs : List(LedgerInfoWithSignatures), more : bool):
+    def __init__(self, ledger_info_with_sigs : List[LedgerInfoWithSignatures], more : bool):
         self.ledger_info_with_sigs = ledger_info_with_sigs
         self.more = more
 
