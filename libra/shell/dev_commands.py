@@ -17,7 +17,8 @@ class DevCommand(Command):
             DevCommandExecute(),
             DevCommandAddValidator(),
             DevCommandRemoveValidator(),
-            DevCommandRegisterValidator()
+            DevCommandRegisterValidator(),
+            DevCommandGenWaypoint()
         ]
         self.subcommand_execute(params[0], commands, client, params[1:], **kwargs)
 
@@ -121,4 +122,30 @@ class DevCommandRegisterValidator(Command):
     def execute(self, client, params, **kwargs):
         client.grpc_client.register_validator_with_faucet_account(params[1],params[2],params[3],params[4],params[5],params[6])
         print("Successfully finished execution")
+
+
+class DevCommandGenWaypoint(Command):
+    def get_aliases(self):
+        return ["gen_waypoint"]
+
+    def get_params_help(self):
+        return ""
+
+    def get_description(self):
+        return "Generate a waypoint for the latest epoch change LedgerInfo"
+
+    def execute(self, client, params, **kwargs):
+        print("Retrieving the uptodate ledger info...")
+        _info = client.grpc_client.get_latest_ledger_info()
+        latest_epoch_change_li = client.grpc_client.state.latest_epoch_change_li
+        if latest_epoch_change_li is None:
+            print("No epoch change LedgerInfo found")
+            return
+        waypoint = Waypoint.new(latest_epoch_change_li.ledger_info)
+        print("Waypoint (end of epoch {}, time {}): {}".format(
+                latest_epoch_change_li.ledger_info.epoch,
+                latest_epoch_change_li.ledger_info.timestamp_usecs,
+                waypoint
+            )
+        )
 

@@ -21,6 +21,11 @@ class Waypoint(Struct):
         ("value", HashValue)
     ]
 
+    @classmethod
+    def new(cls, ledger_info):
+        converter = Ledger2WaypointConverter.new(ledger_info)
+        return cls(ledger_info.version, converter.hash())
+
 
 
 class Ledger2WaypointConverter(Struct):
@@ -36,6 +41,19 @@ class Ledger2WaypointConverter(Struct):
         ("timestamp_usecs", Uint64),
         ("next_validator_set", ValidatorSet)
     ]
+
+    @classmethod
+    def new(cls, ledger_info):
+        if ledger_info.next_validator_set is None:
+            raise ValueError("Cannot create a waypoint without validator set")
+        ret = cls()
+        ret.epoch = ledger_info.epoch
+        ret.root_hash = ledger_info.transaction_accumulator_hash
+        ret.version = ledger_info.version
+        ret.timestamp_usecs = ledger_info.timestamp_usecs
+        ret.next_validator_set = ledger_info.next_validator_set
+        return ret
+
 
     def hash(self):
         shazer = gen_hasher(b"Ledger2WaypointConverter::libra_types::waypoint")
