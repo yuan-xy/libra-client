@@ -13,7 +13,7 @@ from libra.transaction import (
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
-from libra.validator_change import VerifierType
+from libra.validator_change import VerifierType, ValidatorChangeProof
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
@@ -180,7 +180,8 @@ class Client:
         if new_epoch_info is not None:
             print(f"Trusted epoch change to :{new_epoch_info}")
             self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
-            self.state.latest_epoch_change_li = resp.validator_change_proof.ledger_info_with_sigs
+            vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
+            self.state.latest_epoch_change_li = vcp.ledger_info_with_sigss[-1]
         self.state.version = resp.ledger_info_with_sigs.ledger_info.version
         self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp

@@ -55,7 +55,7 @@ class ValidatorChangeProof:
             # While the original verification could've been via waypoints, all the next epoch
             # changes are verified using the (already trusted) validator sets.
             ledger_info = ledger_info_with_sigs.ledger_info
-            validator_set = ledger_info.commit_info.next_validator_set #TODO: why commit_info
+            validator_set = ledger_info.next_validator_set
             if not ledger_info.has_next_validator_set():
                 raise VerifyError("LedgerInfo doesn't carry ValidatorSet")
             vv = ValidatorVerifier.from_validator_set(validator_set.value)

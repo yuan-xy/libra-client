@@ -42,12 +42,13 @@ def verify_update_to_latest_ledger_response(
         raise VerifyError(f"{len(response_items)} != {len(requested_items)}")
     for req_item, resp_item in zip(requested_items, response_items):
         pass
+        #TODO: update proof: no bitmap, tx format change
         #verify_response_item(ledger_info, req_item, resp_item)
     if verifier_type.epoch_change_verification_required(ledger_info.epoch):
         epoch_change_li = validator_change_proof.verify(verifier_type)
         if not epoch_change_li.ledger_info.has_next_validator_set():
             raise VerifyError("No ValidatorSet in EpochProof")
-        vset = epoch_change_li.ledger_info.commit_info.next_validator_set.value
+        vset = epoch_change_li.ledger_info.next_validator_set.value
         vv = ValidatorVerifier.from_validator_set(vset)
         new_epoch_info = EpochInfo(epoch_change_li.ledger_info.epoch + 1, vv)
         ledger_info_with_sigs.verify(new_epoch_info.verifier)

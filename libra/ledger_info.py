@@ -61,15 +61,14 @@ class LedgerInfo(Struct):
 
     @property
     def timestamp_usecs(self):
-        self.commit_info.timestamp_usecs
+        return self.commit_info.timestamp_usecs
 
     @property
     def next_validator_set(self):
-        self.commit_info.next_validator_set
+        return self.commit_info.next_validator_set
 
     def has_next_validator_set(self):
         return self.commit_info.next_validator_set.value is not None
-
 
 
 
