@@ -17,16 +17,18 @@ class ValidatorInfo(Struct):
 
 class ValidatorVerifier(Struct):
     _fields = [
-        ('address_to_validator_info', {Address: ValidatorInfo})
+        ('address_to_validator_info', {Address: ValidatorInfo}),
+        ('quorum_voting_power', Uint64),
+        ('total_voting_power', Uint64)
     ]
 
     def __init__(self, address_to_validator_info):
         super().__init__(address_to_validator_info)
+        self.total_voting_power = sum([v.voting_power for k,v in address_to_validator_info.items()])
         if len(address_to_validator_info) == 0:
-            self.quorum_size = 0
-            #TODO: weighted voting
+            self.quorum_voting_power = 0
         else:
-            self.quorum_size = len(address_to_validator_info) * 2 // 3 + 1
+            self.quorum_voting_power = self.total_voting_power * 2 // 3 + 1
 
     @classmethod
     def from_validator_set(cls, vset):
