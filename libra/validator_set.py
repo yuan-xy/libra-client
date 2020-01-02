@@ -34,5 +34,7 @@ class ValidatorSet(DelegateT):
 
     @classmethod
     def from_proto(cls, next_validator_set_proto):
-        #TODO: validator_set change
-        raise Exception("not implemented.")
+        ret = []
+        for keys in next_validator_set_proto.validator_public_keys:
+            ret.append(ValidatorPublicKeys.from_proto(keys))
+        return ret

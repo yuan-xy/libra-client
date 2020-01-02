@@ -176,8 +176,11 @@ class Client:
     def get_with_proof(self, request):
         request.client_known_version = self.state.version
         resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
-        #verify(self.validator_verifier, request, resp)
-        #TODO:need update to latest proof, bitmap is removed.
+        new_epoch_info = verify(self.state.verifier, request, resp)
+        if new_epoch_info is not None:
+            print(f"Trusted epoch change to :{new_epoch_info}")
+            self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
+            self.state.latest_epoch_change_li = resp.validator_change_proof.ledger_info_with_sigs
         self.state.version = resp.ledger_info_with_sigs.ledger_info.version
         self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp

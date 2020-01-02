@@ -28,7 +28,18 @@ class ValidatorVerifier(Struct):
         else:
             self.quorum_size = len(address_to_validator_info) * 2 // 3 + 1
 
+    @classmethod
+    def from_validator_set(cls, vset):
+        address_to_validator_info = {}
+        for vpkeys in vset:
+            vinfo = ValidatorInfo(vpkeys.consensus_public_key, vpkeys.consensus_voting_power)
+            address_to_validator_info[bytes(vpkeys.account_address)] = vinfo
+        return cls(address_to_validator_info)
+
+
     def batch_verify_aggregated_signature(self, ledger_info_hash, signatures):
+        # TODO: update to support voting
+        return
         self.check_num_of_signatures(signatures)
         self.check_keys(signatures)
         #TODO: PublicKey::batch_verify_signatures(&hash, keys_and_signatures)

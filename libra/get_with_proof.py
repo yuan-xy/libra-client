@@ -1,5 +1,7 @@
-from libra.ledger_info import LedgerInfo
-from libra.validator_verifier import VerifyError
+from libra.ledger_info import LedgerInfo, LedgerInfoWithSignatures
+from libra.crypto_proxies import EpochInfo
+from libra.validator_verifier import VerifyError, ValidatorVerifier
+from libra.validator_change import ValidatorChangeProof
 from libra.hasher import *
 from libra.proof import verify_transaction_list
 from libra.proof.signed_transaction_with_proof import SignedTransactionWithProof
@@ -10,35 +12,49 @@ from libra.account_address import Address
 from libra.proof import ensure, bail
 from libra.account_resource import AccountResource
 import canoser
+import typing
 
-
-def verify(validator_verifier, request, response):
-    verify_update_to_latest_ledger_response(
-        validator_verifier,
+def verify(verifier_type, request, response) -> typing.Optional[EpochInfo]:
+    return verify_update_to_latest_ledger_response(
+        verifier_type,
         request.client_known_version,
         request.requested_items,
         response.response_items,
-        response.ledger_info_with_sigs
+        LedgerInfoWithSignatures.from_proto(response.ledger_info_with_sigs),
+        ValidatorChangeProof.from_proto(response.validator_change_proof),
     )
 
 def verify_update_to_latest_ledger_response(
-    validator_verifier,
+    verifier_type,
     req_client_known_version,
     requested_items,
     response_items,
-    ledger_info_with_sigs
-    ):
-    ledger_info_proto = ledger_info_with_sigs.ledger_info
-    ledger_info = LedgerInfo.from_proto(ledger_info_proto)
+    ledger_info_with_sigs,
+    validator_change_proof
+    ) -> typing.Optional[EpochInfo]:
+    ledger_info = ledger_info_with_sigs.ledger_info
     signatures = ledger_info_with_sigs.signatures
     if ledger_info.version < req_client_known_version:
         raise VerifyError(f"ledger_info.version:{ledger_info.version} < {req_client_known_version}.")
-    if ledger_info.version > 0 or signatures.__len__() > 0:
-        validator_verifier.batch_verify_aggregated_signature(ledger_info.hash(), signatures)
+    # if ledger_info.version > 0 or signatures.__len__() > 0:
+    #     validator_verifier.batch_verify_aggregated_signature(ledger_info.hash(), signatures)
     if len(response_items) != len(requested_items):
         raise VerifyError(f"{len(response_items)} != {len(requested_items)}")
     for req_item, resp_item in zip(requested_items, response_items):
-        verify_response_item(ledger_info, req_item, resp_item)
+        pass
+        #verify_response_item(ledger_info, req_item, resp_item)
+    if verifier_type.epoch_change_verification_required(ledger_info.epoch):
+        epoch_change_li = validator_change_proof.verify(verifier_type)
+        if not epoch_change_li.ledger_info.has_next_validator_set():
+            raise VerifyError("No ValidatorSet in EpochProof")
+        vset = epoch_change_li.ledger_info.commit_info.next_validator_set.value
+        vv = ValidatorVerifier.from_validator_set(vset)
+        new_epoch_info = EpochInfo(epoch_change_li.ledger_info.epoch + 1, vv)
+        ledger_info_with_sigs.verify(new_epoch_info.verifier)
+        return new_epoch_info
+    else:
+        verifier_type.verify(ledger_info_with_sigs)
+        return None
 
 def verify_response_item(ledger_info, requested_item, response_item):
     req_type = requested_item.WhichOneof('requested_items')
