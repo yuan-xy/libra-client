@@ -1,6 +1,7 @@
 from canoser import Struct, Uint64, Uint8
 from libra.crypto.ed25519 import ED25519_PUBLIC_KEY_LENGTH
 from libra.account_address import Address
+from nacl.signing import VerifyKey
 
 
 class VerifyError(Exception):
@@ -40,35 +41,37 @@ class ValidatorVerifier(Struct):
 
 
     def batch_verify_aggregated_signature(self, ledger_info_hash, signatures):
-        # TODO: update to support voting
-        return
         self.check_num_of_signatures(signatures)
         self.check_keys(signatures)
+        self.check_voting_power(signatures)
         #TODO: PublicKey::batch_verify_signatures(&hash, keys_and_signatures)
         self.verify_aggregated_signature(ledger_info_hash, signatures);
 
     def check_num_of_signatures(self, signatures):
         num = len(signatures)
-        if num < self.quorum_size:
-            raise VerifyError(f"TooFewSignatures: {num} < {self.quorum_size}")
         if num > len(self.address_to_validator_info):
             raise VerifyError(f"TooManySignatures: {num} > {len(self.address_to_validator_info)}")
 
+    def check_voting_power(self, signatures):
+        aggregated_voting_power = 0
+        for addr, _sign in signatures.items():
+            aggregated_voting_power += self.get_voting_power(addr)
+        if aggregated_voting_power < self.quorum_voting_power:
+            raise VerifyError(f"TooLittleVotingPower: {aggregated_voting_power} > {self.quorum_voting_power}")
+
+    def get_voting_power(self, address):
+        return self.address_to_validator_info[address].voting_power
+
     def check_keys(self, signatures):
-        for v_s_proto in signatures:
-            validator_id = v_s_proto.validator_id
-            if not validator_id in self.address_to_validator_info:
-                raise VerifyError(f"UnknownAuthor: {validator_id}")
+        for addr, _sign in signatures.items():
+            if addr not in self.address_to_validator_info:
+                raise VerifyError(f"UnknownAuthor: {addr}")
 
     def verify_aggregated_signature(self, ledger_info_hash, signatures):
-        #TODO: why validate all? according to proto file, there are >2/3 nodes signing this correctly
-        for v_s_proto in signatures:
-            validator_id = v_s_proto.validator_id
-            signature = v_s_proto.signature
-            self.verify_signature(validator_id, ledger_info_hash, signature)
+        for addr, signature in signatures.items():
+            self.verify_signature(addr, ledger_info_hash, signature)
 
-    def verify_signature(self, validator_id, ledger_info_hash, signature):
-        vkey = self.address_to_validator_info[validator_id]
-        if not vkey:
-            raise VerifyError(f"UnknownAuthor: {validator_id}")
-        vkey.verify(ledger_info_hash, signature)
+    def verify_signature(self, address, ledger_info_hash, signature):
+        validator_info = self.address_to_validator_info[address]
+        vkey = VerifyKey(bytes(validator_info.public_key))
+        vkey.verify(ledger_info_hash, bytes(signature))
