@@ -1,9 +1,10 @@
-from libra.shell.libra_shell import *
+from libra_client.shell.libra_shell import *
 from test_shell import prepare_shell, exec_input_with_client
 from libra.account_address import Address
 from libra.transaction import Script, TransactionPayload
 from libra.account_address import gen_random_address
 import libra
+import libra_client
 import pytest
 import os
 #import pdb
@@ -32,20 +33,20 @@ def test_move_compile_and_exec(capsys):
 def test_no_blob_of_non_exsits_address():
     if not TESTNET_LOCAL:
         return
-    with pytest.raises(libra.client.AccountError):
-        libra.Client("testnet").get_account_state(gen_random_address())
+    with pytest.raises(libra_client.client.AccountError):
+        libra_client.Client("testnet").get_account_state(gen_random_address())
 
 def test_create_account_and_rotate_key():
     if not TESTNET_LOCAL:
         return
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
-    c = libra.Client("testnet")
-    wallet2 = libra.WalletLibrary.new()
+    c = libra_client.Client("testnet")
+    wallet2 = libra_client.WalletLibrary.new()
     account = wallet2.new_account()
     address = account.address
-    with pytest.raises(libra.client.AccountError):
+    with pytest.raises(libra_client.client.AccountError):
         c.get_account_state(address)
     c.create_account(a0, address)
     account_resource = c.get_account_resource(address)
@@ -65,15 +66,15 @@ def test_create_account_and_rotate_key():
     # after rotate,  authentication_key == public_key
 
 def test_true_silent_cast_to_int_which_is_dangerous():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
-    wallet2 = libra.WalletLibrary.new()
+    wallet2 = libra_client.WalletLibrary.new()
     account = wallet2.new_account()
     script = Script.gen_create_account_script(account.address)
     payload = TransactionPayload('Script', script)
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     is_blocking=True
-    with pytest.raises(libra.client.TransactionError):
+    with pytest.raises(libra_client.client.TransactionError):
         c.submit_payload(a0, payload, is_blocking)
         #is_blocking is acctual parsed as max_gas, and True is cast to 1.
         #so, error thrown: min gas required for txn: 600, gas submitted: 1

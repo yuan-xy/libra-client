@@ -18,10 +18,10 @@ def run_stress_test():
 def test_429():
     if not run_stress_test():
         return
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     try:
         while True:
             time.sleep(1)
@@ -36,9 +36,9 @@ def test_429():
 def test_mint_429():
     if not run_stress_test():
         return
-    wallet = libra.WalletLibrary.new()
+    wallet = libra_client.WalletLibrary.new()
     a0 = wallet.new_account()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     count = 1
     while True:
         try:
@@ -56,10 +56,10 @@ def test_mint_429():
 def test_seq_too_old():
     if not run_stress_test():
         return
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     try:
         while True:
             a1 = wallet.new_account()

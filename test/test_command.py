@@ -1,4 +1,4 @@
-from libra.cli.command import *
+from libra_client.cli.command import *
 
 def test_params_valid():
     assert False == params_valid("", "1".split())

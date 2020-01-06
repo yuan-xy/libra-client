@@ -162,16 +162,16 @@ More instructions can be found here [libra command help](https://raw.githubuserc
 You can create a wallet using `WalletLibrary` class. A wallet is like your masterkey and you can create almost infinitely many Libra accounts from it. Note that LibraClient's mnemonic scheme is compatible with that of [Libra's CLI](https://github.com/libra/libra/tree/master/client/src), so you can import mnemonic between the two libraries.
 
 ```py
-import libra
+from libra_client import WalletLibrary
 
 # Create a new random wallet
-wallet = libra.WalletLibrary.new()
+wallet = WalletLibrary.new()
 
 # Create a new wallet from mnemonic words
-wallet = libra.WalletLibrary.new_from_mnemonic(mnemonic, child_count)
+wallet = WalletLibrary.new_from_mnemonic(mnemonic, child_count)
 
 # Recover wallet from a offical Libra CLI backup file
-wallet = libra.WalletLibrary.recover(filename)
+wallet = WalletLibrary.recover(filename)
 ```
 
 ### Account
@@ -194,7 +194,7 @@ print(account1.private_key)
 A `Client` must be created in order to send protobuf message to a Libra node. You can create a client with the following code.
 
 ```py
-from libra import Client
+from libra_client import Client
 
 client1 = Client("testnet")  # Default client connecting to the official testnet
 client2 = Client.new('localhost', 8000, "validator_file_path")  # Client connecting to a local node
@@ -264,7 +264,7 @@ balance = client.get_sequence_number(address)
 You can mint testnet libra with `mint_with_faucet` function, which sends a HTTP POST request to [http://faucet.testnet.libra.org](http://faucet.testnet.libra.org).
 
 ```py
-c = libra.Client("testnet")
+c = Client("testnet")
 c.mint_coins_with_faucet_service(address, 12345, is_blocking=True)
 ```
 
@@ -273,7 +273,7 @@ c.mint_coins_with_faucet_service(address, 12345, is_blocking=True)
 Note that in the official testnet, the Libra node ONLY allows sending [the official transfer transaction script](https://github.com/libra/libra/blob/master/language/stdlib/transaction_scripts/peer_to_peer_transfer.mvir). In the future, this libra can be extended to support more transaction scripts as well!
 
 ```py
-wallet = libra.WalletLibrary.recover('test.wallet')
+wallet = WalletLibrary.recover('test.wallet')
 a0 = wallet.accounts[0]
 a1 = wallet.accounts[1]
 ret = c.transfer_coin(a0, a1.address, 1234, is_blocking=True)
@@ -287,7 +287,7 @@ When is_blocking param is False, the call will return as the transaction is subm
 Get transaction by version:
 
 ```py
-c = libra.Client("testnet")
+c = Client("testnet")
 signed_txn = c.get_transaction(1)
 print(signed_txn.raw_txn)
 ```
@@ -305,7 +305,7 @@ class SignedTransaction(Struct):
 To get a list of transactions:
 
 ```py
-c = libra.Client("testnet")
+c = Client("testnet")
 c.get_transactions(start_version, limit)
 ```
 
@@ -313,14 +313,14 @@ c.get_transactions(start_version, limit)
 To get the latest 2 events send by an address:
 
 ```py
-c = libra.Client("testnet")
+c = Client("testnet")
 events = c.get_latest_events_sent(address, 2)
 ```
 
 To get the latest 2 events received by an address:
 
 ```py
-c = libra.Client("testnet")
+c = Client("testnet")
 events = c.get_latest_events_received(address, 2)
 ```
 

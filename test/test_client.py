@@ -1,4 +1,5 @@
 import libra
+import libra_client
 from libra.transaction import *
 from libra.contract_event import ContractEvent
 import os
@@ -9,7 +10,7 @@ import requests
 
 
 def test_get_transaction():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     stx = c.get_transaction(1, True)
     print(stx)
     assert isinstance(stx, libra.block_metadata.BlockMetadata) == True
@@ -23,14 +24,14 @@ def test_get_transaction():
     assert info.gas_used == 0
 
 def test_get_transactions3():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     txs = c.get_transactions(0, limit=3, fetch_events=True)
     assert len(txs) == 3
 
 
 
 def test_get_transaction_without_events():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     assert hasattr(c, "latest_time") == False
     transactions = c.get_transactions(1, 1, False)
     assert len(transactions) == 1
@@ -40,7 +41,7 @@ def test_get_transaction_without_events():
 
 
 def test_get_tx_with_events():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
     if c.client_known_version == 1:
         return
@@ -48,7 +49,7 @@ def test_get_tx_with_events():
     assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_from_zero():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     transactions, events_for_versions = c.get_transactions_proto(0, 2, True)
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2
@@ -71,7 +72,7 @@ def test_get_tx_from_zero():
 
 
 def test_get_tx_latest():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     ver = c.get_latest_transaction_version()
     if ver == 1:
         return
@@ -80,30 +81,30 @@ def test_get_tx_latest():
     assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_zero():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     with pytest.raises(ValueError):
         c.get_transactions_proto(1, 0, True)
 
 
 def test_get_tx_invalid():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     with pytest.raises(TypeError):
         c.get_transactions_proto(1, -1, True)
 
 def test_get_latest_transaction_version():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     ver = c.get_latest_transaction_version()
     assert ver > 0
 
 def test_get_balance():
     address = libra.AccountConfig.transaction_fee_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     balance = c.get_balance(address)
     assert balance >= 0
 
 def test_get_account_resource():
     address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     ret = c.get_account_resource(address)
     assert len(ret.authentication_key) == 32
     assert ret.balance > 0
@@ -125,13 +126,13 @@ def test_get_account_resource():
 
 def test_account_not_exsits():
     address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
-    c = libra.Client("testnet")
-    with pytest.raises(libra.client.AccountError):
+    c = libra_client.Client("testnet")
+    with pytest.raises(libra_client.client.AccountError):
         balance = c.get_account_state(address)
 
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     txn, usecs = c.get_account_transaction_proto(address, 1, True)
     len(str(usecs)) == 16
     assert usecs//1000_000 > 1570_000_000
@@ -145,10 +146,10 @@ def test_get_account_transaction_proto():
 
 
 def test_transfer_coin():
-    wallet = libra.WalletLibrary.new()
+    wallet = libra_client.WalletLibrary.new()
     a0 = wallet.new_account()
     a1 = wallet.new_account()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     try:
         c.mint_coins(a0.address.hex(), 1234, True)
     except Exception:
@@ -166,7 +167,7 @@ def test_transfer_coin():
     assert c.get_balance(a1.address) == balance1 + 1234
 
 def test_client_init():
-    client = libra.Client.new("localhost","8080")
+    client = libra_client.Client.new("localhost","8080")
     assert client.host == "localhost"
     assert client.port == 8080
     assert hasattr(client, "faucet_host") == False
@@ -180,7 +181,7 @@ def test_client_init():
 
 
 def test_client_testnet():
-    c2 = libra.Client("testnet")
+    c2 = libra_client.Client("testnet")
     try:
         tests = os.environ['TESTNET_LOCAL'].split(";")
         assert c2.host == tests[0]
@@ -196,15 +197,15 @@ def test_client_testnet():
     assert len(c2.validator_verifier.validators) > 0
 
 def test_client_error():
-    with pytest.raises(libra.LibraNetError):
-        libra.Client("xnet")
-    with pytest.raises(libra.LibraNetError):
-        libra.Client("mainnet")
+    with pytest.raises(libra_client.client.LibraNetError):
+        libra_client.Client("xnet")
+    with pytest.raises(libra_client.client.LibraNetError):
+        libra_client.Client("mainnet")
     with pytest.raises(FileNotFoundError):
-        libra.Client.new("localhost", 8000, "non_exsits_file")
+        libra_client.Client.new("localhost", 8000, "non_exsits_file")
 
 def test_timeout():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     c.timeout = 0.001
     with pytest.raises(Exception) as excinfo:
         stx = c.get_transaction(1, True)

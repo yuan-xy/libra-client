@@ -1,8 +1,8 @@
 import libra
 from mnemonic import Mnemonic
 from nacl.signing import SigningKey
-from libra.key_factory import has_sha3
-
+from libra_client.key_factory import has_sha3
+import libra_client
 #import pdb
 
 def test_key():
@@ -12,9 +12,9 @@ def test_key():
     mnemonic = 'legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal will'
     data = b'\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f\x7f'
     assert mnemonic == m.to_mnemonic(data)
-    seed = libra.KeyFactory.to_seed(mnemonic)
+    seed = libra_client.KeyFactory.to_seed(mnemonic)
     assert '8d8d9b85e36b2b9486becd31288e9dc2501cf77f95deb7d141eeb49d77f8a80f' == bytes.hex(seed)
-    kfac = libra.KeyFactory(seed)
+    kfac = libra_client.KeyFactory(seed)
     master = bytes.hex(kfac.master)
     assert master == "16274c9618ed59177ca948529c1884ba65c57984d562ec2b4e5aa1ee3e3903be"
     child0 = kfac.private_child(0)

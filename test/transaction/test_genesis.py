@@ -1,4 +1,5 @@
-import libra
+import libra_client
+from libra.transaction.change_set import ChangeSet
 from libra.contract_event import ContractEvent
 from libra.json_print import json_dumps
 import pytest
@@ -14,7 +15,7 @@ except KeyError:
 
 
 def test_genesis():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     tx = c.get_transaction(0, True)
     assert len(tx.events) == 4
     assert tx.events[0].type_tag.value.module == "LibraAccount"
@@ -37,7 +38,7 @@ def test_genesis():
     else:
         assert_key_related_testnet(tx, amap)
     cset = tx.raw_txn.payload.value
-    assert type(cset) == libra.transaction.change_set.ChangeSet
+    assert type(cset) == ChangeSet
     wset = cset.write_set
     if TESTNET_LOCAL:
         assert len(wset.write_set) == 24

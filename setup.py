@@ -19,6 +19,7 @@ with open("libra/version.py", "r") as fp:
 
 install_requires=[
         'canoser>=0.7.2',
+        'libra-core>=0.7.1',
         'protobuf',
         'grpcio',
         'more-itertools',
@@ -47,8 +48,8 @@ setuptools.setup(
     include_package_data=True,
     entry_points={
         'console_scripts':[
-            'libra = libra.cli.main:main',
-            'libra_shell = libra.shell.libra_shell:main'
+            'libra = libra_client.cli.main:main',
+            'libra_shell = libra_client.shell.libra_shell:main'
         ]
     },
     install_requires=install_requires,

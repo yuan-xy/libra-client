@@ -1,6 +1,7 @@
-import libra
+import libra_client
 from tempfile import NamedTemporaryFile
-from libra.key_factory import has_sha3
+from libra.hasher import has_sha3
+from libra.account import Account
 import pytest
 #import pdb
 
@@ -8,13 +9,13 @@ import pytest
 def test_wallet():
     if not has_sha3():
         return
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
     assert a0.address_hex == "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
     assert a0.public_key_hex == "d1f4e85a3582015deb92d8aba35061a8032865d754a364d2429d475d10829c2a"
     assert a0.private_key_hex == "177bb836b2bb9be29f5accdf74a95d917946001282d7ee74b18d0c81764ee383"
-    assert libra.account.Account.gen_address_from_pk(a0.public_key) == a0.address
+    assert Account.gen_address_from_pk(a0.public_key) == a0.address
     a1 = wallet.accounts[1]
     assert a1.address_hex == "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde"
     assert a1.public_key_hex == "6b72f3922ccbe671409c5ad0552f93888427f466ea0b7fdf3f066b31bce5c6a6"
@@ -32,12 +33,12 @@ def test_wallet():
     tmp.close()
 
 def test_new_wallet():
-    wallet = libra.WalletLibrary.new()
+    wallet = libra_client.WalletLibrary.new()
     assert wallet.child_count == 0
     assert len(wallet.mnemonic.split()) == 18
 
 def test_get_account_by_address_or_refid():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     accounts = wallet.accounts
     assert accounts[0] == wallet.get_account_by_address_or_refid("0")
     assert accounts[1] == wallet.get_account_by_address_or_refid("1")
@@ -51,24 +52,24 @@ def test_get_account_by_address_or_refid():
 
 
 def test_rotate_file():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     wallet.rotate_key(1, 0)
     tmp = NamedTemporaryFile('w+t')
     wallet.write_recovery(tmp.name)
-    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    wallet2 = libra_client.WalletLibrary.recover(tmp.name)
     assert wallet2.child_count == 2
     wallet2.accounts[0] == wallet.accounts[0]
     wallet2.accounts[1].address == wallet.accounts[1].address
     wallet2.accounts[1].public_key == wallet.accounts[0].public_key
 
 def test_rotate_file2():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     wallet.rotate_key("1", "0")
     tmp = NamedTemporaryFile('w+t')
     wallet.write_recovery(tmp.name)
-    wallet2 = libra.WalletLibrary.recover(tmp.name)
+    wallet2 = libra_client.WalletLibrary.recover(tmp.name)
     assert wallet2.child_count == 2
     wallet2.accounts[0] == wallet.accounts[0]
     wallet2.accounts[1].address == wallet.accounts[1].address

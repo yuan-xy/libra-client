@@ -1,6 +1,6 @@
-import libra
+import libra_client
 from libra.transaction import *
-from libra.client import TransactionError, TransactionTimeoutError
+from libra_client.client import TransactionError, TransactionTimeoutError
 from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
@@ -10,7 +10,7 @@ import pdb
 
 def test_raw_txn():
     assert RawTransaction.__doc__.startswith("RawTransaction is the portion of a transaction that a client signs")
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 123)
@@ -31,7 +31,7 @@ def test_raw_txn():
 
 
 def test_raw_txn_with_metadata():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 9, metadata=[2,3,4])
@@ -50,7 +50,7 @@ def test_raw_txn_with_metadata():
 
 
 def test_signed_txn():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 123)
@@ -61,20 +61,20 @@ def test_signed_txn():
         stx.check_signature()
 
 def test_wait_for_transaction_timeout():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     diff = c._get_time_diff()
     if diff < 0:
         with pytest.raises(TransactionTimeoutError):
             c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=True, txn_expiration=0)
 
 def test_gax_too_large():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     balance0 = c.get_balance(a0.address)
     with pytest.raises(TransactionError):
         c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
@@ -85,15 +85,15 @@ def test_gax_too_large():
 
 
 def test_amount_zero():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     try:
         ret = c.transfer_coin(a0, a1.address, 0, is_blocking=True)
-    except libra.client.VMError as vme:
+    except libra_client.client.VMError as vme:
         assert vme.error_code == 4016
-    except libra.client.MempoolError as mpe:
+    except libra_client.client.MempoolError as mpe:
         assert mpe.error_code == 5
 
 
@@ -104,9 +104,9 @@ def test_transfer_to_self():
     if not sys.version.startswith("3.6"):
         #only test under 3.6, prevent parallel test to one account error.
         return
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     balance = c.get_balance(a0.address)
     if balance == 0:
         c.mint_coins(a0.address, 1000000, is_blocking=True)
@@ -121,10 +121,10 @@ def test_transfer_to_self():
 
 
 def test_amount_illegal():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     sequence_number = c.get_sequence_number(a0.address)
     balance0 = c.get_balance(a0.address)
     with pytest.raises(Exception):
@@ -134,13 +134,13 @@ def test_amount_illegal():
     try:
         c.transfer_coin(a0, a1.address, balance0+99999999, is_blocking=False)
         c.wait_for_transaction(a0.address, sequence_number) #no events emitted
-    except libra.client.VMError as vme:
+    except libra_client.client.VMError as vme:
         assert vme.error_code == 4016
-    except libra.client.MempoolError as mpe:
+    except libra_client.client.MempoolError as mpe:
         assert mpe.error_code == 5
 
 def test_query():
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     txs = c.get_transactions(1, "1")
     txs = c.get_transactions("1", 1)
     txs = c.get_transactions(1, "1", False)
@@ -149,7 +149,7 @@ def test_query():
 
 
 def test_get_transaction_invalid():
-    client = libra.Client("testnet")
+    client = libra_client.Client("testnet")
     with pytest.raises(TypeError):
         client.get_transaction(-1)
     tx = client.get_transaction(Uint64.max_value)
@@ -158,7 +158,7 @@ def test_get_transaction_invalid():
         client.get_transaction(Uint64.max_value+1)
 
 def test_tx_id_overflow():
-    client = libra.Client("testnet")
+    client = libra_client.Client("testnet")
     start_version = Uint64.max_value+1
     request = UpdateToLatestLedgerRequest()
     item = request.requested_items.add()
@@ -173,10 +173,10 @@ def test_tx_id_overflow():
 
 
 def test_transfer_with_metadata():
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    client = libra.Client("testnet")
+    client = libra_client.Client("testnet")
     balance = client.get_balance(a0.address)
     if balance == 0:
         client.mint_coins(a0.address, 1000000, is_blocking=True)

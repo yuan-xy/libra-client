@@ -1,7 +1,8 @@
-from libra.shell.libra_shell import *
+from libra_client.shell.libra_shell import *
 from libra.account_address import gen_random_address
 from tempfile import NamedTemporaryFile
 import libra
+import libra_client
 import pytest
 import os
 #import pdb
@@ -19,7 +20,7 @@ def test_shell():
     assert args.host == "ac.testnet.libra.org"
     assert args.port == 0
     assert args.sync == False
-    grpc_client = libra.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.host, args.port)
     assert TESTNET_LOCAL or hasattr(grpc_client, "faucet_host")
 
 
@@ -27,7 +28,7 @@ def test_recover_account_on_init(capsys):
     parser = get_parser()
     args = parser.parse_args("-n test/test.wallet".split())
     assert args.mnemonic_file == "test/test.wallet"
-    grpc_client = libra.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.host, args.port)
     client = ClientProxy(grpc_client, args)
     assert len(client.accounts) == 2
 
@@ -37,7 +38,7 @@ def prepare_shell(shell_args):
     if shell_args is None:
         shell_args = "-n test/test.wallet"
     args = parser.parse_args(shell_args.split())
-    grpc_client = libra.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.host, args.port)
     client = ClientProxy(grpc_client, args)
     (_, alias_to_cmd) = get_commands(True)
     return (client, alias_to_cmd)
@@ -116,7 +117,7 @@ def test_transfer_coin(capsys):
     try:
         output = exec_input("t 0 1 123", capsys)
         assert 'Transaction submitted to validator' in output
-    except libra.client.MempoolError:
+    except libra_client.client.MempoolError:
         pass
 
 def test_transfer_error(capsys):
@@ -128,8 +129,8 @@ def test_execute_script_on_testnet(capsys):
         #TODO: why should sleep some seconds to avoid MempoolError
         import time
         time.sleep(1)
-    client = libra.Client("testnet")
-    wallet = libra.WalletLibrary.recover('test/test.wallet')
+    client = libra_client.Client("testnet")
+    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
     balance = client.get_balance(a0.address_hex)
@@ -144,7 +145,7 @@ def test_execute_script_on_testnet(capsys):
             import requests
             requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
     addr1 = gen_random_address()
-    output = exec_input(f"dev e 0 transaction_scripts/peer_to_peer_transfer.mv {addr1} 1", capsys)
+    output = exec_input(f"dev e 0 test/peer_to_peer_transfer.mv {addr1} 1", capsys)
     assert 'Compiling program' in output
     if TESTNET_LOCAL:
         if "MempoolError" in output:
@@ -168,7 +169,7 @@ def test_execute_script_on_testnet(capsys):
 
 
 def test_publish_module_to_testnet(capsys):
-    output = exec_input(f"dev p 0 transaction_scripts/peer_to_peer_transfer.mv", capsys)
+    output = exec_input(f"dev p 0 test/peer_to_peer_transfer.mv", capsys)
     assert "ERROR" in output
     if TESTNET_LOCAL:
         assert 'Publish move module on-chain: ' in output
@@ -193,8 +194,8 @@ def exec_input_with_client(input, client, alias_to_cmd):
 
 def test_ledger_time(capsys):
     # output = exec_input("ledger time", capsys)
-    from libra.cli.ledger_cmds import LedgerCmdTime
-    client = libra.Client("testnet")
+    from libra_client.cli.ledger_cmds import LedgerCmdTime
+    client = libra_client.Client("testnet")
     LedgerCmdTime().execute(client, {})
     output = capsys.readouterr().out
     assert 'start_time' in output

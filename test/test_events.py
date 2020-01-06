@@ -3,12 +3,13 @@ from libra.event import *
 from libra.contract_event import ContractEvent
 from libra.account_address import Address
 import libra
+import libra_client
 #import pdb
 
 
 def test_event_sent():
     address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     events = c.get_latest_events_sent(address, 2)
     assert len(events) == 2
     assert events[0].transaction_version >= events[1].transaction_version
@@ -42,7 +43,7 @@ def test_event_sent():
 
 def test_latest_events_received():
     address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     events = c.get_latest_events_received(address, 1)
     assert len(events) == 1
     assert events[0].transaction_version >= 0
@@ -64,7 +65,7 @@ def test_latest_events_received():
 
 def test_events_received():
     address = libra.AccountConfig.association_address()
-    c = libra.Client("testnet")
+    c = libra_client.Client("testnet")
     events = c.get_events_received(address, 0, limit=1)
     assert len(events) == 1
     assert events[0].transaction_version >= 0
