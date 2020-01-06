@@ -15,6 +15,8 @@ from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
 from libra.validator_change import VerifierType, ValidatorChangeProof
 
+from libra_client.error import LibraError, AccountError, TransactionError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
+
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
@@ -26,38 +28,6 @@ NETWORKS = {
         'faucet_host': "faucet.testnet.libra.org"
     }
 }
-
-class LibraError(Exception):
-    pass
-
-class AccountError(LibraError):
-    pass
-
-class TransactionError(LibraError):
-    @property
-    def error_code(self):
-        code, _ = self.args
-        return code
-
-    @property
-    def error_msg(self):
-        _, msg = self.args
-        return msg
-
-class AdmissionControlError(TransactionError):
-    pass
-
-class VMError(TransactionError):
-    pass
-
-class MempoolError(TransactionError):
-    pass
-
-class TransactionTimeoutError(LibraError):
-    pass
-
-class LibraNetError(LibraError):
-    pass
 
 
 class TrustedState:
