@@ -1,6 +1,7 @@
 #!/bin/bash
+#pip install  ansi2html
 
-libra='python3 libra/cli/main.py -c always'
+libra='python3 libra_client/cli/main.py -c always'
 
 rm "docs/cli_help.html"
 touch "docs/cli_help.html"
