@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
     long_description = "\n".join(arr[3:])
 
 
-with open("libra/version.py", "r") as fp:
+with open("libra_client/version.py", "r") as fp:
     try:
         version = re.findall(
             r"^version = \"([0-9\.]+)\"", fp.read(), re.M

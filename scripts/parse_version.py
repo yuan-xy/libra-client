@@ -2,7 +2,7 @@
 import re
 
 
-with open("libra/version.py", "r") as fp:
+with open("libra_client/version.py", "r") as fp:
     try:
         version = re.findall(
             r"^version = \"([0-9\.]+)\"", fp.read(), re.M

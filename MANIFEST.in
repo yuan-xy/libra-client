@@ -2,6 +2,6 @@ include README.md
 include LICENSE
 include setup.py
 include requirements.txt
-graft libra
+graft libra_client
 global-exclude __pycache__
 global-exclude *.py[co]
