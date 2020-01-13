@@ -17,7 +17,7 @@ def test_get_transaction():
     assert stx.previous_block_votes == {}
     assert len(stx.proposer) == 32
     assert len(stx.id) == 32
-    assert stx.timestamp_usec == 0 or stx.timestamp_usec > 1570_000_000_000_000
+    assert stx.timestamp_usecs == 0 or stx.timestamp_usecs > 1570_000_000_000_000
     assert len(stx.events) == 0
     info = stx.transaction_info
     assert info.major_status == 4001

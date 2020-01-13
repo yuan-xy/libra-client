@@ -46,8 +46,8 @@ class LedgerCmdTime(DualCommand):
         info = resp.ledger_info_with_sigs.ledger_info
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         tx = Transaction.deserialize(txnp.transactions[0].transaction)
-        stx = tx.value
-        start_time = datetime.fromtimestamp(stx.timestamp_usec / 1000_000)
+        stx = tx.value #should be BlockMetadata
+        start_time = datetime.fromtimestamp(stx.timestamp_usecs / 1000_000)
         latest_time = datetime.fromtimestamp(client.latest_time / 1000_000)
         json_print_in_cmd({
             "start_time": start_time.strftime("%Y-%m-%dT%H:%M:%S"),

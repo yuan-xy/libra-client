@@ -148,7 +148,8 @@ class Client:
         resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
         new_epoch_info = verify(self.state.verifier, request, resp)
         if new_epoch_info is not None:
-            print(f"Trusted epoch change to :{new_epoch_info}")
+            if self.verbose:
+                print(f"Trusted epoch change to :{new_epoch_info}")
             self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
             vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
             self.state.latest_epoch_change_li = vcp.ledger_info_with_sigss[-1]
