@@ -13,9 +13,9 @@ python:
     - "3.7"
     - "3.8"
 
-env:
-  global:
-    - TESTNET_LOCAL="118.31.170.65;33333"
+# env:
+#   global:
+#     - TESTNET_LOCAL="118.31.170.65;33333"
 
 install:
     # Optimisation: build requirements as wheels, which get cached by Travis

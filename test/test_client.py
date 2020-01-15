@@ -194,7 +194,7 @@ def test_client_testnet():
     assert c2.faucet_host == "faucet.testnet.libra.org"
     assert c2.verbose == True
     assert c2.faucet_account is None
-    assert len(c2.validator_verifier.validators) > 0
+
 
 def test_client_error():
     with pytest.raises(libra_client.client.LibraNetError):

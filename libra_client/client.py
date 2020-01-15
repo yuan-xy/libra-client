@@ -289,7 +289,7 @@ class Client:
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
         max_iterations = 50
         if self.verbose:
-            print("waiting", flush=True)
+            print(f"waiting for {address} with sequence number {sequence_number}", flush=True)
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1
