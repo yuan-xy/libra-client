@@ -43,7 +43,7 @@ def test_get_transaction_without_events():
 def test_get_tx_with_events():
     c = libra_client.Client("testnet")
     transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
-    if c.client_known_version == 1:
+    if c.state.version == 1:
         return
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2

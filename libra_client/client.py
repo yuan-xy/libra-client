@@ -57,7 +57,6 @@ class Client:
         self.init_faucet_account(faucet_file)
         self.init_trusted_state(waypoint)
         self.timeout = 30
-        self.client_known_version = 0
         self.verbose = True
 
     def init_trusted_state(self, waypoint):
