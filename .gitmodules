@@ -1,0 +1,3 @@
+[submodule "libra-core"]
+	path = libra-core
+	url = https://github.com/MoveOnLibra/libra-core.git
