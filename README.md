@@ -13,7 +13,7 @@ For exmaple, **`$ libra`** meants run `libra` command in linux shell, which is d
 
 ## Installation
 
-Require python 3.6 or above installed.
+Require python 3.7 or above installed.
 
 ```sh
 $ python3 -m pip install libra-client
