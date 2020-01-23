@@ -2,6 +2,7 @@ import libra
 import libra_client
 from libra.transaction import *
 from libra.contract_event import ContractEvent
+from canoser import Uint64
 import os
 import pytest
 import requests
@@ -143,6 +144,12 @@ def test_get_account_transaction_proto():
     assert len(txn.transaction.transaction) > 0
     if txn.proof.transaction_info.major_status == 4001:
         assert txn.events.events[0].sequence_number == 1
+
+def test_get_account_transaction_non_exists():
+    address = libra.AccountConfig.association_address()
+    c = libra_client.Client("testnet")
+    txn, usecs = c.get_account_transaction_proto(address, Uint64.max_value, True)
+    assert txn.__str__() == ''
 
 
 def test_transfer_coin():

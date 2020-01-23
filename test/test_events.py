@@ -29,11 +29,11 @@ def test_event_sent():
     assert contracts[0].key == contracts[1].key
     assert contracts[0].event_seq_num-1 == contracts[1].event_seq_num
     assert len(contracts[0].event_data) == 44
-    aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
+    aes = [SentPaymentEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
-    assert len(aes[0].account) == 32
+    assert len(aes[0].receiver) == 32
     assert aes[1].amount >0
-    assert len(aes[1].account) == 32
+    assert len(aes[1].receiver) == 32
     contract2s = [ContractEvent.from_proto_event_with_proof(x) for x in events]
     assert contract2s[0].event_data_decode.amount == aes[0].amount
     res = c.get_account_resource(address)
@@ -53,9 +53,9 @@ def test_latest_events_received():
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
     assert len(contracts[0].event_data) == 44
-    aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
+    aes = [ReceivedPaymentEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
-    assert len(aes[0].account) == 32
+    assert len(aes[0].sender) == 32
     res = c.get_account_resource(address)
     assert res.received_events.key == contracts[0].key
     assert res.received_events.count == contracts[0].event_seq_num+1
@@ -75,6 +75,6 @@ def test_events_received():
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
     assert len(contracts[0].event_data) == 44
-    aes = [AccountEvent.deserialize(x.event_data) for x in contracts]
+    aes = [ReceivedPaymentEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
-    assert len(aes[0].account) == 32
+    assert len(aes[0].sender) == 32
