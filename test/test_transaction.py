@@ -34,7 +34,7 @@ def test_raw_txn_with_metadata():
     wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
-    raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 9, metadata=[2,3,4])
+    raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 9, metadata=bytes([2,3,4]))
     assert raw_tx.payload.value_type == Script
     script = raw_tx.payload.value
     assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
@@ -46,7 +46,7 @@ def test_raw_txn_with_metadata():
     assert script.args[1].value == 9
     assert script.args[2].index == 2
     assert script.args[2].ByteArray == True
-    assert script.args[2].value == [2,3,4]
+    assert script.args[2].value == bytes([2,3,4])
 
 
 def test_signed_txn():
@@ -57,7 +57,7 @@ def test_signed_txn():
     stx = SignedTransaction.gen_from_raw_txn(raw_tx, a0)
     stx.check_signature()
     with pytest.raises(nacl.exceptions.BadSignatureError):
-        stx.signature = [0]*64
+        stx.signature = b'\0'*64
         stx.check_signature()
 
 def test_wait_for_transaction_timeout():
@@ -180,12 +180,12 @@ def test_transfer_with_metadata():
     balance = client.get_balance(a0.address)
     if balance == 0:
         client.mint_coins(a0.address, 1000000, is_blocking=True)
-    ret = client.transfer_coin(a0, a1.address, 1, metadata=[3,4,5], is_blocking=True)
+    ret = client.transfer_coin(a0, a1.address, 1, metadata=bytes([3,4,5]), is_blocking=True)
     script = ret.raw_txn.payload.value
     assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
     assert bytes(script.args[0].value) == a1.address
     assert script.args[1].value == 1
-    assert script.args[2].value == [3,4,5]
+    assert script.args[2].value == bytes([3,4,5])
     proto, _ = client.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
     assert proto.version > 1
     assert len(proto.events.events) == 2

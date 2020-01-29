@@ -4,7 +4,6 @@ from libra.contract_event import ContractEvent
 from libra.account_address import Address
 import libra
 import libra_client
-#import pdb
 
 
 def test_event_sent():
@@ -15,12 +14,12 @@ def test_event_sent():
     assert events[0].transaction_version >= events[1].transaction_version
     contracts = [ContractEvent.from_proto(x.event) for x in events]
     tag0 = contracts[0].type_tag.value
-    assert tag0.address == libra.AccountConfig.core_code_address_ints()
+    assert tag0.address == libra.AccountConfig.core_code_address_bytes()
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'SentPaymentEvent'
     assert tag0.is_pay_tag() == True
     tag1 = contracts[1].type_tag.value
-    assert tag1.address == libra.AccountConfig.core_code_address_ints()
+    assert tag1.address == libra.AccountConfig.core_code_address_bytes()
     assert tag1.module == 'LibraAccount'
     assert tag1.name == 'SentPaymentEvent'
     assert tag1.is_pay_tag() == True
@@ -49,7 +48,7 @@ def test_latest_events_received():
     assert events[0].transaction_version >= 0
     contracts = [ContractEvent.from_proto(x.event) for x in events]
     tag0 = contracts[0].type_tag.value
-    assert tag0.address == libra.AccountConfig.core_code_address_ints()
+    assert tag0.address == libra.AccountConfig.core_code_address_bytes()
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
     assert len(contracts[0].event_data) == 44
@@ -71,7 +70,7 @@ def test_events_received():
     assert events[0].transaction_version >= 0
     contracts = [ContractEvent.from_proto(x.event) for x in events]
     tag0 = contracts[0].type_tag.value
-    assert tag0.address == libra.AccountConfig.core_code_address_ints()
+    assert tag0.address == libra.AccountConfig.core_code_address_bytes()
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
     assert len(contracts[0].event_data) == 44
