@@ -4,17 +4,13 @@ import time
 from canoser import Uint64
 import os
 
-from libra.account import Account
-from libra.account_address import Address
-from libra.account_resource import AccountState, AccountResource
-from libra.account_config import AccountConfig
+from libra import Account, Address, AccountConfig, AccountState, AccountResource
 from libra.transaction import (
     Version, Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
 from libra.validator_change import VerifierType, ValidatorChangeProof
-
 from libra_client.error import LibraError, AccountError, TransactionError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
@@ -151,7 +147,7 @@ class Client:
                 print(f"Trusted epoch change to :{new_epoch_info}")
             self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
             vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
-            self.state.latest_epoch_change_li = vcp.ledger_info_with_sigss[-1]
+            self.state.latest_epoch_change_li = vcp.ledger_info_with_sigs[-1]
         self.state.version = resp.ledger_info_with_sigs.ledger_info.version
         self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
         return resp

@@ -19,7 +19,7 @@ with open("libra_client/version.py", "r") as fp:
 
 install_requires=[
         'canoser>=0.7.6',
-        'libra-core>=0.7.4',
+        'libra-core>=0.7.6',
         'protobuf',
         'grpcio',
         'more-itertools',
