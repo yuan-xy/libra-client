@@ -140,7 +140,14 @@ class Client:
 
     def get_with_proof(self, request):
         request.client_known_version = self.state.version
-        resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
+        try:
+            resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
+        except Exception as err:
+            if err.__class__.__name__ == '_Rendezvous' and \
+                err.details().find("other accumulator is bigger than this") != -1:
+                #Testnet reset, so clear old state
+                self.init_trusted_state(self, None)
+            raise
         new_epoch_info = verify(self.state.verifier, request, resp)
         if new_epoch_info is not None:
             if self.verbose:
