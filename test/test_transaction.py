@@ -67,8 +67,13 @@ def test_wait_for_transaction_timeout():
     c = libra_client.Client("testnet")
     diff = c._get_time_diff()
     if diff < 0:
-        with pytest.raises(TransactionTimeoutError):
+        with pytest.raises(libra_client.VMError) as excinfo:
             c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=True, txn_expiration=0)
+        vm_error = excinfo.value
+        assert vm_error.args == (6, 'TRANSACTION_EXPIRED')
+        assert vm_error.error_code == 6
+        assert vm_error.error_msg == 'TRANSACTION_EXPIRED'
+
 
 def test_gax_too_large():
     wallet = libra_client.WalletLibrary.recover('test/test.wallet')
