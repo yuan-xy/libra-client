@@ -131,6 +131,20 @@ def test_account_not_exsits():
     with pytest.raises(libra_client.client.AccountError):
         balance = c.get_account_state(address)
 
+def test_get_acc_txns_with_client_known_version():
+    address = libra.AccountConfig.association_address()
+    client = libra_client.Client("testnet")
+    client.state.version = 2
+    with pytest.raises(libra.validator_verifier.VerifyError):
+        #need validator proof
+        client.get_account_transaction_proto(address, 1, False)
+    client.state.version = 0
+    client.get_account_transaction_proto(address, 1, False)
+    assert client.state.version > 0
+    client.get_account_transaction_proto(address, 1, False)
+
+
+
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
     c = libra_client.Client("testnet")
