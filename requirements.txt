@@ -13,7 +13,7 @@ idna==2.8
 importlib-metadata==1.5.0
 jeepney==0.4.2
 keyring==21.1.0
-libra-core==0.7.8
+libra-core==0.7.9
 mnemonic==0.19
 more-itertools==8.2.0
 packaging==20.1
