@@ -146,7 +146,7 @@ class Client:
             if err.__class__.__name__ == '_Rendezvous' and \
                 err.details().find("other accumulator is bigger than this") != -1:
                 #Testnet reset, so clear old state
-                self.init_trusted_state(self, None)
+                self.init_trusted_state(None)
             raise
         new_epoch_info = verify(self.state.verifier, request, resp)
         if new_epoch_info is not None:
