@@ -215,6 +215,7 @@ def test_client_testnet():
     assert c2.faucet_host == "faucet.testnet.libra.org"
     assert c2.verbose == True
     assert c2.faucet_account is None
+    c2.init_trusted_state(None)
 
 
 def test_client_error():
