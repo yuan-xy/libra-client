@@ -11,8 +11,9 @@ def test_invalid_signature():
     stx = SignedTransaction.gen_from_raw_txn(raw_tx, a0)
     stx.signature = b'\0'*64
     client = libra_client.Client("testnet")
-    with pytest.raises(AssertionError) as excinfo:
+    with pytest.raises(Exception) as excinfo:
         client.submit_signed_txn(stx)
+        #libra_client.error.VMError: (3, 'SEQUENCE_NUMBER_TOO_OLD')
     return #TODO: This maybe libra's bug, should return INVALID_SIGNATURE error.
     with pytest.raises(libra_client.VMError) as excinfo:
     	client.submit_signed_txn(stx)

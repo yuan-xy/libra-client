@@ -14,7 +14,7 @@ def test_raw_txn():
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 123)
-    assert raw_tx.max_gas_amount == 140000
+    assert raw_tx.max_gas_amount == 400_000
     assert raw_tx.gas_unit_price == 0
     assert bytes(raw_tx.sender) == a0.address
     assert raw_tx.payload.enum_name == "Script"

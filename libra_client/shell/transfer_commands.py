@@ -31,7 +31,7 @@ class TransferCommand(Command):
         if len(params) == 7:
             max_gas_amount_in_micro_libras = Uint64.int_safe(params[6])
         else:
-            max_gas_amount_in_micro_libras = 140_000
+            max_gas_amount_in_micro_libras = 400_000
         print(">> Transferring")
         is_blocking = blocking_cmd(params[0])
         sequence_number = client.transfer_coins(params[1], params[2], params[3],

@@ -316,7 +316,7 @@ class Client:
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
-        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
+        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
         script = Script.gen_transfer_script(receiver_address,micro_libra, metadata)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
@@ -360,7 +360,7 @@ class Client:
 
 
     def submit_payload(self, sender_account, payload,
-        max_gas=140_000, unit_price=0, is_blocking=False, txn_expiration=100):
+        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         #TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
