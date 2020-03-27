@@ -122,7 +122,7 @@ class Client:
 
     def get_account_resource(self, address, retry=False):
         state = self.get_account_state(address, retry)
-        return state.get_resource()
+        return state.get_account_resource()
 
     def get_sequence_number(self, address, retry=False):
         try:
@@ -133,8 +133,8 @@ class Client:
 
     def get_balance(self, address, retry=False):
         try:
-            state = self.get_account_resource(address, retry)
-            return state.balance
+            state = self.get_account_state(address, retry)
+            return state.get_balance_resource().coin
         except AccountError:
             return 0
 

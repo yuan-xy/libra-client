@@ -1,5 +1,6 @@
 import libra
 import libra_client
+from libra import Address
 from libra.transaction import *
 from libra.contract_event import ContractEvent
 from canoser import Uint64
@@ -15,11 +16,13 @@ def test_get_transaction():
     stx = c.get_transaction(1, True)
     print(stx)
     assert isinstance(stx, libra.block_metadata.BlockMetadata) == True
-    assert stx.previous_block_votes == {}
-    assert len(stx.proposer) == 32
+    assert stx.previous_block_votes == []
+    assert len(stx.proposer) == Address.LENGTH
     assert len(stx.id) == 32
     assert stx.timestamp_usecs == 0 or stx.timestamp_usecs > 1570_000_000_000_000
-    assert len(stx.events) == 0
+    assert len(stx.events) == 1
+    be = libra.block_metadata.NewBlockEvent.deserialize(stx.events[0].event_data)
+    assert be.round == stx.round
     info = stx.transaction_info
     assert info.major_status == 4001
     assert info.gas_used == 0
@@ -108,7 +111,6 @@ def test_get_account_resource():
     c = libra_client.Client("testnet")
     ret = c.get_account_resource(address)
     assert len(ret.authentication_key) == 32
-    assert ret.balance > 0
     assert ret.delegated_key_rotation_capability == False
     assert ret.delegated_withdrawal_capability == False
     assert ret.received_events.count > 0
@@ -116,7 +118,9 @@ def test_get_account_resource():
     assert ret.sent_events.count > 0
     assert len(ret.sent_events.key) == libra.event.EVENT_KEY_LENGTH
     assert ret.sequence_number > 0
-    addr = b'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\nU\x0c\x18'
+    balance = c.get_balance(address)
+    assert balance > 0
+    addr = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\nU\x0c\x18'
     assert addr == bytes.fromhex(address)
     ret2 = c.get_account_resource(addr)
     assert ret.delegated_withdrawal_capability == ret2.delegated_withdrawal_capability
@@ -126,7 +130,7 @@ def test_get_account_resource():
 
 
 def test_account_not_exsits():
-    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"
+    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"[32:]
     c = libra_client.Client("testnet")
     with pytest.raises(libra_client.client.AccountError):
         balance = c.get_account_state(address)
@@ -171,14 +175,17 @@ def test_transfer_coin():
     a0 = wallet.new_account()
     a1 = wallet.new_account()
     c = libra_client.Client("testnet")
-    try:
-        c.mint_coins(a0.address.hex(), 1234_000, True)
-    except Exception:
-        params = {
-            "receiver_account_address": a0.address.hex(),
-            "number_of_micro_libra": 1234_000
-        }
-        requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
+    c.mint_coins(a0.address.hex(), 1234_000, True)
+
+    # try:
+    #     c.mint_coins(a0.address.hex(), 1234_000, True)
+    # except Exception:
+    #     params = {
+    #         "receiver_account_address": a0.address.hex(),
+    #         "number_of_micro_libra": 1234_000
+    #     }
+    #     requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
+
     balance0 = c.get_balance(a0.address, retry=True)
     balance1 = c.get_balance(a1.address, retry=True)
     ret = c.transfer_coin(a0, a1.address, 123, unit_price=1, is_blocking=True)
