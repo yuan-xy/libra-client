@@ -2,7 +2,7 @@ from libra_client.shell.libra_shell import *
 from test_shell import prepare_shell, exec_input_with_client
 from libra.account_address import Address
 from libra.transaction import Script, TransactionPayload
-from libra.account_address import gen_random_address
+from libra.account_address import Address
 import libra
 import libra_client
 import pytest
@@ -20,21 +20,21 @@ def test_move_compile_and_exec(capsys):
     if not TESTNET_LOCAL:
         return
     client, alias_to_cmd = prepare_shell(None)
-    balance = client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
+    balance = client.grpc_client.get_balance("116998abbe30cb048b6c4d430922c9c2")
     exec_input_with_client("a r test/test.wallet", client, alias_to_cmd)
     exec_input_with_client("a mb 0 123", client, alias_to_cmd)
     exec_input_with_client("dev c 0 ../libra-client/test/pay_1.module.mvir module", client, alias_to_cmd)
     exec_input_with_client("dev p 0 ../libra-client/test/pay_1.module.mv", client, alias_to_cmd)
     exec_input_with_client("dev c 0 ../libra-client/test/use_pay.mvir script", client, alias_to_cmd)
-    exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde", client, alias_to_cmd)
-    assert balance+1 == client.grpc_client.get_balance("f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde")
+    exec_input_with_client("dev e 0 ../libra-client/test/use_pay.mv  116998abbe30cb048b6c4d430922c9c2", client, alias_to_cmd)
+    assert balance+1 == client.grpc_client.get_balance("116998abbe30cb048b6c4d430922c9c2")
 
 
 def test_no_blob_of_non_exsits_address():
     if not TESTNET_LOCAL:
         return
     with pytest.raises(libra_client.client.AccountError):
-        libra_client.Client("testnet").get_account_state(gen_random_address())
+        libra_client.Client("testnet").get_account_state(Address.random())
 
 def test_create_account_and_rotate_key():
     if not TESTNET_LOCAL:

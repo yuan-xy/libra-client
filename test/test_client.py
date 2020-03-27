@@ -175,22 +175,14 @@ def test_transfer_coin():
     a0 = wallet.new_account()
     a1 = wallet.new_account()
     c = libra_client.Client("testnet")
-    c.mint_coins(a0.address.hex(), 1234_000, True)
-
-    # try:
-    #     c.mint_coins(a0.address.hex(), 1234_000, True)
-    # except Exception:
-    #     params = {
-    #         "receiver_account_address": a0.address.hex(),
-    #         "number_of_micro_libra": 1234_000
-    #     }
-    #     requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
-
+    c.mint_coins(a0.address, a0.auth_key_prefix, 1234_000, True)
     balance0 = c.get_balance(a0.address, retry=True)
     balance1 = c.get_balance(a1.address, retry=True)
+    ret = c.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
+    assert ret.raw_txn.sequence_number == 0
     ret = c.transfer_coin(a0, a1.address, 123, unit_price=1, is_blocking=True)
     assert bytes(ret.raw_txn.sender) == a0.address
-    assert ret.raw_txn.sequence_number == 0
+    assert ret.raw_txn.sequence_number == 1
     assert c.get_balance(a0.address) <= balance0 - 123
     assert c.get_balance(a1.address) == balance1 + 123
 

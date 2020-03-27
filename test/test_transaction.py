@@ -1,4 +1,5 @@
 import libra_client
+from libra.crypto.ed25519 import ED25519_PRIVATE_KEY_LENGTH, ED25519_SIGNATURE_LENGTH
 from libra.transaction import *
 from libra_client.client import TransactionError, TransactionTimeoutError
 from canoser import Uint64
@@ -21,13 +22,13 @@ def test_raw_txn():
     assert raw_tx.payload.index == 2
     assert raw_tx.payload.value_type == Script
     script = raw_tx.payload.value
-    assert script.code == Script.get_script_bytecode("peer_to_peer_transfer")
+    assert script.code == Script.get_script_bytecode("peer_to_peer")
     assert script.args[0].index == 1
     assert script.args[0].Address == True
     assert script.args[0].enum_name == 'Address'
-    assert script.args[1].index == 0
-    assert script.args[1].U64 == True
-    assert script.args[1].value == 123
+    assert script.args[2].index == 0
+    assert script.args[2].U64 == True
+    assert script.args[2].value == 123
 
 
 def test_raw_txn_with_metadata():
@@ -37,16 +38,16 @@ def test_raw_txn_with_metadata():
     raw_tx = RawTransaction._gen_transfer_transaction(a0.address, 0, a1.address, 9, metadata=bytes([2,3,4]))
     assert raw_tx.payload.value_type == Script
     script = raw_tx.payload.value
-    assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
+    assert script.code == Script.get_script_bytecode("peer_to_peer_with_metadata")
     assert script.args[0].index == 1
     assert script.args[0].Address == True
     assert script.args[0].enum_name == 'Address'
-    assert script.args[1].index == 0
-    assert script.args[1].U64 == True
-    assert script.args[1].value == 9
-    assert script.args[2].index == 2
-    assert script.args[2].ByteArray == True
-    assert script.args[2].value == bytes([2,3,4])
+    assert script.args[2].index == 0
+    assert script.args[2].U64 == True
+    assert script.args[2].value == 9
+    assert script.args[3].index == 2
+    assert script.args[3].U8Vector == True
+    assert script.args[3].value == bytes([2,3,4])
 
 
 def test_signed_txn():
@@ -57,7 +58,8 @@ def test_signed_txn():
     stx = SignedTransaction.gen_from_raw_txn(raw_tx, a0)
     stx.check_signature()
     with pytest.raises(nacl.exceptions.BadSignatureError):
-        stx.signature = b'\0'*64
+        authenticator = TransactionAuthenticator.ed25519(a0.public_key, b'\0'*ED25519_SIGNATURE_LENGTH)
+        stx.authenticator = authenticator
         stx.check_signature()
 
 def test_wait_for_transaction_timeout():
@@ -97,7 +99,7 @@ def test_amount_zero():
     try:
         ret = c.transfer_coin(a0, a1.address, 0, is_blocking=True)
     except libra_client.client.VMError as vme:
-        assert vme.error_code == 4016
+        assert vme.error_code == 4016 or vme.error_code == 7
     except libra_client.client.MempoolError as mpe:
         assert mpe.error_code == 5
 
@@ -140,7 +142,7 @@ def test_amount_illegal():
         c.transfer_coin(a0, a1.address, balance0+99999999, is_blocking=False)
         c.wait_for_transaction(a0.address, sequence_number) #no events emitted
     except libra_client.client.VMError as vme:
-        assert vme.error_code == 4016
+        assert vme.error_code == 4016 or vme.error_code == 7
     except libra_client.client.MempoolError as mpe:
         assert mpe.error_code == 5
 
@@ -184,13 +186,21 @@ def test_transfer_with_metadata():
     client = libra_client.Client("testnet")
     balance = client.get_balance(a0.address)
     if balance == 0:
-        client.mint_coins(a0.address, 1000000, is_blocking=True)
+        client.mint_coins(a0.address, a0.auth_key_prefix, 1000000, is_blocking=True)
+    try:
+        client.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
+    except libra_client.error.VMError as err:
+        if err.error_code == 4012:
+            pass
+        else:
+            raise
+
     ret = client.transfer_coin(a0, a1.address, 1, metadata=bytes([3,4,5]), is_blocking=True)
     script = ret.raw_txn.payload.value
-    assert script.code == Script.get_script_bytecode("peer_to_peer_transfer_with_metadata")
+    assert script.code == Script.get_script_bytecode("peer_to_peer_with_metadata")
     assert bytes(script.args[0].value) == a1.address
-    assert script.args[1].value == 1
-    assert script.args[2].value == bytes([3,4,5])
+    assert script.args[2].value == 1
+    assert script.args[3].value == bytes([3,4,5])
     proto, _ = client.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
     assert proto.version > 1
     assert len(proto.events.events) == 2

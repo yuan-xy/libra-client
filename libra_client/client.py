@@ -264,15 +264,15 @@ class Client:
         return self.get_events_received(address, 2**64-1, False, limit)
 
 
-    def mint_coins(self, address, micro_libra, is_blocking=False):
+    def mint_coins(self, address, auth_key_prefix, micro_libra, is_blocking=False):
         if self.faucet_account:
-            tx = self.mint_coins_with_faucet_account(address, micro_libra, is_blocking)
+            tx = self.mint_coins_with_faucet_account(address, auth_key_prefix, micro_libra, is_blocking)
             return tx.raw_txn.sequence_number
         else:
             return self.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
 
-    def mint_coins_with_faucet_account(self, receiver_address, micro_libra, is_blocking=False):
-        script = Script.gen_mint_script(receiver_address, micro_libra)
+    def mint_coins_with_faucet_account(self, receiver_address, auth_key_prefix, micro_libra, is_blocking=False):
+        script = Script.gen_mint_script(receiver_address, auth_key_prefix, micro_libra)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
@@ -322,8 +322,8 @@ class Client:
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
             is_blocking, txn_expiration)
 
-    def create_account(self, sender_account, fresh_address, is_blocking=True):
-        script = Script.gen_create_account_script(fresh_address)
+    def create_account(self, sender_account, fresh_address, auth_key_prefix, is_blocking=True):
+        script = Script.gen_create_account_script(fresh_address, auth_key_prefix)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
 

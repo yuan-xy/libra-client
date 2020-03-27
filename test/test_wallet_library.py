@@ -12,12 +12,11 @@ def test_wallet():
     wallet = libra_client.WalletLibrary.recover('test/test.wallet')
     assert wallet.child_count == 2
     a0 = wallet.accounts[0]
-    assert a0.address_hex == "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f"
+    assert a0.address_hex == "c3201a49948171c3fecbcba0282c89b0"
     assert a0.public_key_hex == "d1f4e85a3582015deb92d8aba35061a8032865d754a364d2429d475d10829c2a"
     assert a0.private_key_hex == "177bb836b2bb9be29f5accdf74a95d917946001282d7ee74b18d0c81764ee383"
-    assert Account.gen_address_from_pk(a0.public_key) == a0.address
     a1 = wallet.accounts[1]
-    assert a1.address_hex == "f1f48f56c4deea75f4393e832edef247547eb76e1cd498c27cc972073ec4dbde"
+    assert a1.address_hex == "116998abbe30cb048b6c4d430922c9c2"
     assert a1.public_key_hex == "6b72f3922ccbe671409c5ad0552f93888427f466ea0b7fdf3f066b31bce5c6a6"
     assert a1.private_key_hex == "2aa7e79ffe6bcb110b2a736ef4d37ad471c88b6f5be833cf1f2989ef12db05be"
     tmp = NamedTemporaryFile('w+t')
@@ -44,7 +43,7 @@ def test_get_account_by_address_or_refid():
     assert accounts[1] == wallet.get_account_by_address_or_refid("1")
     with pytest.raises(ValueError):
         wallet.get_account_by_address_or_refid("2")
-    assert accounts[0] == wallet.get_account_by_address_or_refid("7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e2f")
+    assert accounts[0] == wallet.get_account_by_address_or_refid("c3201a49948171c3fecbcba0282c89b0")
     with pytest.raises(ValueError):
         wallet.get_account_by_address_or_refid("0"*64)
     with pytest.raises(ValueError):

@@ -78,7 +78,7 @@ class ClientProxy:
         self.grpc_client.mint_coins(address, micro_libra, is_blocking)
 
     def parse_address_or_refid(self, address_or_refid):
-        if len(address_or_refid) == 64:
+        if len(address_or_refid) == Address.LENGTH*2:
             return address_or_refid
         else:
             idx = Uint64.int_safe(address_or_refid)

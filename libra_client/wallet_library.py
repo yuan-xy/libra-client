@@ -20,6 +20,7 @@ class WalletLibrary:
         if child_count > 0:
             self._recover_accounts()
         for ik, iv in self.rotate_keys.items():
+            #TODO: check rotate key
             privkey = self.accounts[iv].private_key
             address = self.accounts[ik].address
             self.accounts[ik] = libra.Account(privkey, address=address)
@@ -116,11 +117,10 @@ class WalletLibrary:
                 f.write(WalletLibrary.DELIMITER)
 
     def get_account_by_address_or_refid(self, address_or_refid):
-        assert 64 == HEX_ADDRESS_LENGTH
         slen = len(address_or_refid)
-        if slen > 64 or (slen < 64 and slen > len(str(MAX_CHILD_COUNT))):
+        if slen > HEX_ADDRESS_LENGTH or (slen < HEX_ADDRESS_LENGTH and slen > len(str(MAX_CHILD_COUNT))):
             raise ValueError(f"address:{address_or_refid} is not valid.")
-        if slen == 64:
+        if slen == HEX_ADDRESS_LENGTH:
             _i, account = self.find_account_by_address_hex(address_or_refid)
             if account is None:
                 raise ValueError(f"account:{address_or_refid} not in wallet.")
