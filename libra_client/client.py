@@ -269,15 +269,18 @@ class Client:
             tx = self.mint_coins_with_faucet_account(address, auth_key_prefix, micro_libra, is_blocking)
             return tx.raw_txn.sequence_number
         else:
-            return self.mint_coins_with_faucet_service(address, micro_libra, is_blocking)
+            #TODO: auth_key_prefix+address may not equal auth_key
+            return self.mint_coins_with_faucet_service(auth_key_prefix+address, micro_libra, is_blocking)
 
     def mint_coins_with_faucet_account(self, receiver_address, auth_key_prefix, micro_libra, is_blocking=False):
         script = Script.gen_mint_script(receiver_address, auth_key_prefix, micro_libra)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
-    def mint_coins_with_faucet_service(self, receiver, micro_libra, is_blocking=False):
-        url = "http://{}?amount={}&address={}".format(self.faucet_host, micro_libra, receiver)
+    def mint_coins_with_faucet_service(self, auth_key, micro_libra, is_blocking=False):
+        if isinstance(auth_key, bytes):
+            auth_key = auth_key.hex()
+        url = "http://{}?amount={}&auth_key={}".format(self.faucet_host, micro_libra, auth_key)
         resp = requests.post(url, timeout=self.timeout)
         if resp.status_code != 200:
             raise IOError(
