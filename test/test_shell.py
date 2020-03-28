@@ -48,12 +48,7 @@ def exec_input(input, capsys, shell_args=None):
     (client, alias_to_cmd) = prepare_shell(shell_args)
     params = parse_cmd(input)
     cmd = alias_to_cmd.get(params[0])
-    try:
-        cmd.execute(client, params)
-    except Exception as err:
-        breakpoint()
-        traceback.print_exc()
-        raise
+    cmd.execute(client, params)
     return capsys.readouterr().out
 
 def test_account_hint(capsys):
