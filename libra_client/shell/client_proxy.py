@@ -74,8 +74,21 @@ class ClientProxy:
 
     def mint_coins(self, address_or_refid, libra, is_blocking):
         micro_libra = Uint64.int_safe(libra) * 1_000_000
-        address = self.parse_address_or_refid(address_or_refid)
-        self.grpc_client.mint_coins(address, micro_libra, is_blocking)
+        address, prefix = self.get_account_address_from_parameter(address_or_refid)
+        self.grpc_client.mint_coins(address, prefix, micro_libra, is_blocking)
+
+    def get_account_address_from_parameter(self, address_or_refid):
+        if len(address_or_refid) == 64:
+            return (address_or_refid[0:32], address_or_refid[0:32])
+        elif len(address_or_refid) == Address.LENGTH*2:
+            raise "Need authentication key, not address."
+        else:
+            idx = Uint64.int_safe(address_or_refid)
+            if idx >=0 and idx < self.wallet.child_count:
+                return (self.accounts[idx].address, self.accounts[idx].auth_key_prefix)
+            else:
+                raise IOError(f"account index {idx} out of range:{self.wallet.child_count}")
+
 
     def parse_address_or_refid(self, address_or_refid):
         if len(address_or_refid) == Address.LENGTH*2:
@@ -138,6 +151,7 @@ class ClientProxy:
 
     def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking, metadata):
         account = self.address_or_refid_to_account(sender)
+        #TODO: do we really need auth_key_prefix for p2p transfer?
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = Uint64.int_safe(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking, metadata=metadata)

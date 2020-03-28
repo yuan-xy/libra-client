@@ -79,6 +79,7 @@ def test_account_write(capsys):
 
 def test_mint_account(capsys):
     output = exec_input("a m 0 123", capsys)
+    assert 'Error' not in output
     assert 'Mint' in output
 
 def test_query_hint(capsys):
