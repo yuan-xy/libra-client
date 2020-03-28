@@ -136,7 +136,7 @@ def test_execute_script_on_testnet(capsys):
     balance = client.get_balance(a0.address_hex)
     if balance <= 1:
         try:
-            client.mint_coins(a0.address_hex, 9999999, True)
+            client.mint_coins(a0.address_hex, a0.auth_key_prefix, 9999999, True)
         except Exception:
             params = {
                 "receiver_account_address": a0.address_hex,
@@ -145,7 +145,8 @@ def test_execute_script_on_testnet(capsys):
             import requests
             requests.post("http://apitest.moveonlibra.com/v1/transactions/mint_mol", data=params)
     addr1 = wallet.accounts[1].address.hex()
-    output = exec_input(f"dev e 0 test/peer_to_peer.mv {addr1} 1", capsys)
+    addr1_prefix = 'b"'+wallet.accounts[1].auth_key_prefix.hex()+'"'
+    output = exec_input(f"dev e 0 test/peer_to_peer.mv {addr1} {addr1_prefix} 1", capsys)
     assert 'Compiling program' in output
     if TESTNET_LOCAL:
         if "MempoolError" in output:

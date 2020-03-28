@@ -9,12 +9,12 @@ import pytest
 import os
 #import pdb
 
-try:
-    os.environ['TESTNET_LOCAL']
-    TESTNET_LOCAL = True
-except KeyError:
-    TESTNET_LOCAL = False
-
+# try:
+#     os.environ['TESTNET_LOCAL']
+#     TESTNET_LOCAL = True
+# except KeyError:
+#     TESTNET_LOCAL = False
+TESTNET_LOCAL = False
 
 def test_move_compile_and_exec(capsys):
     if not TESTNET_LOCAL:
@@ -70,11 +70,11 @@ def test_true_silent_cast_to_int_which_is_dangerous():
     a0 = wallet.accounts[0]
     wallet2 = libra_client.WalletLibrary.new()
     account = wallet2.new_account()
-    script = Script.gen_create_account_script(account.address)
+    script = Script.gen_create_account_script(account.address, account.auth_key_prefix)
     payload = TransactionPayload('Script', script)
     c = libra_client.Client("testnet")
     is_blocking=True
-    with pytest.raises(libra_client.client.TransactionError):
+    with pytest.raises(TypeError):
         c.submit_payload(a0, payload, is_blocking)
         #is_blocking is acctual parsed as max_gas, and True is cast to 1.
         #so, error thrown: min gas required for txn: 600, gas submitted: 1
