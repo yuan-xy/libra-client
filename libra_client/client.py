@@ -125,18 +125,13 @@ class Client:
         return state.get_account_resource()
 
     def get_sequence_number(self, address, retry=False):
-        try:
-            state = self.get_account_resource(address, retry)
-            return state.sequence_number
-        except AccountError:
-            return 0
+        state = self.get_account_resource(address, retry)
+        return state.sequence_number
 
     def get_balance(self, address, retry=False):
-        try:
-            state = self.get_account_state(address, retry)
-            return state.get_balance_resource().coin
-        except AccountError:
-            return 0
+        state = self.get_account_state(address, retry)
+        return state.get_balance_resource().coin
+
 
     def get_with_proof(self, request):
         request.client_known_version = self.state.version
@@ -294,7 +289,10 @@ class Client:
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
         max_iterations = 50
         if self.verbose:
-            print(f"waiting for {address} with sequence number {sequence_number}", flush=True)
+            address_hex = address
+            if isinstance(address_hex, bytes):
+                address_hex = address.hex()
+            print(f"waiting for {address_hex} with sequence number {sequence_number}", flush=True)
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1

@@ -3,6 +3,7 @@ from libra_client.cli.command import *
 from libra.transaction import SignedTransaction
 from libra.account_config import AccountConfig
 from libra_client.wallet_library import WalletLibrary
+from libra_client.error import AccountError
 
 class AccountCmd(Command):
     def get_aliases(self):
@@ -46,8 +47,12 @@ class AccountCmdGetBalance(Command):
         return "Get the current balance of an account by address"
 
     def execute(self, client, params, **kwargs):
-        balance = client.get_balance(params[1])
-        json_print_in_cmd({"balance": balance})
+        try:
+            balance = client.get_balance(params[1])
+            json_print_in_cmd({"balance": balance})
+        except AccountError:
+            print(f"Failed to get balance: No account exists at {params[1]}")
+
 
 
 class AccountCmdGetSeqNum(Command):
@@ -61,8 +66,12 @@ class AccountCmdGetSeqNum(Command):
         return ("Get the current sequence number for an account by address")
 
     def execute(self, client, params, **kwargs):
-        sn = client.get_sequence_number(params[1])
-        json_print_in_cmd({"sequence": sn})
+        try:
+            sn = client.get_sequence_number(params[1])
+            json_print_in_cmd({"sequence": sn})
+        except AccountError:
+            print(f"Failed to get sequence number: No account exists at {params[1]}")
+
 
 
 

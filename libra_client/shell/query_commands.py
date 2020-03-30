@@ -1,5 +1,6 @@
 from canoser import Uint64
 from libra_client.cli.command import *
+from libra_client.error import AccountError
 
 class QueryCommand(Command):
     def get_aliases(self):
@@ -31,8 +32,12 @@ class QueryCommandGetBalance(Command):
         return "Get the current balance of an account"
 
     def execute(self, client, params, **kwargs):
-        balance = client.get_balance(params[1])
-        print(f"Balance is: {balance}")
+        try:
+            balance = client.get_balance(params[1])
+            print(f"Balance is: {balance}")
+        except AccountError:
+            print(f"Failed to get balance: No account exists at {params[1]}")
+
 
 
 class QueryCommandGetSeqNum(Command):
@@ -48,9 +53,12 @@ class QueryCommandGetSeqNum(Command):
 
     def execute(self, client, params, **kwargs):
         print(">> Getting current sequence number")
-        sn = client.get_sequence_number(params[1])
-        #TODO: support reset_sequence_number
-        print(f"Sequence number is: {sn}")
+        try:
+            sn = client.get_sequence_number(params[1])
+            #TODO: support reset_sequence_number
+            print(f"Sequence number is: {sn}")
+        except AccountError:
+            print(f"Failed to get sequence number: No account exists at {params[1]}")
 
 
 class QueryCommandGetLatestAccountState(Command):
