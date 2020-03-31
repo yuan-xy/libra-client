@@ -1,0 +1,5 @@
+pytest
+hypothesis
+twine
+setuptools
+wheel

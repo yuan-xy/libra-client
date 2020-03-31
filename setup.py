@@ -24,11 +24,14 @@ install_requires=[
         'grpcio',
         'more-itertools',
         'PyNaCl',
-        'pygments',
         'requests',
-        "toml",
         'mnemonic'
     ]
+
+
+tests_require = [
+    'pytest',
+]
 
 if not 'sha3_256' in hashlib.algorithms_available:
     #only exec under sdist, not bdist_wheel
@@ -53,6 +56,7 @@ setuptools.setup(
         ]
     },
     install_requires=install_requires,
+    tests_require=tests_require,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
