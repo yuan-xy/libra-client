@@ -1,6 +1,7 @@
 from libra_client.cli.command import *
 from libra_client.wallet_library import WalletLibrary
 from libra.json_print import to_json_serializable
+from libra_client.error import AccountError
 
 
 class WalletCmd(Command):
@@ -72,8 +73,12 @@ class WalletCmdBalance(Command):
         wallet = WalletLibrary.recover(params[1])
         maps = {}
         for account in wallet.accounts:
-            maps[account.address_hex] = client.get_balance(account.address_hex)
-            #TODO: multi query combine to one
+            try:
+                maps[account.address_hex] = client.get_balance(account.address_hex)
+                #TODO: multi query combine to one
+            except AccountError:
+                maps[account.address_hex] = 0
+
         maps["total_balance"] = sum(maps.values())
         json_print_in_cmd(maps)
 
