@@ -94,7 +94,7 @@ def test_events_received():
     assert tag0.address == libra.AccountConfig.core_code_address_bytes()
     assert tag0.module == 'LibraAccount'
     assert tag0.name == 'ReceivedPaymentEvent'
-    assert len(contracts[0].event_data) == 28
+    assert len(contracts[0].event_data) == 25
     aes = [ReceivedPaymentEvent.deserialize(x.event_data) for x in contracts]
     assert aes[0].amount >0
     assert len(aes[0].sender) == Address.LENGTH
