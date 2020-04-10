@@ -11,7 +11,7 @@ cffi==1.14.0              # via pynacl
 chardet==3.0.4            # via requests
 grpcio==1.27.2            # via libra-client (setup.py), libra-core
 idna==2.9                 # via requests
-libra-core==0.8.3         # via libra-client (setup.py)
+libra-core==0.8.5         # via libra-client (setup.py)
 mnemonic==0.19            # via libra-client (setup.py)
 more-itertools==8.2.0     # via libra-client (setup.py), libra-core
 protobuf==3.11.3          # via libra-client (setup.py), libra-core

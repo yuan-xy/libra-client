@@ -43,7 +43,7 @@ class LedgerCmdTime(DualCommand):
     def execute(self, client, params, **kwargs):
         client = self.get_real_client(client, **kwargs)
         request, resp = client._get_txs(1)
-        info = self.ledger.ledger_info
+        info = client.ledger.ledger_info
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         tx = Transaction.deserialize(txnp.transactions[0].transaction)
         stx = tx.value #should be BlockMetadata

@@ -161,7 +161,8 @@ class ClientProxy:
         account = self.address_or_refid_to_account(address_or_refid)
         code = get_code_by_filename(code_file)
         arguments = [TransactionArgument.parse_as_transaction_argument(x) for x in script_args]
-        payload = TransactionPayload('Script', Script(code, arguments))
+        #TODO: support type arguments in the client.
+        payload = TransactionPayload('Script', Script(code, [], arguments))
         return self.grpc_client.submit_payload(account, payload, is_blocking=True)
 
     def publish_module(self, address_or_refid, module_file):
