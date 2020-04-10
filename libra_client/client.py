@@ -10,6 +10,7 @@ from libra.transaction import (
 from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
+from libra.ledger_info import LedgerInfoWithSignatures
 from libra.validator_change import VerifierType, ValidatorChangeProof
 from libra_client.error import LibraError, AccountError, TransactionError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
 
@@ -104,8 +105,7 @@ class Client:
         item.get_account_state_request.address = address
         resp = self.get_with_proof(request)
         blob = resp.response_items[0].get_account_state_response.account_state_with_proof.blob
-        version = resp.ledger_info_with_sigs.ledger_info.version
-        return (blob, version)
+        return (blob, self.state.version)
 
     def get_account_state(self, address, retry=False):
         try:
@@ -150,14 +150,16 @@ class Client:
             self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
             vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
             self.state.latest_epoch_change_li = vcp.ledger_info_with_sigs[-1]
-        self.state.version = resp.ledger_info_with_sigs.ledger_info.version
-        self.latest_time = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
+        ledger = LedgerInfoWithSignatures.from_proto(resp.ledger_info_with_sigs)
+        self.ledger = ledger
+        self.state.version = ledger.ledger_info.version
+        self.latest_time = ledger.ledger_info.timestamp_usecs
         return resp
 
     def get_latest_ledger_info(self):
         request = UpdateToLatestLedgerRequest()
         resp = self.get_with_proof(request)
-        return resp.ledger_info_with_sigs.ledger_info
+        return self.ledger.ledger_info
 
     def _get_time_diff(self):
         from datetime import datetime
@@ -219,7 +221,7 @@ class Client:
         itemreq.sequence_number = sequence_number
         itemreq.fetch_events = fetch_events
         resp = self.get_with_proof(request)
-        usecs = resp.ledger_info_with_sigs.ledger_info.timestamp_usecs
+        usecs = self.ledger.ledger_info.timestamp_usecs
         transaction = resp.response_items[0].get_account_transaction_by_sequence_number_response
         return (transaction.transaction_with_proof, usecs)
 
