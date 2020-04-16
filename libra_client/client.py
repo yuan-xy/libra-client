@@ -130,7 +130,8 @@ class Client:
 
     def get_balance(self, address, retry=False):
         state = self.get_account_state(address, retry)
-        return state.get_balance_resource().coin
+        br = state.get_balance_resource()
+        return br.coin# if br else 0
 
 
     def get_with_proof(self, request):

@@ -101,7 +101,7 @@ def test_get_latest_transaction_version():
     assert ver > 0
 
 def test_get_balance():
-    address = libra.AccountConfig.transaction_fee_address()
+    address = libra.AccountConfig.association_address()
     c = libra_client.Client("testnet")
     balance = c.get_balance(address)
     assert balance >= 0
@@ -119,7 +119,7 @@ def test_get_account_resource():
     assert len(ret.sent_events.key) == libra.event.EVENT_KEY_LENGTH
     assert ret.sequence_number > 0
     balance = c.get_balance(address)
-    assert balance > 0
+    assert balance >= 0
     addr = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\nU\x0c\x18'
     assert addr == bytes.fromhex(address)
     ret2 = c.get_account_resource(addr)

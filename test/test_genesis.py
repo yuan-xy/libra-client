@@ -22,8 +22,8 @@ def test_genesis():
     assert tx.events[0].type_tag.value.name == "SentPaymentEvent"
     assert tx.events[1].type_tag.value.module == "LibraAccount"
     assert tx.events[1].type_tag.value.name == "ReceivedPaymentEvent"
-    assert tx.events[2].type_tag.value.module == "LibraSystem"
-    assert tx.events[2].type_tag.value.name == "ValidatorSetChangeEvent"
+    assert tx.events[2].type_tag.value.module == "LibraConfig"
+    assert tx.events[2].type_tag.value.name == "NewEpochEvent"
     assert tx.events[3].type_tag.value.module == "LibraSystem"
     assert tx.events[3].type_tag.value.name == "DiscoverySetChangeEvent"
     amap = tx.to_json_serializable()
