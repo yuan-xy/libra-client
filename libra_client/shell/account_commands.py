@@ -1,4 +1,5 @@
-from libra_client.cli.command import *
+from libra_client.cli.command import Command, blocking_cmd
+
 
 class AccountCommand(Command):
     def get_aliases(self):

@@ -1,6 +1,7 @@
 from canoser import Uint64
-from libra_client.cli.command import *
+from libra_client.cli.command import Command, parse_bool
 from libra_client.error import AccountError
+
 
 class QueryCommand(Command):
     def get_aliases(self):
@@ -39,7 +40,6 @@ class QueryCommandGetBalance(Command):
             print(f"Failed to get balance: No account exists at {params[1]}")
 
 
-
 class QueryCommandGetSeqNum(Command):
     def get_aliases(self):
         return ["sequence", "s"]
@@ -49,13 +49,13 @@ class QueryCommandGetSeqNum(Command):
 
     def get_description(self):
         return ("Get the current sequence number for an account, "
-         "and reset current sequence number in CLI (optional, default is false)")
+                "and reset current sequence number in CLI (optional, default is false)")
 
     def execute(self, client, params, **kwargs):
         print(">> Getting current sequence number")
         try:
             sn = client.get_sequence_number(params[1])
-            #TODO: support reset_sequence_number
+            # TODO: support reset_sequence_number
             print(f"Sequence number is: {sn}")
         except AccountError:
             print(f"Failed to get sequence number: No account exists at {params[1]}")
@@ -91,17 +91,17 @@ class QueryCommandGetTxnByAccountSeq(Command):
 
     def get_description(self):
         return ("Get the committed transaction by account and sequence number.  "
-         "Optionally also fetch events emitted by this transaction.")
+                "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by account and sequence number")
         fetch_events = parse_bool(params[3])
         transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
-        print(f"Committed transaction: {transaction}") #transaction pretty print
+        print(f"Committed transaction: {transaction}")  # transaction pretty print
         if transaction.HasField("events"):
             print("Events: ")
             for event in transaction.events.events:
-                #TODO: event pretty print
+                # TODO: event pretty print
                 print(event)
             if len(transaction.events.events) == 0:
                 print("no events emitted")
@@ -118,7 +118,7 @@ class QueryCommandGetTxnByRange(Command):
 
     def get_description(self):
         return ("Get the committed transactions by version range. "
-         "Optionally also fetch events emitted by these transactions.")
+                "Optionally also fetch events emitted by these transactions.")
 
     def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by range")
@@ -126,7 +126,7 @@ class QueryCommandGetTxnByRange(Command):
         transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
         cur_version = Uint64.int_safe(params[1])
         for index, signed_tx in enumerate(transactions):
-            #TODO: events print
+            # TODO: events print
             print(f"Transaction at version {cur_version+index}: {signed_tx}")
 
 
@@ -150,4 +150,4 @@ class QueryCommandGetEvent(Command):
         else:
             for event in enumerate(events):
                 print(event)
-        #TODO: print("Last event state: {:#?}", last_event_state)
+        # TODO: print("Last event state: {:#?}", last_event_state)

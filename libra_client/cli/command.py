@@ -1,12 +1,10 @@
 import abc
-import sys
-import os
 import traceback
 from libra_client.cli.color import support_color, print_color, bcolors
 from libra.json_print import json_print
 
 
-class Command(metaclass = abc.ABCMeta):
+class Command(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_aliases(self):
         pass
@@ -79,16 +77,17 @@ def params_valid(spec: str, params: list) -> bool:
     """
     spec_arr = spec.split()
     real_params_len = len(params)
-    required_len = len([x for x in spec_arr if x[0]=='<'])
+    required_len = len([x for x in spec_arr if x[0] == '<'])
     if real_params_len < required_len:
         return False
     if spec.endswith("...]"):
         return True
-    optionals = [x for x in spec_arr if x[0]=='[']
+    optionals = [x for x in spec_arr if x[0] == '[']
     optional_len = len(optionals)
     if real_params_len > required_len + optional_len:
         return False
     return True
+
 
 def get_commands_alias(commands):
     alias_to_cmd = {}
@@ -102,12 +101,14 @@ def report_error(msg, err=None, verbose=False):
     if err is not None:
         msg = f"{msg}: {err.__class__.__name__} {err}"
     json_print({"ERROR": msg}, color=support_color(), bgcolor='\u001b[43;1m')
-    #http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#background-colors
+    # http://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#background-colors
     if verbose:
         traceback.print_exc()
 
+
 def parse_cmd(cmd_str: str):
     return cmd_str.split()
+
 
 def parse_bool(para_str):
     para = para_str.lower()
@@ -123,6 +124,7 @@ def print_commands(commands):
     for cmd in commands:
         cmd.print_params_help()
 
+
 def blocking_cmd(cmd: str) -> bool:
     return cmd.endswith('b')
 
@@ -130,6 +132,6 @@ def blocking_cmd(cmd: str) -> bool:
 def debug_format_cmd(cmd: str) -> bool:
     return cmd.endswith('?')
 
+
 def json_print_in_cmd(obj, sort_keys=False):
     json_print(obj, sort_keys=sort_keys, color=support_color())
-

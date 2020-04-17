@@ -1,4 +1,4 @@
-from libra_client.cli.command import *
+from libra_client.cli.command import Command, json_print_in_cmd
 from libra_client.wallet_library import WalletLibrary
 from libra.json_print import to_json_serializable
 from libra_client.error import AccountError
@@ -57,8 +57,6 @@ class WalletCmdAccount(Command):
         json_print_in_cmd(arr)
 
 
-
-
 class WalletCmdBalance(Command):
     def get_aliases(self):
         return ["balance", "b"]
@@ -75,7 +73,7 @@ class WalletCmdBalance(Command):
         for account in wallet.accounts:
             try:
                 maps[account.address_hex] = client.get_balance(account.address_hex)
-                #TODO: multi query combine to one
+                # TODO: multi query combine to one
             except AccountError:
                 maps[account.address_hex] = 0
 
@@ -116,6 +114,6 @@ class WalletCmdCreateNewAccount(Command):
         wallet = WalletLibrary.recover(wfile)
         sender_account = wallet.get_account_by_address_or_refid(params[1])
         fresh_address = wallet.new_account().address
-        resp = client.create_account(sender_account, fresh_address)
+        client.create_account(sender_account, fresh_address)
         wallet.write_recovery(wfile)
         json_print_in_cmd({"new_account_address": fresh_address})

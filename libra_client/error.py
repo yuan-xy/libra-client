@@ -2,8 +2,10 @@
 class LibraError(Exception):
     pass
 
+
 class AccountError(LibraError):
     pass
+
 
 class TransactionError(LibraError):
     @property
@@ -16,18 +18,22 @@ class TransactionError(LibraError):
         _, msg = self.args
         return msg
 
+
 class AdmissionControlError(TransactionError):
     pass
+
 
 class VMError(TransactionError):
     pass
 
+
 class MempoolError(TransactionError):
     pass
+
 
 class TransactionTimeoutError(LibraError):
     pass
 
+
 class LibraNetError(LibraError):
     pass
-

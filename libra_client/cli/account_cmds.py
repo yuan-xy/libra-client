@@ -1,9 +1,9 @@
 from canoser import Uint64
-from libra_client.cli.command import *
-from libra.transaction import SignedTransaction
+from libra_client.cli.command import Command, json_print_in_cmd, blocking_cmd, parse_bool
 from libra.account_config import AccountConfig
 from libra_client.wallet_library import WalletLibrary
 from libra_client.error import AccountError
+
 
 class AccountCmd(Command):
     def get_aliases(self):
@@ -54,7 +54,6 @@ class AccountCmdGetBalance(Command):
             print(f"Failed to get balance: No account exists at {params[1]}")
 
 
-
 class AccountCmdGetSeqNum(Command):
     def get_aliases(self):
         return ["sequence", "s"]
@@ -71,8 +70,6 @@ class AccountCmdGetSeqNum(Command):
             json_print_in_cmd({"sequence": sn})
         except AccountError:
             print(f"Failed to get sequence number: No account exists at {params[1]}")
-
-
 
 
 class AccountCmdGetLatestAccountState(Command):
@@ -99,14 +96,13 @@ class AccountCmdGetTxnByAccountSeq(Command):
 
     def get_description(self):
         return ("Get the committed transaction by account and sequence number.  "
-         "Optionally also fetch events emitted by this transaction.")
+                "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params, **kwargs):
         fetch_events = parse_bool(params[3])
         seq = Uint64.int_safe(params[2])
         transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
         json_print_in_cmd(transaction)
-
 
 
 class AccountCmdMint(Command):
@@ -121,9 +117,8 @@ class AccountCmdMint(Command):
 
     def execute(self, client, params, **kwargs):
         is_blocking = blocking_cmd(params[0])
-        resp = client.mint_coins(params[1],Uint64.int_safe(params[2]), is_blocking)
+        resp = client.mint_coins(params[1], Uint64.int_safe(params[2]), is_blocking)
         json_print_in_cmd({"sequence_number": resp})
-
 
 
 class AccountCmdRotateAuthenticationKey(Command):
@@ -143,10 +138,9 @@ class AccountCmdRotateAuthenticationKey(Command):
         index, _account = wallet.find_account_by_publickey_hex(params[2])
         wallet.rotate_key(params[1], index)
         wallet.write_recovery(params[3])
-        #TODO: Exec Transaction throw major_status: 2, after rotate key.
+        # TODO: Exec Transaction throw major_status: 2, after rotate key.
         # account_resource = client.get_account_resource(account.address)
         # key = account_resource.to_json_serializable()["authentication_key"]
         json_print_in_cmd({
             "address": account.address_hex,
             "authentication_key": params[2]})
-

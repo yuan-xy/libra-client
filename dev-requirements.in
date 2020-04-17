@@ -1,5 +1,6 @@
 pytest
-hypothesis
 twine
 setuptools
 wheel
+flake8
+autopep8

@@ -3,9 +3,11 @@ import os
 
 _force_color = None
 
+
 def set_force_color(force_color):
     global _force_color
     _force_color = force_color
+
 
 def support_color():
     if _force_color is not None:
@@ -16,7 +18,7 @@ def support_color():
         return True
     if os.name == 'nt':
         try:
-            #os.system('') #enable VT100 Escape Sequence for WINDOWS 10 Ver. 1607
+            # os.system('') #enable VT100 Escape Sequence for WINDOWS 10 Ver. 1607
             import ctypes
             kernel32 = ctypes.windll.kernel32
             kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
@@ -31,6 +33,7 @@ def print_color(str, color, **kargs):
         print(color + str + bcolors.ENDC, **kargs)
     else:
         print(str, **kargs)
+
 
 class bcolors:
     HEADER = '\033[95m'

@@ -1,4 +1,6 @@
-from libra_client.cli.command import *
+from libra_client.cli.command import Command
+from libra.waypoint import Waypoint
+
 
 class DevCommand(Command):
     def get_aliases(self):
@@ -34,7 +36,7 @@ class DevCommandCompile(Command):
         return "Compile move program"
 
     def execute(self, client, params, **kwargs):
-        print(">> Compiling program");
+        print(">> Compiling program")
         file_path = params[2]
         if params[3] == "module":
             is_module = True
@@ -57,7 +59,7 @@ class DevCommandPublish(Command):
         return "Publish move module on-chain"
 
     def execute(self, client, params, **kwargs):
-        print(">> Compiling program");
+        print(">> Compiling program")
         client.publish_module(params[1], params[2])
         print("Successfully published module")
 
@@ -76,7 +78,6 @@ class DevCommandExecute(Command):
         print(">> Compiling program")
         client.execute_script(params[1], params[2], params[3:])
         print("Successfully finished execution")
-
 
 
 class DevCommandAddValidator(Command):
@@ -120,7 +121,7 @@ class DevCommandRegisterValidator(Command):
         return "Register an validator candidate"
 
     def execute(self, client, params, **kwargs):
-        client.grpc_client.register_validator_with_faucet_account(params[1],params[2],params[3],params[4],params[5],params[6])
+        client.grpc_client.register_validator_with_faucet_account(params[1], params[2], params[3], params[4], params[5], params[6])
         print("Successfully finished execution")
 
 
@@ -136,16 +137,15 @@ class DevCommandGenWaypoint(Command):
 
     def execute(self, client, params, **kwargs):
         print("Retrieving the uptodate ledger info...")
-        _info = client.grpc_client.get_latest_ledger_info()
+        client.grpc_client.get_latest_ledger_info()
         latest_epoch_change_li = client.grpc_client.state.latest_epoch_change_li
         if latest_epoch_change_li is None:
             print("No epoch change LedgerInfo found")
             return
         waypoint = Waypoint.new(latest_epoch_change_li.ledger_info)
         print("Waypoint (end of epoch {}, time {}): {}".format(
-                latest_epoch_change_li.ledger_info.epoch,
-                latest_epoch_change_li.ledger_info.timestamp_usecs,
-                waypoint
-            )
+            latest_epoch_change_li.ledger_info.epoch,
+            latest_epoch_change_li.ledger_info.timestamp_usecs,
+            waypoint
         )
-
+        )

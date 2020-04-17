@@ -1,6 +1,6 @@
-from canoser import Uint64, hex_to_int_list
+from canoser import Uint64
 import libra
-from libra_client import Client, WalletLibrary
+from libra_client import WalletLibrary
 from libra.account import AccountStatus
 from libra.account_address import Address
 from libra.transaction import Script, Module, TransactionPayload, TransactionArgument
@@ -10,6 +10,7 @@ import json
 from tempfile import NamedTemporaryFile
 
 CLIENT_WALLET_MNEMONIC_FILE = "client.mnemonic"
+
 
 class ClientProxy:
     def __init__(self, client, libra_args):
@@ -33,7 +34,6 @@ class ClientProxy:
     def faucet_account(self):
         return self.grpc_client.faucet_account
 
-
     def print_all_accounts(self):
         if not self.accounts:
             print("No user accounts")
@@ -41,24 +41,24 @@ class ClientProxy:
             for index, account in enumerate(self.accounts):
                 print(
                     "User account index: {}, address: {}, sequence number: {}, status:{}".format(
-                    index,
-                    account.address.hex(),
-                    account.sequence_number,
-                    account.status
+                        index,
+                        account.address.hex(),
+                        account.sequence_number,
+                        account.status
                     )
                 )
         if self.faucet_account:
             print(
                 "Faucet account address: {}, sequence_number: {}, status: {}".format(
-                self.faucet_account.address_hex,
-                self.faucet_account.sequence_number,
-                self.faucet_account.status
+                    self.faucet_account.address_hex,
+                    self.faucet_account.sequence_number,
+                    self.faucet_account.status
                 )
             )
 
     def create_next_account(self):
         account = self.wallet.new_account()
-        return (self.wallet.child_count-1, account)
+        return (self.wallet.child_count - 1, account)
 
     def recover_wallet_accounts(self, filename):
         self.wallet = WalletLibrary.recover(filename)
@@ -80,22 +80,21 @@ class ClientProxy:
     def get_account_address_from_parameter(self, address_or_refid):
         if len(address_or_refid) == 64:
             return (address_or_refid[0:32], address_or_refid[0:32])
-        elif len(address_or_refid) == Address.LENGTH*2:
+        elif len(address_or_refid) == Address.LENGTH * 2:
             raise "Need authentication key, not address."
         else:
             idx = Uint64.int_safe(address_or_refid)
-            if idx >=0 and idx < self.wallet.child_count:
+            if idx >= 0 and idx < self.wallet.child_count:
                 return (self.accounts[idx].address, self.accounts[idx].auth_key_prefix)
             else:
                 raise IOError(f"account index {idx} out of range:{self.wallet.child_count}")
 
-
     def parse_address_or_refid(self, address_or_refid):
-        if len(address_or_refid) == Address.LENGTH*2:
+        if len(address_or_refid) == Address.LENGTH * 2:
             return address_or_refid
         else:
             idx = Uint64.int_safe(address_or_refid)
-            if idx >=0 and idx < self.wallet.child_count:
+            if idx >= 0 and idx < self.wallet.child_count:
                 return self.accounts[idx].address.hex()
             else:
                 raise IOError(f"account index {idx} out of range:{self.wallet.child_count}")
@@ -108,7 +107,7 @@ class ClientProxy:
     def get_sequence_number(self, address_or_refid):
         address = self.parse_address_or_refid(address_or_refid)
         seq = self.grpc_client.get_sequence_number(address)
-        #TODO sync seq
+        # TODO sync seq
         return seq
 
     def get_latest_account_state(self, address_or_refid):
@@ -116,7 +115,7 @@ class ClientProxy:
         blob, version = self.grpc_client.get_account_blob(address)
         if len(blob.__str__()) > 0:
             blob = libra.AccountState.deserialize(blob.blob)
-        #TODO: update local account if address in local wallet.
+        # TODO: update local account if address in local wallet.
         return (blob, address, version)
 
     def get_committed_txn_by_acc_seq(self, address_or_refid, seq, fetch_events):
@@ -146,12 +145,12 @@ class ClientProxy:
         sender_addr = self.parse_address_or_refid(address_or_refid)
         _index, account = self.wallet.find_account_by_address_hex(sender_addr)
         if account is None:
-            raise IOError(f"address {sender} not in wallet.")
+            raise IOError(f"address {sender_addr} not in wallet.")
         return account
 
     def transfer_coins(self, sender, recevier, coin, max_gas, unit_price, is_blocking, metadata):
         account = self.address_or_refid_to_account(sender)
-        #TODO: do we really need auth_key_prefix for p2p transfer?
+        # TODO: do we really need auth_key_prefix for p2p transfer?
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = Uint64.int_safe(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra, max_gas, unit_price, is_blocking, metadata=metadata)
@@ -161,7 +160,7 @@ class ClientProxy:
         account = self.address_or_refid_to_account(address_or_refid)
         code = get_code_by_filename(code_file)
         arguments = [TransactionArgument.parse_as_transaction_argument(x) for x in script_args]
-        #TODO: support type arguments in the client.
+        # TODO: support type arguments in the client.
         payload = TransactionPayload('Script', Script(code, [], arguments))
         return self.grpc_client.submit_payload(account, payload, is_blocking=True)
 
@@ -209,5 +208,3 @@ class ClientProxy:
         if dependencies_file:
             dependencies_file.close()
         return file_path
-
-

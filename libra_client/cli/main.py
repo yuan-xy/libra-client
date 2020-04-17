@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
-from datetime import datetime
+from libra_client.cli.color import set_force_color, bcolors, print_color
+from libra_client.cli.ledger_cmds import LedgerCmd
+from libra_client.cli.wallet_cmds import WalletCmd
+from libra_client.cli.transaction_cmds import TransactionCmd
+from libra_client.cli.account_cmds import AccountCmd
+from libra_client.cli.command import get_commands_alias, report_error, print_commands
+from libra_client.client import NETWORKS
+from libra_client import Client
+from libra.version import version
 import argparse
-import sys, os, signal
+import sys
+import os
+import signal
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
 
-import libra
-from libra.version import version
-from libra_client import Client, WalletLibrary
-from libra_client.client import NETWORKS
-from libra_client.cli.command import *
-from libra_client.cli.account_cmds import AccountCmd
-from libra_client.cli.transaction_cmds import TransactionCmd
-from libra_client.cli.wallet_cmds import WalletCmd
-from libra_client.cli.ledger_cmds import LedgerCmd
-from libra_client.cli.color import set_force_color
 
 TESTNET = NETWORKS['testnet']['host']
+
 
 def get_commands(include_dev: bool):
     commands = [AccountCmd(), TransactionCmd(), WalletCmd(), LedgerCmd()]
@@ -40,7 +41,7 @@ def run_cmd(args):
         return
     client = Client.new(args.host, args.port, args.faucet_account_file)
     client.verbose = args.verbose
-    #TODO: some cmd doesn't need client to be initialized.
+    # TODO: some cmd doesn't need client to be initialized.
     cmd.execute(client, args.command)
 
 
@@ -55,6 +56,7 @@ def get_parser():
     parser.add_argument('-c', '--color', choices=['always', 'auto', 'never'], default='auto')
     parser.add_argument('command', nargs='*')
     return parser
+
 
 def print_help(commands):
     print("USAGE: ")
@@ -96,7 +98,6 @@ def main():
         run_cmd(libra_args)
     except Exception as err:
         report_error("some error occured", err, libra_args.verbose)
-
 
 
 if __name__ == '__main__':

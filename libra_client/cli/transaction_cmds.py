@@ -1,6 +1,7 @@
 from canoser import Uint64
-from libra_client.cli.command import *
+from libra_client.cli.command import Command, json_print_in_cmd, blocking_cmd, parse_bool
 from libra_client.wallet_library import WalletLibrary
+
 
 class TransactionCmd(Command):
     def get_aliases(self):
@@ -34,9 +35,8 @@ class TransactionCmdP2PTransfer(Command):
         is_blocking = blocking_cmd(params[0])
         wallet = WalletLibrary.recover(params[4])
         account = wallet.get_account_by_address_or_refid(params[1])
-        resp = client.transfer_coin(account, params[2],Uint64.int_safe(params[3]), is_blocking=is_blocking)
+        resp = client.transfer_coin(account, params[2], Uint64.int_safe(params[3]), is_blocking=is_blocking)
         json_print_in_cmd(resp)
-
 
 
 class TransactionCmdGetByVer(Command):

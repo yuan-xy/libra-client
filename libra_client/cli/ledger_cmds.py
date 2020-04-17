@@ -1,7 +1,6 @@
-from libra_client.cli.command import *
+from libra_client.cli.command import json_print_in_cmd
 from libra_client.cli.dual_command import DualCommand
-from libra_client.wallet_library import WalletLibrary
-from libra.transaction import SignedTransaction, Transaction
+from libra.transaction import Transaction
 from datetime import datetime
 
 
@@ -43,13 +42,14 @@ class LedgerCmdTime(DualCommand):
     def execute(self, client, params, **kwargs):
         client = self.get_real_client(client, **kwargs)
         request, resp = client._get_txs(1)
-        info = client.ledger.ledger_info
+        # TODO: tx 1 may have no time
+        # info = client.ledger.ledger_info
         txnp = resp.response_items[0].get_transactions_response.txn_list_with_proof
         tx = Transaction.deserialize(txnp.transactions[0].transaction)
-        stx = tx.value #should be BlockMetadata
+        stx = tx.value  # should be BlockMetadata
         start_time = datetime.fromtimestamp(stx.timestamp_usecs / 1000_000)
         latest_time = datetime.fromtimestamp(client.latest_time / 1000_000)
         json_print_in_cmd({
             "start_time": start_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "latest_time": latest_time.strftime("%Y-%m-%dT%H:%M:%S")
-            }, sort_keys=False)
+        }, sort_keys=False)

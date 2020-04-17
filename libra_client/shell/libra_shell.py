@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
+from libra_client.cli.color import support_color, print_color, bcolors
+from libra_client.shell.client_proxy import ClientProxy
+from libra_client.shell.dev_commands import DevCommand
+from libra_client.shell.transfer_commands import TransferCommand
+from libra_client.shell.query_commands import QueryCommand
+from libra_client.shell.account_commands import AccountCommand
+from libra_client.cli.ledger_cmds import LedgerCmd
+from libra_client.cli.command import get_commands_alias, report_error, print_commands, parse_cmd
+from libra_client import Client
+from libra.version import version
 from datetime import datetime
 import argparse
-import sys, os, signal
+import sys
+import os
+import signal
 
 if os.name == 'posix':
     import readline
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
-
-from libra.version import version
-from libra_client import Client, WalletLibrary
-from libra_client.cli.command import *
-from libra_client.cli.ledger_cmds import LedgerCmd
-from account_commands import AccountCommand
-from query_commands import QueryCommand
-from transfer_commands import TransferCommand
-from dev_commands import DevCommand
-from client_proxy import ClientProxy
-from libra_client.cli.color import support_color, print_color
 
 
 def get_commands(include_dev: bool):
@@ -28,7 +29,7 @@ def get_commands(include_dev: bool):
     return get_commands_alias(commands)
 
 
-def run_shell(args):
+def run_shell(args):  # noqa: C901
     grpc_client = Client.new(args.host, args.port, args.faucet_account_file)
     try:
         info = grpc_client.get_latest_ledger_info()
@@ -76,6 +77,7 @@ def print_help(client_info: str, commands):
     print("\tExit this client")
     print("\n")
 
+
 def get_parser():
     parser = argparse.ArgumentParser(prog='libra-shell')
     parser.add_argument('-a', "--host", default="ac.testnet.libra.org", help='Host address/name to connect to')
@@ -91,10 +93,11 @@ def get_parser():
 def handler(signum, frame):
     sys.exit(0)
 
+
 def main():
     signal.signal(signal.SIGTERM, handler)
     signal.signal(signal.SIGINT, handler)
-    #signal.signal(signal.SIGTSTP, handler)
+    # signal.signal(signal.SIGTSTP, handler)
     if os.name == 'posix':
         readline.set_history_length(1000)
     parser = get_parser()

@@ -1,7 +1,6 @@
 from libra_client.cli.command import Command
 
 
-
 class DualCommand(Command):
     """
     All commands that can run both in libra_shell and linux shell should inherit this DualCommand

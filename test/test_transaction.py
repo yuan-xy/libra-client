@@ -1,7 +1,7 @@
 import libra_client
 from libra.crypto.ed25519 import ED25519_PRIVATE_KEY_LENGTH, ED25519_SIGNATURE_LENGTH
 from libra.transaction import *
-from libra_client.client import TransactionError, TransactionTimeoutError
+from libra_client.error import TransactionError, TransactionTimeoutError
 from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest

@@ -6,6 +6,7 @@ from libra.account_address import HEX_ADDRESS_LENGTH
 
 MAX_CHILD_COUNT = Uint16.max_value
 
+
 class WalletLibrary:
 
     DELIMITER = ";"
@@ -20,11 +21,11 @@ class WalletLibrary:
         if child_count > 0:
             self._recover_accounts()
         for ik, iv in self.rotate_keys.items():
-            #TODO: check rotate key
+            # TODO: check rotate key
             privkey = self.accounts[iv].private_key
             address = self.accounts[ik].address
             self.accounts[ik] = libra.Account(privkey, address=address)
-        #print("rotate_keys:", rotate_keys)
+        # print("rotate_keys:", rotate_keys)
 
     def json_print_fields(self):
         return ["mnemonic", "seed", "child_count", "accounts.address"]
@@ -46,22 +47,20 @@ class WalletLibrary:
         master_id = Uint16.int_safe(str(master_id))
         self.rotate_keys[to_rotate_id] = master_id
 
-
     def _recover_accounts(self):
         for idx in range(self.child_count):
             self._add_account(idx)
 
     def _add_account(self, account_idx):
-            privkey = self.key_factory.private_child(account_idx)
-            account = libra.Account(privkey)
-            self.accounts.append(account)
-            return account
+        privkey = self.key_factory.private_child(account_idx)
+        account = libra.Account(privkey)
+        self.accounts.append(account)
+        return account
 
     def new_account(self):
         child_index = self.child_count
         self.child_count += 1
         return self._add_account(child_index)
-
 
     @classmethod
     def new(cls):
@@ -83,13 +82,13 @@ class WalletLibrary:
             try:
                 rotate_keys = cls.recover_rotate_pairs(filename)
             except FileNotFoundError:
-                rotate_keys={}
+                rotate_keys = {}
             return cls.new_from_mnemonic(arr[0], Uint16.int_safe(arr[1]), rotate_keys)
 
     @classmethod
     def recover_rotate_pairs(cls, filename):
-        rotate_keys={}
-        with open(filename+".rotate") as f:
+        rotate_keys = {}
+        with open(filename + ".rotate") as f:
             data = f.read()
             arr = data.split(WalletLibrary.DELIMITER)
             if arr[-1] == '':
@@ -109,7 +108,7 @@ class WalletLibrary:
         self.write_recovery_rotate(filename)
 
     def write_recovery_rotate(self, filename):
-        with open(filename+".rotate", 'wt') as f:
+        with open(filename + ".rotate", 'wt') as f:
             for k, v in self.rotate_keys.items():
                 f.write(str(k))
                 f.write(",")
@@ -127,8 +126,7 @@ class WalletLibrary:
             return account
         else:
             idx = Uint16.int_safe(address_or_refid)
-            if idx >=0 and idx < self.child_count:
+            if idx >= 0 and idx < self.child_count:
                 return self.accounts[idx]
             else:
                 raise ValueError(f"account index {idx} out of range:{self.child_count}")
-

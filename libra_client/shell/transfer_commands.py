@@ -1,5 +1,5 @@
-from canoser import Uint64
-from libra_client.cli.command import *
+from canoser import Uint64, hex_to_int_list
+from libra_client.cli.command import Command, blocking_cmd
 
 
 class TransferCommand(Command):
@@ -8,10 +8,10 @@ class TransferCommand(Command):
 
     def get_params_help(self):
         return ("\n\t<sender_account_address>|<sender_account_ref_id>"
-         " <receiver_account_address>|<receiver_account_ref_id> <number_of_coins>"
-         " [metadata]"
-         " [gas_unit_price_in_micro_libras (default=0)] [max_gas_amount_in_micro_libras (default 140000)]"
-         " Suffix 'b' is for blocking. ")
+                " <receiver_account_address>|<receiver_account_ref_id> <number_of_coins>"
+                " [metadata]"
+                " [gas_unit_price_in_micro_libras (default=0)] [max_gas_amount_in_micro_libras (default 140000)]"
+                " Suffix 'b' is for blocking. ")
 
     def get_description(self):
         return "Transfer coins (in libra) from account to another."
@@ -35,7 +35,7 @@ class TransferCommand(Command):
         print(">> Transferring")
         is_blocking = blocking_cmd(params[0])
         sequence_number = client.transfer_coins(params[1], params[2], params[3],
-            max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking, metadata)
+                                                max_gas_amount_in_micro_libras, gas_unit_price_in_micro_libras, is_blocking, metadata)
         if is_blocking:
             print("Finished transaction!")
         else:
@@ -43,8 +43,6 @@ class TransferCommand(Command):
         print(
             "To query for transaction status, run: query txn_acc_seq {} {} \
             <fetch_events=true|false>".format(
-            params[1], sequence_number
+                params[1], sequence_number
             )
         )
-
-

@@ -4,22 +4,21 @@ import time
 from canoser import Uint64
 import os
 
-from libra import Account, Address, AccountConfig, AccountState, AccountResource
+from libra import Account, Address, AccountConfig, AccountState
 from libra.transaction import (
     Version, Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
-from libra.ledger_info import LedgerInfo
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
 from libra.ledger_info import LedgerInfoWithSignatures
 from libra.validator_change import VerifierType, ValidatorChangeProof
-from libra_client.error import LibraError, AccountError, TransactionError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
+from libra_client.error import AccountError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
 from libra.proto.admission_control_pb2_grpc import AdmissionControlStub
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 
 NETWORKS = {
-    'testnet':{
+    'testnet': {
         'host': "ac.testnet.libra.org",
         'port': 8000,
         'faucet_host': "faucet.testnet.libra.org"
@@ -28,7 +27,7 @@ NETWORKS = {
 
 
 class TrustedState:
-    def __init__(self, version : Version, verifier : VerifierType, latest_epoch_change_li=None):
+    def __init__(self, version: Version, verifier: VerifierType, latest_epoch_change_li=None):
         self.version = version
         self.verifier = verifier
         self.latest_epoch_change_li = latest_epoch_change_li
@@ -64,7 +63,7 @@ class Client:
             self.state = TrustedState(waypoint.version, VerifierType('Waypoint', waypoint))
 
     def init_grpc(self):
-        #TODO: should check under ipv6, add [] around ipv6 host
+        # TODO: should check under ipv6, add [] around ipv6 host
         self.channel = insecure_channel(f"{self.host}:{self.port}")
         self.stub = AdmissionControlStub(self.channel)
 
@@ -91,12 +90,11 @@ class Client:
         ret.host = host
         if isinstance(port, str):
             port = int(port)
-        if port <=0 or port > 65535:
+        if port <= 0 or port > 65535:
             raise LibraNetError("port must be between 1 and 65535")
         ret.port = port
         ret.do_init(faucet_file)
         return ret
-
 
     def get_account_blob(self, address):
         address = Address.normalize_to_bytes(address)
@@ -116,7 +114,7 @@ class Client:
             else:
                 raise
         if len(blob.__str__()) == 0:
-            #TODO: bad smell
+            # TODO: bad smell
             raise AccountError("Account state blob is empty.")
         return AccountState.deserialize(blob.blob)
 
@@ -131,8 +129,7 @@ class Client:
     def get_balance(self, address, retry=False):
         state = self.get_account_state(address, retry)
         br = state.get_balance_resource()
-        return br.coin# if br else 0
-
+        return br.coin  # if br else 0
 
     def get_with_proof(self, request):
         request.client_known_version = self.state.version
@@ -140,15 +137,15 @@ class Client:
             resp = self.stub.UpdateToLatestLedger(request, timeout=self.timeout)
         except Exception as err:
             if err.__class__.__name__ == '_Rendezvous' and \
-                err.details().find("other accumulator is bigger than this") != -1:
-                #Testnet reset, so clear old state
+                    err.details().find("other accumulator is bigger than this") != -1:
+                # Testnet reset, so clear old state
                 self.init_trusted_state(None)
             raise
         new_epoch_info = verify(self.state.verifier, request, resp)
         if new_epoch_info is not None:
             if self.verbose:
                 print(f"Trusted epoch change to :{new_epoch_info}")
-            self.state.verifier = VerifierType('TrustedVerifier',new_epoch_info)
+            self.state.verifier = VerifierType('TrustedVerifier', new_epoch_info)
             vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
             self.state.latest_epoch_change_li = vcp.ledger_info_with_sigs[-1]
         ledger = LedgerInfoWithSignatures.from_proto(resp.ledger_info_with_sigs)
@@ -159,7 +156,7 @@ class Client:
 
     def get_latest_ledger_info(self):
         request = UpdateToLatestLedgerRequest()
-        resp = self.get_with_proof(request)
+        self.get_with_proof(request)
         return self.ledger.ledger_info
 
     def _get_time_diff(self):
@@ -246,29 +243,26 @@ class Client:
         return resp.response_items[0].get_events_by_event_access_path_response.events_with_proof
 
     def get_events_sent(self, address, start_sequence_number, ascending=True, limit=1):
-      path = AccountConfig.account_sent_event_path()
-      return self.get_events(address, path, start_sequence_number, ascending, limit)
+        path = AccountConfig.account_sent_event_path()
+        return self.get_events(address, path, start_sequence_number, ascending, limit)
 
     def get_events_received(self, address, start_sequence_number, ascending=True, limit=1):
-      path = AccountConfig.account_received_event_path()
-      return self.get_events(address, path, start_sequence_number, ascending, limit)
-
+        path = AccountConfig.account_received_event_path()
+        return self.get_events(address, path, start_sequence_number, ascending, limit)
 
     def get_latest_events_sent(self, address, limit=1):
-        return self.get_events_sent(address, 2**64-1, False, limit)
-
+        return self.get_events_sent(address, 2**64 - 1, False, limit)
 
     def get_latest_events_received(self, address, limit=1):
-        return self.get_events_received(address, 2**64-1, False, limit)
-
+        return self.get_events_received(address, 2**64 - 1, False, limit)
 
     def mint_coins(self, address, auth_key_prefix, micro_libra, is_blocking=False):
         if self.faucet_account:
             tx = self.mint_coins_with_faucet_account(address, auth_key_prefix, micro_libra, is_blocking)
             return tx.raw_txn.sequence_number
         else:
-            #TODO: auth_key_prefix+address may not equal auth_key
-            return self.mint_coins_with_faucet_service(auth_key_prefix+address, micro_libra, is_blocking)
+            # TODO: auth_key_prefix+address may not equal auth_key
+            return self.mint_coins_with_faucet_service(auth_key_prefix + address, micro_libra, is_blocking)
 
     def mint_coins_with_faucet_account(self, receiver_address, auth_key_prefix, micro_libra, is_blocking=False):
         script = Script.gen_mint_script(receiver_address, auth_key_prefix, micro_libra)
@@ -289,7 +283,7 @@ class Client:
             self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
         return sequence_number
 
-    def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):
+    def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):  # noqa: C901
         max_iterations = 50
         if self.verbose:
             address_hex = address
@@ -320,11 +314,11 @@ class Client:
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
-        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
-        script = Script.gen_transfer_script(receiver_address,micro_libra, metadata)
+                      max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
+        script = Script.gen_transfer_script(receiver_address, micro_libra, metadata)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
-            is_blocking, txn_expiration)
+                                   is_blocking, txn_expiration)
 
     def create_account(self, sender_account, fresh_address, auth_key_prefix, is_blocking=True):
         script = Script.gen_create_account_script(fresh_address, auth_key_prefix)
@@ -347,28 +341,27 @@ class Client:
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
     def register_validator_with_faucet_account(self, consensus_pubkey,
-        validator_network_signing_pubkey,
-        validator_network_identity_pubkey,
-        validator_network_address,
-        fullnodes_network_identity_pubkey,
-        fullnodes_network_address,
-        is_blocking=True):
+                                               validator_network_signing_pubkey,
+                                               validator_network_identity_pubkey,
+                                               validator_network_address,
+                                               fullnodes_network_identity_pubkey,
+                                               fullnodes_network_address,
+                                               is_blocking=True):
         script = Script.gen_register_validator_script(consensus_pubkey,
-            validator_network_signing_pubkey,
-            validator_network_identity_pubkey,
-            validator_network_address,
-            fullnodes_network_identity_pubkey,
-            fullnodes_network_address)
+                                                      validator_network_signing_pubkey,
+                                                      validator_network_identity_pubkey,
+                                                      validator_network_address,
+                                                      fullnodes_network_identity_pubkey,
+                                                      fullnodes_network_address)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
-
     def submit_payload(self, sender_account, payload,
-        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
+                       max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
-        #TODO: cache sequence_number
+        # TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
-            payload, max_gas, unit_price, txn_expiration)
+                                       payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         self.submit_signed_txn(signed_txn, is_blocking)
         return signed_txn
@@ -377,7 +370,6 @@ class Client:
         request = SubmitTransactionRequest()
         request.transaction.txn_bytes = signed_txn.serialize()
         return self.submit_transaction(request, signed_txn, is_blocking)
-
 
     def submit_transaction(self, request, signed_txn, is_blocking):
         resp = self.submit_transaction_non_block(request)
