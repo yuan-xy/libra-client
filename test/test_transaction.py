@@ -1,7 +1,7 @@
 import libra_client
 from libra.crypto.ed25519 import ED25519_PRIVATE_KEY_LENGTH, ED25519_SIGNATURE_LENGTH
 from libra.transaction import *
-from libra_client.error import TransactionError, TransactionTimeoutError
+from libra_client.error import AccountError, TransactionError, TransactionTimeoutError
 from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
@@ -82,12 +82,15 @@ def test_gax_too_large():
     a0 = wallet.accounts[0]
     a1 = wallet.accounts[1]
     c = libra_client.Client("testnet")
-    balance0 = c.get_balance(a0.address)
-    with pytest.raises(TransactionError):
+    try:
+        balance0 = c.get_balance(a0.address)
+    except AccountError:
+        balance0 = 0
+    with pytest.raises((AccountError, TransactionError)):
         c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
-    with pytest.raises(TransactionError):
+    with pytest.raises((AccountError, TransactionError)):
         c.transfer_coin(a0, a1.address, 1, max_gas=1_000_001)
-    with pytest.raises(TransactionError):
+    with pytest.raises((AccountError, TransactionError)):
         c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
 
 
