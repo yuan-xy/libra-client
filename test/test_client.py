@@ -29,9 +29,16 @@ def test_get_transaction():
 
 def test_get_transactions3():
     c = libra_client.Client("testnet")
-    txs = c.get_transactions(0, limit=3, fetch_events=True)
+    start_version = 0
+    txs = c.get_transactions(start_version, limit=3, fetch_events=True)
     assert len(txs) == 3
-
+    for tx in txs:
+        tx.version = start_version
+        tx.success = (tx.transaction_info.major_status == 4001)
+        start_version += 1
+    for i, tx in enumerate(txs):
+        assert i == tx.version
+        assert tx.transaction_info.gas_used >= 0
 
 
 def test_get_transaction_without_events():
