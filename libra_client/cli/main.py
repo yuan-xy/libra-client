@@ -13,9 +13,6 @@ import sys
 import os
 import signal
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
-
 
 TESTNET = NETWORKS['testnet']['host']
 

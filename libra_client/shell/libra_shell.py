@@ -18,10 +18,6 @@ import signal
 if os.name == 'posix':
     import readline
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
-
-
 def get_commands(include_dev: bool):
     commands = [AccountCommand(), QueryCommand(), TransferCommand(), LedgerCmd()]
     if include_dev:
