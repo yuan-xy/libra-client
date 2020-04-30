@@ -72,7 +72,7 @@ def test_get_tx_from_zero():
     assert info.timestamp_usecs == info.commit_info.timestamp_usecs
     assert info.consensus_block_id == info.commit_info.id
     assert info.transaction_accumulator_hash == info.commit_info.executed_state_id
-    assert info.next_validator_set == info.commit_info.next_validator_set
+    assert info.next_epoch_info == info.commit_info.next_epoch_info
     transactions, events_for_versions = c.get_transactions_proto(0, 1, True)
     assert len(transactions) == 1
     assert len(events_for_versions.events_for_version) == 1

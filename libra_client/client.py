@@ -10,7 +10,7 @@ from libra.transaction import (
 from libra.get_with_proof import verify
 from libra.contract_event import ContractEvent
 from libra.ledger_info import LedgerInfoWithSignatures
-from libra.validator_change import VerifierType, ValidatorChangeProof
+from libra.epoch_change import VerifierType, EpochChangeProof
 from libra_client.error import AccountError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
 
 from libra.proto.admission_control_pb2 import SubmitTransactionRequest, AdmissionControlStatusCode
@@ -57,7 +57,7 @@ class Client:
 
     def init_trusted_state(self, waypoint):
         if waypoint is None:
-            from libra.crypto_proxies import EpochInfo
+            from libra.epoch_info import EpochInfo
             self.state = TrustedState(0, VerifierType('TrustedVerifier', EpochInfo.empty()))
         else:
             self.state = TrustedState(waypoint.version, VerifierType('Waypoint', waypoint))
@@ -146,7 +146,7 @@ class Client:
             if self.verbose:
                 print(f"Trusted epoch change to :{new_epoch_info}")
             self.state.verifier = VerifierType('TrustedVerifier', new_epoch_info)
-            vcp = ValidatorChangeProof.from_proto(resp.validator_change_proof)
+            vcp = EpochChangeProof.from_proto(resp.epoch_change_proof)
             self.state.latest_epoch_change_li = vcp.ledger_info_with_sigs[-1]
         ledger = LedgerInfoWithSignatures.from_proto(resp.ledger_info_with_sigs)
         self.ledger = ledger
