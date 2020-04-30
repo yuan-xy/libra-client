@@ -15,8 +15,10 @@ import sys
 import os
 import signal
 
+
 if os.name == 'posix':
     import readline
+
 
 def get_commands(include_dev: bool):
     commands = [AccountCommand(), QueryCommand(), TransferCommand(), LedgerCmd()]

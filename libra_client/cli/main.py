@@ -10,7 +10,6 @@ from libra_client import Client
 from libra.version import version
 import argparse
 import sys
-import os
 import signal
 
 
