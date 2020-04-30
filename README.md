@@ -1,4 +1,4 @@
-# LibraClient ![Python package](https://github.com/yuan-xy/libra-client/workflows/Python%20package/badge.svg) [![Build Status](https://travis-ci.org/yuan-xy/libra-client.svg?branch=master)](https://travis-ci.org/yuan-xy/libra-client) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+# LibraClient ![Python package](https://github.com/yuan-xy/libra-client/workflows/Python%20package/badge.svg)  [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
 LibraClient is a collection of tools which allows you interact whith [Libra Network](http://libra.org) easily. It provides three ways to access Libra:
