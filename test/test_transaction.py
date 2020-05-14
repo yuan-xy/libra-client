@@ -89,7 +89,7 @@ def test_gax_too_large():
     with pytest.raises((AccountError, TransactionError)):
         c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
     with pytest.raises((AccountError, TransactionError)):
-        c.transfer_coin(a0, a1.address, 1, max_gas=1_000_001)
+        c.transfer_coin(a0, a1.address, 1, max_gas=1_000_000_001)
     with pytest.raises((AccountError, TransactionError)):
         c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
 
