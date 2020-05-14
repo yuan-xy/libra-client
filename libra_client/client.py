@@ -126,10 +126,13 @@ class Client:
         state = self.get_account_resource(address, retry)
         return state.sequence_number
 
-    def get_balance(self, address, retry=False):
+    def get_balances(self, address, currency_codes, retry=False):
         state = self.get_account_state(address, retry)
-        br = state.get_balance_resource()
-        return br.coin  # if br else 0
+        return state.get_balance_resources(currency_codes)
+
+    def get_balance(self, address, retry=False):
+        br = self.get_balances(address, ["LBR"])[0]
+        return br.coin if br else 0
 
     def get_with_proof(self, request):
         request.client_known_version = self.state.version
