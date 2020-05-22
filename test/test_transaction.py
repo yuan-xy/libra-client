@@ -23,10 +23,10 @@ def test_raw_txn():
     assert raw_tx.payload.value_type == Script
     script = raw_tx.payload.value
     assert script.code == Script.get_script_bytecode("peer_to_peer")
-    assert script.args[0].index == 1
+    assert script.args[0].index == 3
     assert script.args[0].Address == True
     assert script.args[0].enum_name == 'Address'
-    assert script.args[2].index == 0
+    assert script.args[2].index == 1
     assert script.args[2].U64 == True
     assert script.args[2].value == 123
 
@@ -39,13 +39,13 @@ def test_raw_txn_with_metadata():
     assert raw_tx.payload.value_type == Script
     script = raw_tx.payload.value
     assert script.code == Script.get_script_bytecode("peer_to_peer_with_metadata")
-    assert script.args[0].index == 1
+    assert script.args[0].index == 3
     assert script.args[0].Address == True
     assert script.args[0].enum_name == 'Address'
-    assert script.args[2].index == 0
+    assert script.args[2].index == 1
     assert script.args[2].U64 == True
     assert script.args[2].value == 9
-    assert script.args[3].index == 2
+    assert script.args[3].index == 4
     assert script.args[3].U8Vector == True
     assert script.args[3].value == bytes([2,3,4])
 

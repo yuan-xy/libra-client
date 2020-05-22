@@ -131,7 +131,8 @@ class Client:
         return state.get_balance_resources(currency_codes)
 
     def get_balance(self, address, retry=False):
-        br = self.get_balances(address, ["LBR"])[0]
+        state = self.get_account_state(address, retry)
+        br = state.get_balance_resource("LBR")
         return br.coin if br else 0
 
     def get_with_proof(self, request):
@@ -364,7 +365,7 @@ class Client:
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         # TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
-                                       payload, max_gas, unit_price, txn_expiration)
+                                       payload, max_gas, unit_price, "LBR", txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         self.submit_signed_txn(signed_txn, is_blocking)
         return signed_txn
