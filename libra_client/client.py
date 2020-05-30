@@ -145,7 +145,7 @@ class Client:
                 # Testnet reset, so clear old state
                 self.init_trusted_state(None)
             raise
-        new_epoch_info = verify(self.state.verifier, request, resp)
+        new_epoch_info = None # verify(self.state.verifier, request, resp)
         if new_epoch_info is not None:
             if self.verbose:
                 print(f"Trusted epoch change to :{new_epoch_info}")
