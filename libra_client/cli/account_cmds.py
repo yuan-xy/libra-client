@@ -92,16 +92,16 @@ class AccountCmdGetTxnByAccountSeq(Command):
         return ["txn_acc_seq", "ts"]
 
     def get_params_help(self):
-        return "<account_address> <sequence_number> <fetch_events=true|false>"
+        return "<account_address> <sequence_number> <include_events=true|false>"
 
     def get_description(self):
         return ("Get the committed transaction by account and sequence number.  "
                 "Optionally also fetch events emitted by this transaction.")
 
     def execute(self, client, params, **kwargs):
-        fetch_events = parse_bool(params[3])
+        include_events = parse_bool(params[3])
         seq = Uint64.int_safe(params[2])
-        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, fetch_events)
+        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, include_events)
         json_print_in_cmd(transaction)
 
 

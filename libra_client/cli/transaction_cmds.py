@@ -59,17 +59,17 @@ class TransactionCmdByRange(Command):
         return ["range", "r"]
 
     def get_params_help(self):
-        return "<start_version> <limit> [fetch_events=true|false]"
+        return "<start_version> <limit> [include_events=true|false]"
 
     def get_description(self):
         return ("Get up to <limit> number transactions from <start_version>")
 
     def execute(self, client, params, **kwargs):
         if len(params) < 4:
-            fetch_events = True
+            include_events = True
         else:
-            fetch_events = parse_bool(params[3])
-        sn = client.get_transactions(Uint64.int_safe(params[1]), Uint64.int_safe(params[2]), fetch_events)
+            include_events = parse_bool(params[3])
+        sn = client.get_transactions(Uint64.int_safe(params[1]), Uint64.int_safe(params[2]), include_events)
         json_print_in_cmd([x.to_json_serializable() for x in sn])
 
 

@@ -42,7 +42,7 @@ class TransferCommand(Command):
             print("Transaction submitted to validator")
         print(
             "To query for transaction status, run: query txn_acc_seq {} {} \
-            <fetch_events=true|false>".format(
+            <include_events=true|false>".format(
                 params[1], sequence_number
             )
         )

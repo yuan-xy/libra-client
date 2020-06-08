@@ -30,15 +30,11 @@ def test_get_transaction():
 def test_get_transactions3():
     c = libra_client.Client("testnet")
     start_version = 0
-    txs = c.get_transactions(start_version, limit=3, fetch_events=True)
+    txs = c.get_transactions(start_version, limit=3, include_events=True)
     assert len(txs) == 3
-    for tx in txs:
-        tx.version = start_version
-        tx.success = (tx.transaction_info.major_status == 4001)
-        start_version += 1
     for i, tx in enumerate(txs):
         assert i == tx.version
-        assert tx.transaction_info.gas_used >= 0
+        assert tx.gas_used >= 0
 
 
 def test_get_transaction_without_events():
@@ -117,13 +113,11 @@ def test_get_account_resource():
     address = libra.AccountConfig.association_address()
     c = libra_client.Client("testnet")
     ret = c.get_account_resource(address)
-    assert len(ret.authentication_key) == 32
+    assert len(ret.authentication_key) == 32*2 #hex
     assert ret.delegated_key_rotation_capability == False
     assert ret.delegated_withdrawal_capability == False
-    assert ret.received_events.count >= 0
-    assert len(ret.received_events.key) == libra.event.EVENT_KEY_LENGTH
-    assert ret.sent_events.count > 0
-    assert len(ret.sent_events.key) == libra.event.EVENT_KEY_LENGTH
+    assert len(ret.received_events_key) == libra.event.EVENT_KEY_LENGTH*2
+    assert len(ret.sent_events_key) == libra.event.EVENT_KEY_LENGTH*2
     assert ret.sequence_number > 0
     balance = c.get_balance(address)
     assert balance >= 0
@@ -131,13 +125,11 @@ def test_get_account_resource():
     assert addr == bytes.fromhex(address)
     ret2 = c.get_account_resource(addr)
     assert ret.delegated_withdrawal_capability == ret2.delegated_withdrawal_capability
-    assert ret2.received_events.count >= ret.received_events.count
-    assert ret2.sent_events.count >= ret.sent_events.count
     assert ret2.sequence_number >= ret.sequence_number
 
 
 def test_account_not_exsits():
-    address = "7af57a0c206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"[32:]
+    address = "7af57fff206fbcc846532f75f373b5d1db9333308dbc4673c5befbca5db60e21"[:32]
     c = libra_client.Client("testnet")
     with pytest.raises(libra_client.client.AccountError):
         balance = c.get_account_state(address)

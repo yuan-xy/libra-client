@@ -87,7 +87,7 @@ class QueryCommandGetTxnByAccountSeq(Command):
         return ["txn_acc_seq", "ts"]
 
     def get_params_help(self):
-        return "<account_ref_id>|<account_address> <sequence_number> <fetch_events=true|false>"
+        return "<account_ref_id>|<account_address> <sequence_number> <include_events=true|false>"
 
     def get_description(self):
         return ("Get the committed transaction by account and sequence number.  "
@@ -95,8 +95,8 @@ class QueryCommandGetTxnByAccountSeq(Command):
 
     def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by account and sequence number")
-        fetch_events = parse_bool(params[3])
-        transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], fetch_events)
+        include_events = parse_bool(params[3])
+        transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], include_events)
         print(f"Committed transaction: {transaction}")  # transaction pretty print
         if transaction.HasField("events"):
             print("Events: ")
@@ -114,7 +114,7 @@ class QueryCommandGetTxnByRange(Command):
         return ["txn_range", "tr"]
 
     def get_params_help(self):
-        return "<start_version> <limit> <fetch_events=true|false>"
+        return "<start_version> <limit> <include_events=true|false>"
 
     def get_description(self):
         return ("Get the committed transactions by version range. "
@@ -122,8 +122,8 @@ class QueryCommandGetTxnByRange(Command):
 
     def execute(self, client, params, **kwargs):
         print(">> Getting committed transaction by range")
-        fetch_events = parse_bool(params[3])
-        transactions = client.get_committed_txn_by_range(params[1], params[2], fetch_events)
+        include_events = parse_bool(params[3])
+        transactions = client.get_committed_txn_by_range(params[1], params[2], include_events)
         cur_version = Uint64.int_safe(params[1])
         for index, signed_tx in enumerate(transactions):
             # TODO: events print

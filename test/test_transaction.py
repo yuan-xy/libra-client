@@ -177,7 +177,7 @@ def test_tx_id_overflow():
     with pytest.raises(ValueError):
         item.get_transactions_request.start_version = -1
     # item.get_transactions_request.limit = 1
-    # item.get_transactions_request.fetch_events = False
+    # item.get_transactions_request.include_events = False
     # resp = client.update_to_latest_ledger(request)
     # print(resp)
 
