@@ -1,26 +1,27 @@
 import requests
 import time
 from canoser import Uint64
-import os, json
+import os
+import json
 
-from libra import Account, Address, AccountConfig, AccountState, AccountResource
+from libra import Account, Address, AccountConfig
 from libra.transaction import (
-    Version, Transaction, RawTransaction, SignedTransaction, Script, TransactionPayload, TransactionInfo)
-from libra.ledger_info import LedgerInfo
-from libra.contract_event import ContractEvent
-from libra_client.error import LibraError, AccountError, TransactionError, AdmissionControlError, VMError, MempoolError, LibraNetError, TransactionTimeoutError
+    RawTransaction, SignedTransaction, Script, TransactionPayload)
+from libra_client.error import AccountError, TransactionError, VMError, LibraNetError, TransactionTimeoutError
 
 NETWORKS = {
-    'testnet':{
+    'testnet': {
         'url': "https://client.testnet.libra.org",
         'faucet_host': "http://faucet.testnet.libra.org",
         'waypoint_url': "https://developers.libra.org/testnet_waypoint.txt"
     }
 }
 
+
 class DictObj:
     def __init__(self, _dict):
         self.__dict__.update(_dict)
+
 
 class Client:
     def __init__(self, network="testnet", faucet_file=None, waypoint=None):
@@ -79,7 +80,10 @@ class Client:
     def get_account_state(self, address, retry=False):
         address = Address.normalize_to_bytes(address)
         params = [address.hex()]
-        return DictObj(self.json_rpc("get_account_state", params))
+        state = self.json_rpc("get_account_state", params)
+        if state is None:
+            raise AccountError(address)
+        return DictObj(state)
 
     def get_account_resource(self, address, retry=False):
         return self.get_account_state(address, retry)
@@ -116,7 +120,6 @@ class Client:
     def get_latest_transaction_version(self):
         return self.get_latest_ledger_info().version
 
-
     def get_transactions(self, start_version, limit=1, include_events=False):
         params = [start_version, limit, include_events]
         txs = self.json_rpc("get_transactions", params)
@@ -142,32 +145,29 @@ class Client:
         params = [address.hex(), sequence_number, include_events]
         return self.json_rpc("get_account_transaction", params)
 
-
     def get_events(self, key, start_sequence_number, ascending=True, limit=1):
         limit = Uint64.int_safe(limit)
         if limit == 0:
             raise ValueError(f"limit:{limit} is invalid.")
-        params = [key, start, limit]
+        params = [key, start_sequence_number, limit]
         events = self.json_rpc("get_events", params)
         if not ascending:
             events = reversed(events)
         return [DictObj(ev) for ev in events]
 
     def get_events_sent(self, address, start_sequence_number, ascending=True, limit=1):
-      key = self.get_account_state(address).sent_events_key
-      return self.get_events(key, start_sequence_number, ascending, limit)
+        key = self.get_account_state(address).sent_events_key
+        return self.get_events(key, start_sequence_number, ascending, limit)
 
     def get_events_received(self, address, start_sequence_number, ascending=True, limit=1):
-      key = self.get_account_state(address).received_events_key
-      return self.get_events(key, start_sequence_number, ascending, limit)
+        key = self.get_account_state(address).received_events_key
+        return self.get_events(key, start_sequence_number, ascending, limit)
 
     def get_latest_events_sent(self, address, limit=1):
-        return self.get_events_sent(address, 2**64-1, False, limit)
+        return self.get_events_sent(address, 2**64 - 1, False, limit)
 
     def get_latest_events_received(self, address, limit=1):
-        return self.get_events_received(address, 2**64-1, False, limit)
-
-
+        return self.get_events_received(address, 2**64 - 1, False, limit)
 
     def mint_coins(self, address, auth_key_prefix, micro_libra, is_blocking=False):
         if self.faucet_account:
@@ -185,10 +185,12 @@ class Client:
     def mint_coins_with_faucet_service(self, auth_key, micro_libra, is_blocking=False):
         if isinstance(auth_key, bytes):
             auth_key = auth_key.hex()
-        url = "http://{}?amount={}&auth_key={}&".format(
-            self.faucet_host, micro_libra, auth_key
-        )
-        resp = requests.post(url, timeout=self.timeout)
+        params = {
+            "amount": micro_libra,
+            "auth_key": auth_key,
+            "currency_code": "LBR",
+        }
+        resp = requests.post(self.faucet_host, data=params, timeout=self.timeout)
         if resp.status_code != 200:
             raise IOError(
                 f"Faucet service {self.faucet_host} error: {resp.status_code}, {resp.text}"
@@ -197,7 +199,6 @@ class Client:
         if is_blocking:
             self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
         return sequence_number
-
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):  # noqa: C901
         max_iterations = 50
@@ -227,14 +228,12 @@ class Client:
                     print(".", end='', flush=True)
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
-
     def transfer_coin(self, sender_account, receiver_address, micro_libra,
-        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
-        script = Script.gen_transfer_script(receiver_address,micro_libra, metadata)
+                      max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
+        script = Script.gen_transfer_script(receiver_address, micro_libra, metadata)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, max_gas, unit_price,
-            is_blocking, txn_expiration)
-
+                                   is_blocking, txn_expiration)
 
     def create_account(self, sender_account, fresh_address, auth_key_prefix, is_blocking=True):
         script = Script.gen_create_account_script(fresh_address, auth_key_prefix)
@@ -257,28 +256,27 @@ class Client:
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
     def register_validator_with_faucet_account(self, consensus_pubkey,
-        validator_network_signing_pubkey,
-        validator_network_identity_pubkey,
-        validator_network_address,
-        fullnodes_network_identity_pubkey,
-        fullnodes_network_address,
-        is_blocking=True):
+                                               validator_network_signing_pubkey,
+                                               validator_network_identity_pubkey,
+                                               validator_network_address,
+                                               fullnodes_network_identity_pubkey,
+                                               fullnodes_network_address,
+                                               is_blocking=True):
         script = Script.gen_register_validator_script(consensus_pubkey,
-            validator_network_signing_pubkey,
-            validator_network_identity_pubkey,
-            validator_network_address,
-            fullnodes_network_identity_pubkey,
-            fullnodes_network_address)
+                                                      validator_network_signing_pubkey,
+                                                      validator_network_identity_pubkey,
+                                                      validator_network_address,
+                                                      fullnodes_network_identity_pubkey,
+                                                      fullnodes_network_address)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
-
     def submit_payload(self, sender_account, payload,
-        max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
+                       max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
-        #TODO: cache sequence_number
+        # TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
-            payload, max_gas, unit_price, txn_expiration)
+                                       payload, max_gas, unit_price, txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         params = [signed_txn.serialize().hex()]
         ret = self.json_rpc("submit", params)
@@ -286,4 +284,3 @@ class Client:
             raise TransactionError(ret)
         else:
             return signed_txn
-
