@@ -8,24 +8,23 @@ import os
 import pytest
 import requests
 
-#import pdb
+
+def test_invalid_param():
+    c = libra_client.Client("testnet")
+    with pytest.raises(libra_client.LibraError) as excinfo:
+        c.json_rpc("get_transactions", [])
+    breakpoint()
+    err = excinfo.value
+    assert err.args[0]['error']['code']
 
 
 def test_get_transaction():
     c = libra_client.Client("testnet")
     stx = c.get_transaction(1, True)
-    print(stx)
-    assert isinstance(stx, libra.block_metadata.BlockMetadata) == True
-    assert stx.previous_block_votes == []
-    assert len(stx.proposer) == Address.LENGTH
-    assert len(stx.id) == 32
-    assert stx.timestamp_usecs == 0 or stx.timestamp_usecs > 1570_000_000_000_000
-    assert len(stx.events) == 1
-    be = libra.block_metadata.NewBlockEvent.deserialize(stx.events[0].event_data)
-    assert be.round == stx.round
-    info = stx.transaction_info
-    assert info.major_status == 4001
-    assert info.gas_used == 0
+    assert stx.transaction['type'] == 'blockmetadata'
+    assert stx.vm_status == 4001
+    assert stx.success is True
+    assert stx.gas_used == 600
 
 def test_get_transactions3():
     c = libra_client.Client("testnet")
@@ -39,43 +38,16 @@ def test_get_transactions3():
 
 def test_get_transaction_without_events():
     c = libra_client.Client("testnet")
-    assert hasattr(c, "latest_time") == False
     transactions = c.get_transactions(1, 1, False)
     assert len(transactions) == 1
-    assert hasattr(transactions[0], 'success') == False
-    assert hasattr(c, "latest_time") == True
-    assert c.latest_time > 1570_000_000_000_000
+    # assert hasattr(c, "latest_time") == True
+    # assert c.latest_time > 1570_000_000_000_000
 
-
-def test_get_tx_with_events():
-    c = libra_client.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(1, 2, True)
-    if c.state.version == 1:
-        return
-    assert len(transactions) == 2
-    assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_from_zero():
     c = libra_client.Client("testnet")
-    transactions, events_for_versions = c.get_transactions_proto(0, 2, True)
+    transactions = c.get_transactions(0, 2, True)
     assert len(transactions) == 2
-    assert len(events_for_versions.events_for_version) == 2
-    assert c.state.version > 0
-    assert c.state.verifier.value.epoch > 0
-    assert len(c.state.verifier.value.verifier.address_to_validator_info) > 0
-    assert c.state.latest_epoch_change_li is not None
-    info = c.state.latest_epoch_change_li.ledger_info
-    assert info.timestamp_usecs == info.commit_info.timestamp_usecs
-    assert info.consensus_block_id == info.commit_info.id
-    assert info.transaction_accumulator_hash == info.commit_info.executed_state_id
-    assert info.next_epoch_info == info.commit_info.next_epoch_info
-    transactions, events_for_versions = c.get_transactions_proto(0, 1, True)
-    assert len(transactions) == 1
-    assert len(events_for_versions.events_for_version) == 1
-    events = events_for_versions.events_for_version[0].events
-    assert len(events) == 1
-    ces = [ContractEvent.from_proto(x) for x in events]
-    assert len(ces) == 1
 
 
 def test_get_tx_latest():
@@ -83,20 +55,20 @@ def test_get_tx_latest():
     ver = c.get_latest_transaction_version()
     if ver == 1:
         return
-    transactions, events_for_versions = c.get_transactions_proto(ver-2, 2, True)
+    transactions = c.get_transactions(ver-2, 2, True)
     assert len(transactions) == 2
     assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_zero():
     c = libra_client.Client("testnet")
     with pytest.raises(ValueError):
-        c.get_transactions_proto(1, 0, True)
+        c.get_transactions(1, 0, True)
 
 
 def test_get_tx_invalid():
     c = libra_client.Client("testnet")
     with pytest.raises(TypeError):
-        c.get_transactions_proto(1, -1, True)
+        c.get_transactions(1, -1, True)
 
 def test_get_latest_transaction_version():
     c = libra_client.Client("testnet")
@@ -159,7 +131,7 @@ def test_get_account_transaction_proto():
     assert txn.proof.HasField("ledger_info_to_transaction_info_proof")
     assert txn.proof.HasField("transaction_info")
     assert len(txn.transaction.transaction) > 0
-    if txn.proof.transaction_info.major_status == 4001:
+    if txn.proof.transaction_info.vm_status == 4001:
         # assert txn.events.events[0].sequence_number == 1
         assert txn.events.events[0].sequence_number == 0 # TODO: why changed to 0
 

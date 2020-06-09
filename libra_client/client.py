@@ -7,7 +7,7 @@ import json
 from libra import Account, Address, AccountConfig
 from libra.transaction import (
     RawTransaction, SignedTransaction, Script, TransactionPayload)
-from libra_client.error import AccountError, TransactionError, VMError, LibraNetError, TransactionTimeoutError
+from libra_client.error import AccountError, TransactionError, VMError, LibraError, LibraNetError, TransactionTimeoutError
 
 NETWORKS = {
     'testnet': {
@@ -21,6 +21,12 @@ NETWORKS = {
 class DictObj:
     def __init__(self, _dict):
         self.__dict__.update(_dict)
+
+    @staticmethod
+    def new(_dict):
+        if _dict is None:
+            return None
+        return DictObj(_dict)
 
 
 class Client:
@@ -74,6 +80,8 @@ class Client:
         ret = json.loads(resp.text)
         if ret['id'] != cur_id:
             raise f"Json rpc id mismatch: {ret['id']} - {cur_id}"
+        if 'error' in ret:
+            raise LibraError(ret)
         self.rpcid += 1
         return ret['result']
 
@@ -143,7 +151,7 @@ class Client:
     def get_account_transaction(self, address, sequence_number, include_events=False):
         address = Address.normalize_to_bytes(address)
         params = [address.hex(), sequence_number, include_events]
-        return self.json_rpc("get_account_transaction", params)
+        return DictObj.new(self.json_rpc("get_account_transaction", params))
 
     def get_events(self, key, start_sequence_number, ascending=True, limit=1):
         limit = Uint64.int_safe(limit)
@@ -190,7 +198,7 @@ class Client:
             "auth_key": auth_key,
             "currency_code": "LBR",
         }
-        resp = requests.post(self.faucet_host, data=params, timeout=self.timeout)
+        resp = requests.post(self.faucet_host, params=params, timeout=self.timeout)
         if resp.status_code != 200:
             raise IOError(
                 f"Faucet service {self.faucet_host} error: {resp.status_code}, {resp.text}"
@@ -276,7 +284,7 @@ class Client:
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         # TODO: cache sequence_number
         raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
-                                       payload, max_gas, unit_price, txn_expiration)
+                                       payload, max_gas, unit_price, "LBR", txn_expiration)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         params = [signed_txn.serialize().hex()]
         ret = self.json_rpc("submit", params)
