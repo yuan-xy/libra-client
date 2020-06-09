@@ -187,18 +187,21 @@ class Client:
     def get_latest_events_received(self, address, limit=1):
         return self.get_events_received(address, 2**64 - 1, False, limit)
 
-    def mint_coins(self, address, auth_key_prefix, micro_libra, is_blocking=False):
+    def mint_coins(self, address, auth_key_prefix, micro_libra, **kwargs):
         if self.faucet_account:
-            tx = self.mint_coins_with_faucet_account(address, auth_key_prefix, micro_libra, is_blocking)
+            tx = self.mint_coins_with_faucet_account(address, auth_key_prefix, micro_libra, **kwargs)
             return tx.raw_txn.sequence_number
         else:
             # TODO: auth_key_prefix+address may not equal auth_key
+            is_blocking = False
+            if 'is_blocking' in kwargs:
+                is_blocking = bool(kwargs['is_blocking'])
             return self.mint_coins_with_faucet_service(auth_key_prefix + address, micro_libra, is_blocking)
 
-    def mint_coins_with_faucet_account(self, receiver_address, auth_key_prefix, micro_libra, is_blocking=False):
+    def mint_coins_with_faucet_account(self, receiver_address, auth_key_prefix, micro_libra, **kwargs):
         script = Script.gen_mint_script(receiver_address, auth_key_prefix, micro_libra)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(self.faucet_account, payload, **kwargs)
 
     def mint_coins_with_faucet_service(self, auth_key, micro_libra, is_blocking=False):
         if isinstance(auth_key, bytes):
@@ -246,59 +249,45 @@ class Client:
                     print(".", end='', flush=True)
         raise TransactionTimeoutError("wait_for_transaction timeout.")
 
-    def transfer_coin(self, sender_account, receiver_address, micro_libra,
-                      max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100, metadata=None):
-        script = Script.gen_transfer_script(receiver_address, micro_libra, metadata)
+    def transfer_coin(self, sender_account, receiver_address, micro_libra, **kwargs):
+        script = Script.gen_transfer_script(receiver_address, micro_libra, **kwargs)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload, max_gas, unit_price,
-                                   is_blocking, txn_expiration)
+        return self.submit_payload(sender_account, payload, **kwargs)
 
-    def create_account(self, sender_account, fresh_address, auth_key_prefix, is_blocking=True):
+    def create_account(self, sender_account, fresh_address, auth_key_prefix, **kwargs):
         script = Script.gen_create_account_script(fresh_address, auth_key_prefix)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(sender_account, payload, **kwargs)
 
-    def rotate_authentication_key(self, sender_account, public_key, is_blocking=True):
+    def rotate_authentication_key(self, sender_account, public_key, **kwargs):
         script = Script.gen_rotate_auth_key_script(public_key)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(sender_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(sender_account, payload, **kwargs)
 
-    def add_validator_with_faucet_account(self, validator_address, is_blocking=True):
+    def add_validator_with_faucet_account(self, validator_address, **kwargs):
         script = Script.gen_add_validator_script(validator_address)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(self.faucet_account, payload, **kwargs)
 
-    def remove_validator_with_faucet_account(self, validator_address, is_blocking=True):
+    def remove_validator_with_faucet_account(self, validator_address, **kwargs):
         script = Script.gen_remove_validator_script(validator_address)
         payload = TransactionPayload('Script', script)
-        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
+        return self.submit_payload(self.faucet_account, payload, **kwargs)
 
-    def register_validator_with_faucet_account(self, consensus_pubkey,
-                                               validator_network_signing_pubkey,
-                                               validator_network_identity_pubkey,
-                                               validator_network_address,
-                                               fullnodes_network_identity_pubkey,
-                                               fullnodes_network_address,
-                                               is_blocking=True):
-        script = Script.gen_register_validator_script(consensus_pubkey,
-                                                      validator_network_signing_pubkey,
-                                                      validator_network_identity_pubkey,
-                                                      validator_network_address,
-                                                      fullnodes_network_identity_pubkey,
-                                                      fullnodes_network_address)
-        payload = TransactionPayload('Script', script)
-        return self.submit_payload(self.faucet_account, payload, is_blocking=is_blocking)
 
-    def submit_payload(self, sender_account, payload,
-                       max_gas=400_000, unit_price=0, is_blocking=False, txn_expiration=100):
+    def submit_payload(self, sender_account, payload, **kwargs):
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         # TODO: cache sequence_number
-        raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number,
-                                       payload, max_gas, unit_price, "LBR", txn_expiration)
+        raw_tx = RawTransaction.new_tx(sender_account.address, sequence_number, payload, **kwargs)
         signed_txn = SignedTransaction.gen_from_raw_txn(raw_tx, sender_account)
         params = [signed_txn.serialize().hex()]
         ret = self.json_rpc("submit", params)
         if ret is not None:
             raise TransactionError(ret)
         else:
+            if 'is_blocking' in kwargs and bool(kwargs['is_blocking']):
+                address = bytes(raw_tx.sender)
+                sequence_number = raw_tx.sequence_number
+                expiration_time = raw_tx.expiration_time
+                self.wait_for_transaction(address, sequence_number, expiration_time)
             return signed_txn

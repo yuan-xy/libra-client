@@ -140,7 +140,7 @@ def test_transfer_coin():
     a0 = wallet.new_account()
     a1 = wallet.new_account()
     c = libra_client.Client("testnet")
-    c.mint_coins(a0.address, a0.auth_key_prefix, 1234_000, True)
+    c.mint_coins(a0.address, a0.auth_key_prefix, 1234_000, is_blocking=True)
     balance0 = c.get_balance(a0.address, retry=True)
     balance1 = 0
     ret = c.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
