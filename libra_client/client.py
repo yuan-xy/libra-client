@@ -188,6 +188,7 @@ class Client:
         return self.get_events(key, start_sequence_number, ascending, limit)
 
     def get_latest_events_sent(self, address, limit=1):
+        # TODO: json-rpc doesn't support fetch latest events.
         return self.get_events_sent(address, 2**64 - 1, False, limit)
 
     def get_latest_events_received(self, address, limit=1):

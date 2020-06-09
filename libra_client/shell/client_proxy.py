@@ -75,7 +75,7 @@ class ClientProxy:
     def mint_coins(self, address_or_refid, libra, is_blocking):
         micro_libra = Uint64.int_safe(libra) * 1_000_000
         address, prefix = self.get_account_address_from_parameter(address_or_refid)
-        self.grpc_client.mint_coins(address, prefix, micro_libra, is_blocking)
+        self.grpc_client.mint_coins(address, prefix, micro_libra, is_blocking=is_blocking)
 
     def get_account_address_from_parameter(self, address_or_refid):
         if len(address_or_refid) == 64:
