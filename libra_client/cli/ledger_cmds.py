@@ -43,8 +43,8 @@ class LedgerCmdTime(DualCommand):
         client = self.get_real_client(client, **kwargs)
         start_time = client.get_transaction(1).transaction.timestamp_usecs
         latest_time = client.get_metadata().timestamp
-        start_time = datetime.fromtimestamp(stx.timestamp_usecs / 1000_000)
-        latest_time = datetime.fromtimestamp(client.latest_time / 1000_000)
+        start_time = datetime.fromtimestamp(start_time / 1000_000)
+        latest_time = datetime.fromtimestamp(latest_time / 1000_000)
         json_print_in_cmd({
             "start_time": start_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "latest_time": latest_time.strftime("%Y-%m-%dT%H:%M:%S")

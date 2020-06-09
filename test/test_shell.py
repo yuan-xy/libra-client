@@ -110,8 +110,8 @@ def test_query_transaction(capsys):
 def test_query_events(capsys):
     addr = libra.AccountConfig.association_address()
     output = exec_input(f"q ev {addr} sent 1 true 1", capsys, "")
-    assert 'event_data' in output
-    assert 'sequence_number: 1' in output
+    assert 'data' in output
+    assert "'sequence_number': 1" in output
 
 def test_transfer_coin(capsys):
     try:

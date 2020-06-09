@@ -1,5 +1,6 @@
 import libra
 import libra_client
+from libra_client.error import *
 from libra import Address
 from libra.transaction import *
 from libra.contract_event import ContractEvent
@@ -20,7 +21,7 @@ def test_invalid_param():
 def test_get_transaction():
     c = libra_client.Client("testnet")
     stx = c.get_transaction(1, True)
-    assert stx.transaction['type'] == 'blockmetadata'
+    assert stx.transaction.type == 'blockmetadata'
     assert stx.vm_status == 4001
     assert stx.success is True
     assert stx.gas_used == 600
@@ -56,17 +57,16 @@ def test_get_tx_latest():
         return
     transactions = c.get_transactions(ver-2, 2, True)
     assert len(transactions) == 2
-    assert len(events_for_versions.events_for_version) == 2
 
 def test_get_tx_zero():
     c = libra_client.Client("testnet")
-    with pytest.raises(ValueError):
+    with pytest.raises(LibraError):
         c.get_transactions(1, 0, True)
 
 
 def test_get_tx_invalid():
     c = libra_client.Client("testnet")
-    with pytest.raises(TypeError):
+    with pytest.raises(LibraError):
         c.get_transactions(1, -1, True)
 
 def test_get_latest_transaction_version():
@@ -105,40 +105,34 @@ def test_account_not_exsits():
     with pytest.raises(libra_client.client.AccountError):
         balance = c.get_account_state(address)
 
-def test_get_acc_txns_with_client_known_version():
-    address = libra.AccountConfig.association_address()
-    client = libra_client.Client("testnet")
-    client.state.version = 2
-    with pytest.raises(libra.validator_verifier.VerifyError):
-        #need validator proof
-        client.get_account_transaction_proto(address, 1, False)
-    client.state.version = 0
-    client.get_account_transaction_proto(address, 1, False)
-    assert client.state.version > 0
-    client.get_account_transaction_proto(address, 1, False)
+# def test_get_acc_txns_with_client_known_version():
+#     address = libra.AccountConfig.association_address()
+#     client = libra_client.Client("testnet")
+#     client.state.version = 2
+#     with pytest.raises(libra.validator_verifier.VerifyError):
+#         #need validator proof
+#         client.get_account_transaction_proto(address, 1, False)
+#     client.state.version = 0
+#     client.get_account_transaction_proto(address, 1, False)
+#     assert client.state.version > 0
+#     client.get_account_transaction_proto(address, 1, False)
 
 
 
 def test_get_account_transaction_proto():
     address = libra.AccountConfig.association_address()
     c = libra_client.Client("testnet")
-    txn, usecs = c.get_account_transaction_proto(address, 1, True)
-    len(str(usecs)) == 16
-    assert usecs//1000_000 > 1570_000_000
-    if txn.version == 0:
+    txn = c.get_account_transaction(address, 0, True)
+    if txn is None:
         return
-    assert txn.proof.HasField("ledger_info_to_transaction_info_proof")
-    assert txn.proof.HasField("transaction_info")
-    assert len(txn.transaction.transaction) > 0
-    if txn.proof.transaction_info.vm_status == 4001:
-        # assert txn.events.events[0].sequence_number == 1
-        assert txn.events.events[0].sequence_number == 0 # TODO: why changed to 0
+    usecs = txn.transaction.expiration_time
+    assert usecs//1000_000 > 1570_000_000
 
 def test_get_account_transaction_non_exists():
     address = libra.AccountConfig.association_address()
     c = libra_client.Client("testnet")
-    txn, usecs = c.get_account_transaction_proto(address, Uint64.max_value, True)
-    assert txn.__str__() == ''
+    txn = c.get_account_transaction(address, Uint64.max_value, True)
+    assert txn is None
 
 
 def test_transfer_coin():
@@ -158,30 +152,18 @@ def test_transfer_coin():
     assert c.get_balance(a1.address) == balance1 + 123
 
 def test_client_init():
-    client = libra_client.Client.new("localhost","8080")
-    assert client.host == "localhost"
-    assert client.port == 8080
+    client = libra_client.Client.new("localhost:8080")
+    assert client.url == "localhost:8080"
     assert hasattr(client, "faucet_host") == False
     assert client.verbose == True
     assert client.faucet_account is not None
-    assert client.state.version == 0
-    assert client.state.verifier.enum_name == 'TrustedVerifier'
-    assert client.state.verifier.value.epoch == 0
-    assert client.state.verifier.value.verifier.address_to_validator_info == {}
-    assert client.state.latest_epoch_change_li is None
 
 
 def test_client_testnet():
     c2 = libra_client.Client("testnet")
-    try:
-        tests = os.environ['TESTNET_LOCAL'].split(";")
-        assert c2.host == tests[0]
-        assert c2.port == int(tests[1])
+    if 'TESTNET_LOCAL' in os.environ:
         return
-    except KeyError:
-        pass
-    assert c2.host == "ac.testnet.libra.org"
-    assert c2.port == 8000
+    assert c2.url == "https://client.testnet.libra.org"
     assert c2.faucet_host == "faucet.testnet.libra.org"
     assert c2.verbose == True
     assert c2.faucet_account is None
@@ -194,7 +176,7 @@ def test_client_error():
     with pytest.raises(libra_client.client.LibraNetError):
         libra_client.Client("mainnet")
     with pytest.raises(FileNotFoundError):
-        libra_client.Client.new("localhost", 8000, "non_exsits_file")
+        libra_client.Client.new("localhost:8000", "non_exsits_file")
 
 def test_timeout():
     c = libra_client.Client("testnet")
@@ -202,5 +184,4 @@ def test_timeout():
     with pytest.raises(Exception) as excinfo:
         stx = c.get_transaction(1, True)
     error = excinfo.value
-    assert error.code().name == 'DEADLINE_EXCEEDED'
-    assert error.details() == 'Deadline Exceeded'
+    assert "ConnectTimeoutError" in error.__str__()

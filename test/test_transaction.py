@@ -62,20 +62,6 @@ def test_signed_txn():
         stx.authenticator = authenticator
         stx.check_signature()
 
-def test_wait_for_transaction_timeout():
-    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
-    a0 = wallet.accounts[0]
-    a1 = wallet.accounts[1]
-    c = libra_client.Client("testnet")
-    diff = c._get_time_diff()
-    if diff < 0:
-        with pytest.raises(libra_client.VMError) as excinfo:
-            c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=True, txn_expiration=0)
-        vm_error = excinfo.value
-        assert vm_error.args == (6, 'TRANSACTION_EXPIRED')
-        assert vm_error.error_code == 6
-        assert vm_error.error_msg == 'TRANSACTION_EXPIRED'
-
 
 def test_gax_too_large():
     wallet = libra_client.WalletLibrary.recover('test/test.wallet')
@@ -101,9 +87,7 @@ def test_amount_zero():
     c = libra_client.Client("testnet")
     try:
         ret = c.transfer_coin(a0, a1.address, 0, is_blocking=True)
-    except libra_client.client.VMError as vme:
-        assert vme.error_code == 4016 or vme.error_code == 7
-    except libra_client.client.MempoolError as mpe:
+    except AccountError as ae:
         pass
 
 
@@ -176,10 +160,6 @@ def test_tx_id_overflow():
         item.get_transactions_request.start_version = start_version
     with pytest.raises(ValueError):
         item.get_transactions_request.start_version = -1
-    # item.get_transactions_request.limit = 1
-    # item.get_transactions_request.include_events = False
-    # resp = client.update_to_latest_ledger(request)
-    # print(resp)
 
 
 def test_transfer_with_metadata():
@@ -210,11 +190,7 @@ def test_transfer_with_metadata():
     assert bytes(script.args[0].value) == a1.address
     assert script.args[2].value == 1
     assert script.args[3].value == bytes([3,4,5])
-    proto, _ = client.get_account_transaction_proto(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
-    assert proto.version > 1
-    assert len(proto.events.events) == 2
-    assert proto.proof.transaction_info.major_status == 4001
-    stx = Transaction.deserialize(proto.transaction.transaction).value
-    assert stx.raw_txn == ret.raw_txn
+    tx = client.get_account_transaction(ret.raw_txn.sender, ret.raw_txn.sequence_number, True)
+    assert tx.version > 1
 
 

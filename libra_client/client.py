@@ -20,7 +20,17 @@ NETWORKS = {
 
 class DictObj:
     def __init__(self, _dict):
-        self.__dict__.update(_dict)
+        for key in _dict:
+            value = _dict[key]
+            if type(value) == dict:
+                value = DictObj(value)
+            setattr(self, key, value)
+
+    def __str__(self):
+        return self.__dict__.__str__()
+
+    def __repr__(self):
+        return self.__dict__.__repr__()
 
     @staticmethod
     def new(_dict):
@@ -113,7 +123,7 @@ class Client:
         return DictObj(self.json_rpc("get_currencies", params))
 
     def get_metadata(self):
-        params = []
+        params = [None]
         return DictObj(self.json_rpc("get_metadata", params))
 
     def get_latest_ledger_info(self):
