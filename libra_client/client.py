@@ -107,12 +107,18 @@ class Client:
         return self.get_account_state(address, retry)
 
     def get_sequence_number(self, address, retry=False):
-        state = self.get_account_resource(address, retry)
-        return state.sequence_number
+        try:
+            state = self.get_account_resource(address, retry)
+            return state.sequence_number
+        except AccountError:
+            return 0
 
     def get_balance(self, address, retry=False):
-        state = self.get_account_state(address, retry)
-        return state.balances[0]['amount']
+        try:
+            state = self.get_account_state(address, retry)
+            return state.balances[0]['amount']
+        except AccountError:
+            return 0
 
     def get_balances(self, address, retry=False):
         state = self.get_account_state(address, retry)

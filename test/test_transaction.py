@@ -1,7 +1,7 @@
 import libra_client
 from libra.crypto.ed25519 import ED25519_PRIVATE_KEY_LENGTH, ED25519_SIGNATURE_LENGTH
 from libra.transaction import *
-from libra_client.error import AccountError, TransactionError, TransactionTimeoutError
+from libra_client.error import LibraError, AccountError, TransactionError, TransactionTimeoutError
 from canoser import Uint64
 from libra.proto.get_with_proof_pb2 import UpdateToLatestLedgerRequest
 import pytest
@@ -72,11 +72,11 @@ def test_gax_too_large():
         balance0 = c.get_balance(a0.address)
     except AccountError:
         balance0 = 0
-    with pytest.raises((AccountError, TransactionError)):
+    with pytest.raises(LibraError):
         c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
-    with pytest.raises((AccountError, TransactionError)):
+    with pytest.raises(LibraError):
         c.transfer_coin(a0, a1.address, 1, max_gas=1_000_000_001)
-    with pytest.raises((AccountError, TransactionError)):
+    with pytest.raises(LibraError):
         c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
 
 
@@ -87,7 +87,7 @@ def test_amount_zero():
     c = libra_client.Client("testnet")
     try:
         ret = c.transfer_coin(a0, a1.address, 0, is_blocking=True)
-    except AccountError as ae:
+    except LibraError as ae:
         pass
 
 
@@ -128,38 +128,30 @@ def test_amount_illegal():
     try:
         c.transfer_coin(a0, a1.address, balance0+99999999, is_blocking=False)
         c.wait_for_transaction(a0.address, sequence_number) #no events emitted
-    except libra_client.client.VMError as vme:
-        assert vme.error_code == 4016 or vme.error_code == 7
-    except libra_client.client.MempoolError as mpe:
+    except LibraError as mpe:
         pass
+
 
 def test_query():
     c = libra_client.Client("testnet")
-    txs = c.get_transactions(1, "1")
-    txs = c.get_transactions("1", 1)
-    txs = c.get_transactions(1, "1", False)
-    with pytest.raises(TypeError):
+    with pytest.raises(LibraError):
+        txs = c.get_transactions(1, "1")
+    with pytest.raises(LibraError):
+        txs = c.get_transactions("1", 1)
+    with pytest.raises(LibraError):
+        txs = c.get_transactions(1, "1", False)
+    with pytest.raises(LibraError):
         c.get_transactions(1, True)
 
 
 def test_get_transaction_invalid():
     client = libra_client.Client("testnet")
-    with pytest.raises(TypeError):
+    with pytest.raises(LibraError):
         client.get_transaction(-1)
     tx = client.get_transaction(Uint64.max_value)
     assert tx is None
-    with pytest.raises(TypeError):
+    with pytest.raises(LibraError):
         client.get_transaction(Uint64.max_value+1)
-
-def test_tx_id_overflow():
-    client = libra_client.Client("testnet")
-    start_version = Uint64.max_value+1
-    request = UpdateToLatestLedgerRequest()
-    item = request.requested_items.add()
-    with pytest.raises(ValueError):
-        item.get_transactions_request.start_version = start_version
-    with pytest.raises(ValueError):
-        item.get_transactions_request.start_version = -1
 
 
 def test_transfer_with_metadata():
