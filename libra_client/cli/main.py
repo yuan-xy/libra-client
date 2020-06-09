@@ -13,7 +13,7 @@ import sys
 import signal
 
 
-TESTNET = NETWORKS['testnet']['host']
+TESTNET = NETWORKS['testnet']['url']
 
 
 def get_commands(include_dev: bool):
@@ -44,8 +44,7 @@ def run_cmd(args):
 def get_parser():
     parser = argparse.ArgumentParser(prog='libra', add_help=False)
     parser.add_argument('-h', "--help", action='store_true', default=False)
-    parser.add_argument('-a', "--host", default=TESTNET)
-    parser.add_argument('-p', "--port", default=0)
+    parser.add_argument('-u', "--url", default=TESTNET)
     parser.add_argument('-m', "--faucet_account_file")
     parser.add_argument('-v', "--verbose", action='store_true', default=False)
     parser.add_argument('-V', '--version', action='version', version=f'libra {version}')
@@ -61,12 +60,9 @@ def print_help(commands):
     print_color(" command", bcolors.OKGREEN, end='')
     print_color(" [command parameters ...]", bcolors.OKBLUE)
     print("\nOptional arguments:\n")
-    print_color(" -a | --host", bcolors.OKBLUE, end='')
-    print(" HOST  Host address/name to connect to.", end='')
+    print_color(" -u | --url", bcolors.OKBLUE, end='')
+    print(" URL  Host address/name to connect to.", end='')
     print_color(" [default:testnet]", bcolors.WARNING)
-    print_color(" -p | --port", bcolors.OKBLUE, end='')
-    print(" PORT  Admission Control port to connect to.", end='')
-    print_color(" [default: 8000]", bcolors.WARNING)
     print_color(" -v | --verbose", bcolors.OKBLUE, end='')
     print(" Verbose output")
     print_color(" -V | --version", bcolors.OKBLUE, end='')

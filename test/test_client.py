@@ -13,7 +13,6 @@ def test_invalid_param():
     c = libra_client.Client("testnet")
     with pytest.raises(libra_client.LibraError) as excinfo:
         c.json_rpc("get_transactions", [])
-    breakpoint()
     err = excinfo.value
     assert err.args[0]['error']['code']
 

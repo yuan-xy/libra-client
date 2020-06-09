@@ -17,10 +17,9 @@ except KeyError:
 def test_shell():
     parser = get_parser()
     args = parser.parse_args("")
-    assert args.host == "ac.testnet.libra.org"
-    assert args.port == 0
+    assert args.url == "https://client.testnet.libra.org"
     assert args.sync == False
-    grpc_client = libra_client.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.url)
     assert TESTNET_LOCAL or hasattr(grpc_client, "faucet_host")
 
 
@@ -28,7 +27,7 @@ def test_recover_account_on_init(capsys):
     parser = get_parser()
     args = parser.parse_args("-n test/test.wallet".split())
     assert args.mnemonic_file == "test/test.wallet"
-    grpc_client = libra_client.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.url)
     client = ClientProxy(grpc_client, args)
     assert len(client.accounts) == 2
 
@@ -39,7 +38,7 @@ def prepare_shell(shell_args):
         shell_args = "-n test/test.wallet"
     args = parser.parse_args(shell_args.split())
     args.verbose = True
-    grpc_client = libra_client.Client.new(args.host, args.port)
+    grpc_client = libra_client.Client.new(args.url)
     client = ClientProxy(grpc_client, args)
     (_, alias_to_cmd) = get_commands(True)
     return (client, alias_to_cmd)
@@ -118,7 +117,7 @@ def test_transfer_coin(capsys):
     try:
         output = exec_input("t 0 1 123", capsys)
         assert 'Transaction submitted to validator' in output
-    except libra_client.client.MempoolError:
+    except libra_client.error.LibraError:
         pass
 
 def test_transfer_error(capsys):
@@ -184,7 +183,7 @@ def test_faucet_key_no_host(capsys):
         prepare_shell("-m libra/mint.key")
 
 def test_faucet_key_with_host(capsys):
-    args = "-m libra/mint.key -a localhost"
+    args = "-m libra/mint.key -u localhost"
     client, _ = prepare_shell(args)
     assert client.faucet_account
 

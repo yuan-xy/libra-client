@@ -22,7 +22,7 @@ class ClientProxy:
             self.wallet = WalletLibrary.new()
             self.wallet.write_recovery(CLIENT_WALLET_MNEMONIC_FILE)
         self.accounts = self.wallet.accounts
-        if libra_args.faucet_account_file is not None and libra_args.host == 'ac.testnet.libra.org':
+        if libra_args.faucet_account_file is not None and client.is_testnet():
             raise ValueError("faucet_account_file can't be used with testnet, need `host` to be set.")
 
     @property
@@ -112,11 +112,7 @@ class ClientProxy:
 
     def get_latest_account_state(self, address_or_refid):
         address = self.parse_address_or_refid(address_or_refid)
-        blob, version = self.grpc_client.get_account_blob(address)
-        if len(blob.__str__()) > 0:
-            blob = libra.AccountState.deserialize(blob.blob)
-        # TODO: update local account if address in local wallet.
-        return (blob, address, version)
+        return self.grpc_client.get_account_state(address)
 
     def get_committed_txn_by_acc_seq(self, address_or_refid, seq, include_events):
         address = self.parse_address_or_refid(address_or_refid)

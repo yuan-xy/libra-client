@@ -217,12 +217,9 @@ client2 = Client.new('localhost', 8000, "validator_file_path")  # Client connect
 ```
 
 #### Get Account State Blob of an Address
-You can query an account's raw blob by using `get_account_blob` function on `Client`. The function returns a tuple of account state blob and latest ledger version. The blob is a binary LCS serialize format of account data. If an account has not been created yet (never received any funds), the blob will be empty.
+No longer supported in json-rpc.
 
-```py
-client = Client("testnet")
-blob, version = client.get_account_blob(address)
-```
+
 #### Get Account State of an Address
 If the Account has been created, you can call `get_account_state` function which return a `AccountState` object with 'ordered_map' field; other wise, AccountError will be thrown.
 

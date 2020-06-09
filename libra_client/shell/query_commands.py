@@ -73,12 +73,11 @@ class QueryCommandGetLatestAccountState(Command):
 
     def execute(self, client, params, **kwargs):
         print(">> Getting latest account state")
-        (acc, addr, version) = client.get_latest_account_state(params[1])
+        state = client.get_latest_account_state(params[1])
         print(
             f"Latest account state is: \n \
-            Account: {addr}\n \
-            State: {acc}\n \
-            Blockchain Version: {version}\n"
+            Account: {params[1]}\n \
+            State: {state}\n"
         )
 
 
