@@ -145,7 +145,7 @@ def test_transfer_coin():
     balance1 = 0
     ret = c.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
     assert ret.raw_txn.sequence_number == 0
-    ret = c.transfer_coin(a0, a1.address, 123, unit_price=1, is_blocking=True)
+    ret = c.transfer_coin(a0, a1.address, 123, gas_unit_price=1, is_blocking=True)
     assert bytes(ret.raw_txn.sender) == a0.address
     assert ret.raw_txn.sequence_number == 1
     assert c.get_balance(a0.address) <= balance0 - 123

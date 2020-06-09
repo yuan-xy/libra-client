@@ -26,7 +26,7 @@ def test_429():
         while True:
             time.sleep(1)
             a1 = wallet.new_account()
-            c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=False)
+            c.transfer_coin(a0, a1.address, 1, gas_unit_price=0, is_blocking=False)
     except Exception as err:
         assert err.details() == 'Received http2 header with status: 429'
         assert err.__class__.__name__ == '_Rendezvous'
@@ -63,7 +63,7 @@ def test_seq_too_old():
     try:
         while True:
             a1 = wallet.new_account()
-            c.transfer_coin(a0, a1.address, 1, unit_price=0, is_blocking=False)
+            c.transfer_coin(a0, a1.address, 1, gas_unit_price=0, is_blocking=False)
     except Exception as err:
         assert err.error_code == 3
         assert err.error_msg == 'SEQUENCE_NUMBER_TOO_OLD'

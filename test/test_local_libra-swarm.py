@@ -76,7 +76,7 @@ def test_true_silent_cast_to_int_which_is_dangerous():
     is_blocking=True
     with pytest.raises(TypeError):
         c.submit_payload(a0, payload, is_blocking)
-        #is_blocking is acctual parsed as max_gas, and True is cast to 1.
+        #is_blocking is acctual parsed as max_gas_amount, and True is cast to 1.
         #so, error thrown: min gas required for txn: 600, gas submitted: 1
 
 

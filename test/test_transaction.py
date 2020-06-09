@@ -73,11 +73,11 @@ def test_gax_too_large():
     except AccountError:
         balance0 = 0
     with pytest.raises(LibraError):
-        c.transfer_coin(a0, a1.address, 1, unit_price=balance0)
+        c.transfer_coin(a0, a1.address, 1, gas_unit_price=balance0)
     with pytest.raises(LibraError):
-        c.transfer_coin(a0, a1.address, 1, max_gas=1_000_000_001)
+        c.transfer_coin(a0, a1.address, 1, max_gas_amount=1_000_000_001)
     with pytest.raises(LibraError):
-        c.transfer_coin(a0, a1.address, 1, max_gas=balance0+1, unit_price=10000)
+        c.transfer_coin(a0, a1.address, 1, max_gas_amount=balance0+1, gas_unit_price=10000)
 
 
 def test_amount_zero():
@@ -166,7 +166,7 @@ def test_transfer_with_metadata():
     try:
         client.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
     except libra_client.error.VMError as err:
-        if err.error_code == 4012:
+        if err.error_code == 4016:
             pass
         else:
             raise
