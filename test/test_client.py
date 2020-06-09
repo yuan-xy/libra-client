@@ -164,10 +164,8 @@ def test_client_testnet():
     if 'TESTNET_LOCAL' in os.environ:
         return
     assert c2.url == "https://client.testnet.libra.org"
-    assert c2.faucet_host == "faucet.testnet.libra.org"
     assert c2.verbose == True
     assert c2.faucet_account is None
-    c2.init_trusted_state(None)
 
 
 def test_client_error():
@@ -184,4 +182,4 @@ def test_timeout():
     with pytest.raises(Exception) as excinfo:
         stx = c.get_transaction(1, True)
     error = excinfo.value
-    assert "ConnectTimeoutError" in error.__str__()
+    assert "ConnectTimeoutError" in error.__str__() or "ConnectionError" in error.__str__()
