@@ -281,7 +281,6 @@ class Client:
         payload = TransactionPayload('Script', script)
         return self.submit_payload(self.faucet_account, payload, **kwargs)
 
-
     def submit_payload(self, sender_account, payload, **kwargs):
         sequence_number = self.get_sequence_number(sender_account.address, retry=True)
         # TODO: cache sequence_number

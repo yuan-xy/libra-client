@@ -1,6 +1,5 @@
 from libra_client.cli.command import json_print_in_cmd
 from libra_client.cli.dual_command import DualCommand
-from libra.transaction import Transaction
 from datetime import datetime
 
 

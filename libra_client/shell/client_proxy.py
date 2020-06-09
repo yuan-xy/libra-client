@@ -150,9 +150,9 @@ class ClientProxy:
         recevier = self.parse_address_or_refid(recevier)
         micro_libra = Uint64.int_safe(coin) * 1_000_000
         self.grpc_client.transfer_coin(account, recevier, micro_libra,
-            max_gas_amount=max_gas_amount,
-            gas_unit_price=gas_unit_price,
-            is_blocking=is_blocking, metadata=metadata)
+                                       max_gas_amount=max_gas_amount,
+                                       gas_unit_price=gas_unit_price,
+                                       is_blocking=is_blocking, metadata=metadata)
         return account.sequence_number
 
     def execute_script(self, address_or_refid, code_file, script_args):
