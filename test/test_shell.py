@@ -108,7 +108,7 @@ def test_query_transaction(capsys):
     assert 'Transaction at version 2' in output
 
 def test_query_events(capsys):
-    addr = libra.AccountConfig.association_address()
+    addr = libra.AccountConfig.treasury_compliance_account_address()
     output = exec_input(f"q ev {addr} sent 1 true 1", capsys, "")
     assert 'data' in output
     assert "'sequence_number': 1" in output

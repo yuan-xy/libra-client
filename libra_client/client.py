@@ -225,7 +225,7 @@ class Client:
             )
         sequence_number = Uint64.int_safe(resp.text) - 1
         if is_blocking:
-            self.wait_for_transaction(AccountConfig.association_address(), sequence_number)
+            self.wait_for_transaction(AccountConfig.treasury_compliance_account_address(), sequence_number)
         return sequence_number
 
     def wait_for_transaction(self, address, sequence_number, expiration_time=Uint64.max_value):  # noqa: C901
@@ -262,6 +262,8 @@ class Client:
         return self.submit_payload(sender_account, payload, **kwargs)
 
     def create_account(self, sender_account, fresh_address, auth_key_prefix, **kwargs):
+        return self.mint_coins(fresh_address, auth_key_prefix, 1, **kwargs)
+        # create_account script no longer exsits.
         script = Script.gen_create_account_script(fresh_address, auth_key_prefix)
         payload = TransactionPayload('Script', script)
         return self.submit_payload(sender_account, payload, **kwargs)

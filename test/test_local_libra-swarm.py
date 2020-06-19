@@ -65,19 +65,3 @@ def test_create_account_and_rotate_key():
     # before rotate, authentication_key == address
     # after rotate,  authentication_key == public_key
 
-def test_true_silent_cast_to_int_which_is_dangerous():
-    wallet = libra_client.WalletLibrary.recover('test/test.wallet')
-    a0 = wallet.accounts[0]
-    wallet2 = libra_client.WalletLibrary.new()
-    account = wallet2.new_account()
-    script = Script.gen_create_account_script(account.address, account.auth_key_prefix)
-    payload = TransactionPayload('Script', script)
-    c = libra_client.Client("testnet")
-    is_blocking=True
-    with pytest.raises(TypeError):
-        c.submit_payload(a0, payload, is_blocking)
-        #is_blocking is acctual parsed as max_gas_amount, and True is cast to 1.
-        #so, error thrown: min gas required for txn: 600, gas submitted: 1
-
-
-

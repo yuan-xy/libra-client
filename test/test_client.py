@@ -142,12 +142,11 @@ def test_transfer_coin():
     c = libra_client.Client("testnet")
     c.mint_coins(a0.address, a0.auth_key_prefix, 1234_000, is_blocking=True)
     balance0 = c.get_balance(a0.address, retry=True)
-    balance1 = 0
-    ret = c.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
-    assert ret.raw_txn.sequence_number == 0
+    c.create_account(a0, a1.address, a1.auth_key_prefix, is_blocking=True)
+    balance1 = c.get_balance(a1.address, retry=True)
     ret = c.transfer_coin(a0, a1.address, 123, gas_unit_price=1, is_blocking=True)
     assert bytes(ret.raw_txn.sender) == a0.address
-    assert ret.raw_txn.sequence_number == 1
+    assert ret.raw_txn.sequence_number == 0
     assert c.get_balance(a0.address) <= balance0 - 123
     assert c.get_balance(a1.address) == balance1 + 123
 
@@ -182,4 +181,4 @@ def test_timeout():
     with pytest.raises(Exception) as excinfo:
         stx = c.get_transaction(1, True)
     error = excinfo.value
-    assert "ConnectTimeoutError" in error.__str__() or "ConnectionError" in error.__str__()
+    assert "timeout" in error.__str__().lower() or "ConnectionError" in error.__str__()
