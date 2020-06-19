@@ -26,7 +26,7 @@ def run_cmd(args):
         set_force_color(True)
     if args.color == 'never':
         set_force_color(False)
-    (commands, alias_to_cmd) = get_commands(args.host != TESTNET)
+    (commands, alias_to_cmd) = get_commands(args.url != TESTNET)
     if args.help or len(args.command) == 0:
         print_help(commands)
         return
@@ -35,7 +35,7 @@ def run_cmd(args):
         report_error(f"command `{args.command[0]}` does not exsits.")
         print_help(commands)
         return
-    client = Client.new(args.host, args.port, args.faucet_account_file)
+    client = Client.new(args.url, args.faucet_account_file)
     client.verbose = args.verbose
     # TODO: some cmd doesn't need client to be initialized.
     cmd.execute(client, args.command)

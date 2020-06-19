@@ -28,7 +28,7 @@ class LedgerCmdInfo(DualCommand):
     def execute(self, client, params, **kwargs):
         client = self.get_real_client(client, **kwargs)
         info = client.get_latest_ledger_info()
-        json_print_in_cmd(info)
+        json_print_in_cmd(info.to_json_serializable())
 
 
 class LedgerCmdTime(DualCommand):
