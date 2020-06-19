@@ -97,15 +97,10 @@ class QueryCommandGetTxnByAccountSeq(Command):
         include_events = parse_bool(params[3])
         transaction = client.get_committed_txn_by_acc_seq(params[1], params[2], include_events)
         print(f"Committed transaction: {transaction}")  # transaction pretty print
-        if transaction.HasField("events"):
-            print("Events: ")
-            for event in transaction.events.events:
-                # TODO: event pretty print
-                print(event)
-            if len(transaction.events.events) == 0:
-                print("no events emitted")
-        else:
+        if transaction is None:
             print("Transaction not available")
+        elif len(transaction.events) == 0:
+            print("no events emitted")
 
 
 class QueryCommandGetTxnByRange(Command):
