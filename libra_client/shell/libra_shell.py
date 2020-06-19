@@ -34,7 +34,7 @@ def run_shell(args):  # noqa: C901
     grpc_client = Client.new(args.url, args.faucet_account_file)
     try:
         info = grpc_client.get_latest_ledger_info()
-        time = datetime.fromtimestamp(info.timestamp_usecs / 1000_000)
+        time = datetime.fromtimestamp(info.timestamp / 1000_000)
         ledger_info_str = f"latest version = {info.version}, timestamp = {time}"
     except Exception as err:
         report_error(f"Not able to connect to validator at {args.url}", err, args.verbose)
