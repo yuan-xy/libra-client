@@ -32,6 +32,9 @@ class DictObj:
     def __repr__(self):
         return self.__dict__.__repr__()
 
+    def to_json_serializable(self):
+        return self.__dict__
+
     @staticmethod
     def new(_dict):
         if _dict is None:
@@ -161,9 +164,6 @@ class Client:
         else:
             return txs[0]
 
-    def get_account_transaction_proto(self, address, sequence_number, include_events=False):
-        return self.get_account_transaction(address, sequence_number, include_events)
-
     def get_account_transaction(self, address, sequence_number, include_events=False):
         address = Address.normalize_to_bytes(address)
         params = [address.hex(), sequence_number, include_events]
@@ -238,7 +238,7 @@ class Client:
         while max_iterations > 0:
             time.sleep(1)
             max_iterations -= 1
-            ret = self.get_account_transaction_proto(address, sequence_number, True)
+            ret = self.get_account_transaction(address, sequence_number, True)
             if ret is not None:
                 if self.verbose:
                     print(f"\ntransaction {ret.version} is stored!")

@@ -101,7 +101,7 @@ class AccountCmdGetTxnByAccountSeq(Command):
     def execute(self, client, params, **kwargs):
         include_events = parse_bool(params[3])
         seq = Uint64.int_safe(params[2])
-        transaction, _usecs = client.get_account_transaction_proto(params[1], seq, include_events)
+        transaction = client.get_account_transaction(params[1], seq, include_events)
         json_print_in_cmd(transaction)
 
 

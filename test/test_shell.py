@@ -161,15 +161,7 @@ def test_execute_script_on_testnet(capsys):
         #should get seq by submited transaction, above will get error seq in concurrent env.
         client.wait_for_transaction(a0.address_hex, seq-1)
         balance2 = client.get_balance(addr1)
-        if balance2 == 0:
-            try:
-                tx, _ = client.get_account_transaction_proto(a0.address_hex, seq-1)
-                #TODO: Under what conditions this transaction will fail
-                print(tx.proof.transaction_info.major_status)
-            except:
-                pass
-        else:
-            assert balance2 >= 1
+        assert balance2 >= 0
 
 
 def test_publish_module_to_testnet(capsys):
