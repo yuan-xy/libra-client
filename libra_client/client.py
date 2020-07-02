@@ -119,7 +119,10 @@ class Client:
     def get_balance(self, address, retry=False):
         try:
             state = self.get_account_state(address, retry)
-            return state.balances[0]['amount']
+            if state.balances:
+                return state.balances[0]['amount']
+            else:
+                return 0
         except AccountError:
             return 0
 
