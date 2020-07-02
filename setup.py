@@ -19,7 +19,7 @@ with open("libra_client/version.py", "r") as fp:
 
 install_requires=[
         'canoser==0.8.2',
-        'libra-core==0.9.4',
+        'libra-core==0.9.5',
         'PyNaCl',
         'requests',
         'mnemonic'
@@ -39,7 +39,7 @@ setuptools.setup(
     name="libra-client",
     version=version,
     author="yuan xinyu",
-    author_email="yuanxinyu.hangzhou@gmail.com",
+    author_email="yuan_xin_yu@hotmail.com",
     description="A CLI inteface Libra client and Python API for Libra blockchain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
