@@ -4,21 +4,17 @@
 #
 #    pip-compile dev-requirements.in
 #
---index-url https://mirrors.aliyun.com/pypi/simple
---trusted-host mirrors.aliyun.com
-
 attrs==19.3.0             # via pytest
 autopep8==1.5.1           # via -r dev-requirements.in
 bleach==3.1.4             # via readme-renderer
 certifi==2019.11.28       # via requests
 cffi==1.14.0              # via cryptography
 chardet==3.0.4            # via requests
-cryptography==2.8         # via secretstorage
+cryptography==3.2         # via secretstorage
 docutils==0.16            # via readme-renderer
 entrypoints==0.3          # via flake8
 flake8==3.7.9             # via -r dev-requirements.in
 idna==2.9                 # via requests
-importlib-metadata==1.6.0  # via keyring, pluggy, pytest, twine
 jeepney==0.4.3            # via keyring, secretstorage
 keyring==21.2.0           # via twine
 mccabe==0.6.1             # via flake8
@@ -44,7 +40,6 @@ urllib3==1.25.8           # via requests
 wcwidth==0.1.9            # via pytest
 webencodings==0.5.1       # via bleach
 wheel==0.34.2             # via -r dev-requirements.in
-zipp==3.1.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
